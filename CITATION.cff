@@ -4,8 +4,16 @@ title: "Glushkov's L/X problem: exact directed diameter of the symmetric group i
 type: software
 authors:
   - family-names: Uskov
-    given-names: Sergei
+    given-names: S.
     orcid: "https://orcid.org/0009-0006-5845-7013"
+  - family-names: Chervov
+    given-names: A.
+  - family-names: Levkovich-Maslyuk
+    given-names: F.
+  - family-names: Litvak
+    given-names: I.
+  - family-names: Smolensky
+    given-names: A.
 version: 1.0.0
 repository-code: "https://github.com/snow-ghost/glushkov-lx-lean"
 url: "https://github.com/snow-ghost/glushkov-lx-lean"

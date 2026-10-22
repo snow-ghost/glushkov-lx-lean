@@ -1,8 +1,9 @@
 # Authorship
 
-**Proof author and project author:** Sergei Uskov
-([snow-ghost](https://github.com/snow-ghost)).
-ORCID: [0009-0006-5845-7013](https://orcid.org/0009-0006-5845-7013).
+**Authors:** S. Uskov, A. Chervov, F. Levkovich-Maslyuk, I. Litvak, A. Smolensky.
+
+S. Uskov: [GitHub](https://github.com/snow-ghost),
+[ORCID 0009-0006-5845-7013](https://orcid.org/0009-0006-5845-7013).
 
 The project contains a proof and Lean 4 formalization of the exact directed
 L/X diameter formula for the symmetric groups S_n, for all n ≥ 5.

@@ -1,7 +1,7 @@
 # Glushkov's L/X problem: exact diameter in Lean 4
 
-**Proof author: Sergei Uskov.** [Authorship](AUTHORS.md) · [Русский](README.ru.md)
-ORCID: [0009-0006-5845-7013](https://orcid.org/0009-0006-5845-7013).
+**Authors: S. Uskov, A. Chervov, F. Levkovich-Maslyuk, I. Litvak, A. Smolensky.** [Authorship](AUTHORS.md) · [Русский](README.ru.md)
+S. Uskov — ORCID: [0009-0006-5845-7013](https://orcid.org/0009-0006-5845-7013).
 
 This repository formalizes the exact **directed** diameter of the symmetric
 group Sₙ with two generators: L, a cyclic shift, and X, the transposition of the
@@ -94,7 +94,7 @@ transitive import closure of `LX.SharpDiameterAll`.
 
 ## Citation and license
 
-Please cite **Sergei Uskov, _Glushkov's L/X problem: exact directed diameter of
+Please cite **S. Uskov, A. Chervov, F. Levkovich-Maslyuk, I. Litvak, A. Smolensky, _Glushkov's L/X problem: exact directed diameter of
 the symmetric group in Lean 4_** and link to this repository, preferably with
 a commit. GitHub's “Cite this repository” button uses
 [`CITATION.cff`](CITATION.cff).
