@@ -1,5 +1,5 @@
 import LX.OddCenteredMass
-import Mathlib.Algebra.Order.Floor.BigOperators
+import Mathlib
 
 namespace LX.CenteredLift
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

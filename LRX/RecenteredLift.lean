@@ -1,4 +1,6 @@
+import LRX.LiftedModel
 import LRX.RotationWords
+import Mathlib
 
 /-! Recenter a phase lift at an arbitrary port. The local target is chosen so
 that paid entry and exit rotations recover the original visible permutation. -/
@@ -49,26 +51,8 @@ theorem local_displacement_mass (d : Fin n → ℤ) (r : Fin n) :
 def wrap (c r : Fin n) (w : List Letter) : List Letter :=
   toPort r ++ w ++ toPort (c-r)
 
-theorem wrap_eval (p : State n) (c r : Fin n) (w : List Letter)
-    (hw : eval w=localTarget p c r) : eval (wrap c r w)=p := by
-  simp only [wrap, eval_append, toPort_eval, hw, localTarget]
-  group
 
-omit [NeZero n] in
-theorem wrap_length (c r : Fin n) (w : List Letter) :
-    (wrap c r w).length=w.length+min r.val (n-r.val)+min (c-r).val (n-(c-r).val) := by
-  simp only [wrap, List.length_append, toPort_length]
-  omega
 
-omit [NeZero n] in
-theorem wrap_length_le (c r : Fin n) (w : List Letter) :
-    (wrap c r w).length ≤ w.length+2*(n/2) := by
-  have h1 := toPort_length_le r
-  have h2 := toPort_length_le (c-r)
-  simp only [wrap, List.length_append]
-  omega
 
 #print axioms recentered_lift
-#print axioms wrap_eval
-#print axioms wrap_length
 end LRX.RotationWords

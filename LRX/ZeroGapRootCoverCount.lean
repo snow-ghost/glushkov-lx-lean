@@ -1,4 +1,5 @@
 import LRX.ZeroGapComponentSize
+import Mathlib
 
 /-! If a list of roots meets every event component, the number of vertices
 is at most the number of exchange events plus the number of roots. -/

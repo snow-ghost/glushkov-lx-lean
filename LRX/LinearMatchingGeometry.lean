@@ -1,4 +1,5 @@
-import LRX.FiniteShallowMatching
+import LRX.Graph
+import Mathlib
 
 namespace LRX.FiniteCuts
 variable {n : ℕ}

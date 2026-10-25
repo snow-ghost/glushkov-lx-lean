@@ -1,5 +1,6 @@
-import LRX.RecenteredLift
 import LRX.InversionCrossings
+import LRX.RecenteredLift
+import Mathlib
 
 /-! Choosing a different root cyclically relabels crossing data and preserves
 the exact affine exchange price. -/

@@ -1,4 +1,8 @@
 import LX.EvenUnitPayment
+import LX.EvenUnitPhaseParity
+import LX.EvenUnitThreePayment
+import LX.InvariantCycleGap
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

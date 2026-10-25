@@ -1,4 +1,5 @@
 import LRX.Graph
+import Mathlib
 
 /-!
 A balanced phase lift of an actual permutation, with subset majorization.
@@ -101,12 +102,6 @@ theorem minimal_majorized {n : ℕ} (hn : 0 < n) {p : State n} {c : ℤ}
   have hnonneg := nonneg_of_mul_nonneg_right hprod hn'
   omega
 
-/-- Every permutation admits a balanced, phased, majorized lift. -/
-theorem exists_majorized {n : ℕ} (hn : 0 < n) (p : State n) :
-    ∃ c d, IsLift p c d ∧ Majorized d := by
-  obtain ⟨c, d, hd, hmin⟩ := exists_minimal p
-  exact ⟨c, d, hd, minimal_majorized hn hd hmin⟩
-
 
 /-- Singleton and complementary-subset bounds force every arrow to be strictly
 shorter than half a circle. The integer statement also keeps the parity slack. -/
@@ -136,43 +131,5 @@ theorem range_bound {n : ℕ} {d : Fin n → ℤ}
 
 def displacement {n : ℕ} (d : Fin n → ℤ) : ℤ := ∑ i, |d i|
 
-theorem displacement_balance {n : ℕ} (d : Fin n → ℤ)
-    (hd : ∑ i, d i = 0) :
-    displacement d = 2 * ∑ i ∈ Finset.univ.filter (fun i => 0 < d i), d i := by
-  have point (i : Fin n) : |d i| = 2 * (if 0 < d i then d i else 0) - d i := by
-    split_ifs with hi
-    · rw [abs_of_pos hi]; omega
-    · rw [abs_of_nonpos (by omega : d i ≤ 0)]; omega
-  simp only [displacement, point, Finset.sum_sub_distrib, ← Finset.mul_sum, hd,
-    sub_zero, Finset.sum_filter]
 
-theorem displacement_cap {n : ℕ} {d : Fin n → ℤ}
-    (hd : ∑ i, d i = 0) (hm : Majorized d) :
-    4 * displacement d ≤ (n : ℤ)^2 := by
-  have h := hm (Finset.univ.filter (fun i => 0 < d i))
-  rw [← displacement_balance d hd] at h
-  nlinarith [sq_nonneg ((n : ℤ) - 2 * (Finset.univ.filter (fun i => 0 < d i)).card)]
-
-theorem displacement_floor_cap {n : ℕ} {d : Fin n → ℤ}
-    (hd : ∑ i, d i = 0) (hm : Majorized d) :
-    displacement d ≤ (n : ℤ)^2 / 4 := by
-  have h := displacement_cap hd hm
-  omega
-
-/-- Ready-to-use all-size input to the geometric routing part of the upper proof. -/
-theorem exists_short_lift {n : ℕ} (hn : 0 < n) (p : State n) :
-    ∃ c d, IsLift p c d ∧ Majorized d ∧
-      (∀ i, 2 * |d i| ≤ (n : ℤ) - 1) ∧
-      (∀ i j, d i - d j ≤ (n : ℤ) - 1) ∧
-      displacement d ≤ (n : ℤ)^2 / 4 := by
-  obtain ⟨c, d, hd, hm⟩ := exists_majorized hn p
-  refine ⟨c, d, hd, hm, ?_, range_bound hd.1 hm, displacement_floor_cap hd.1 hm⟩
-  intro i
-  obtain ⟨hu, hl⟩ := short_coordinates hd.1 hm i
-  rcases le_total 0 (d i) with hi | hi
-  · rw [abs_of_nonneg hi]; exact hu
-  · rw [abs_of_nonpos hi]; omega
-
-#print axioms exists_majorized
-#print axioms exists_short_lift
 end LRX.AffineLift

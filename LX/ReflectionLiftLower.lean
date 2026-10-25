@@ -1,5 +1,7 @@
-import LX.TwoColorPairs
 import LRX.FiniteWindowInversions
+import LX.ScanInversions
+import LX.TwoColorPairs
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

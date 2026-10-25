@@ -1,5 +1,10 @@
-import LX.ReflectionConjecture
+import LX.AdjacentDeletion
+import LX.ConstantHeightEvenGeometry
+import LX.EvenOneFixedObstruction
+import LX.HigherPhasePayment
 import LX.ReflectionNeighbor
+import LX.ReflectionPhases
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

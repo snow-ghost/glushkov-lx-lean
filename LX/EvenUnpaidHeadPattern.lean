@@ -1,4 +1,6 @@
+import LX.ConjectureObstruction
 import LX.EvenTerminalTwo
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

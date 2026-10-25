@@ -1,4 +1,7 @@
-import LX.EvenSecondFewFixed
+import LX.AnchorReserveRigidity
+import LX.ExchangeReserve
+import LX.UniqueFixedCursor
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -33,26 +36,6 @@ theorem even_second_orientation_price (p : State n) (a : Fin n)
   have hn' : (n : ℤ)=2*(height p a : ℤ)+4 := by exact_mod_cast hn
   nlinarith
 
-theorem even_second_unpaid_cyclic_gap (p : State n) (a : Fin n)
-    (hn : n=2*height p a+4)
-    (hunpaid : ¬ ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) < 3*(n : ℤ)^2-8*n+4*32) :
-    anchorReserve p a+32 ≤ ((a-p a).val : ℤ) := by
-  have hh : 0 < height p a := by
-    by_contra hnot
-    have hz : height p a=0 := by omega
-    obtain ⟨w,hw,hprice⟩ := candidate_word_bound (by omega : 2 ≤ n) p a
-    rw [hz] at hprice
-    norm_num at hprice
-    have hn' : n=4 := by omega
-    apply hunpaid
-    refine ⟨w,hw,?_⟩
-    rw [hn'] at *
-    norm_num at *
-    omega
-  obtain ⟨w,hw,hprice⟩ := even_second_orientation_price p a hh hn
-  have hnot : ¬4*(w.length : ℤ) < 3*(n : ℤ)^2-8*n+4*32 := fun hp => hunpaid ⟨w,hw,hp⟩
-  omega
 
 /-- If a nonmaximal head occurs before the final orientation allowance is
 exhausted, the initial rotations are absorbed entirely by that allowance. -/
@@ -80,24 +63,7 @@ theorem even_second_head_before_phase_word (p : State n) (a r : Fin n)
   have hgap := (a-p a).isLt
   exact ⟨w,hw,by nlinarith⟩
 
-/-- The unpaid lower-height source fixes an entire initial interval whose
-length is controlled by its actual final phase, not only a constant prefix. -/
-theorem even_second_unpaid_phase_prefix (p : State n) (a : Fin n)
-    (hn : n=2*height p a+4)
-    (hunpaid : ¬ ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) < 3*(n : ℤ)^2-8*n+4*32) :
-    anchorReserve p a+32 ≤ ((a-p a).val : ℤ) ∧
-      ∀ i : Fin n,i.val ≤ (a-p a).val+1 → permutation p a i=i := by
-  refine ⟨even_second_unpaid_cyclic_gap p a hn hunpaid,?_⟩
-  intro i hi
-  by_contra hnot
-  have hne : backwardDepth (displacement p a) i ≠ height p a :=
-    fun he => hnot ((depth_eq_height_iff_fixed p a i).mp he)
-  have hh := (candidate_price_components p a).2 i
-  obtain ⟨w,hw,hprice⟩ := even_second_head_before_phase_word p a i hn hi (by omega)
-  exact hunpaid ⟨w,hw,by linarith⟩
 
 #print axioms even_second_orientation_price
 #print axioms even_second_head_before_phase_word
-#print axioms even_second_unpaid_phase_prefix
 end LX.AnchoredPhases

@@ -1,6 +1,8 @@
+import LX.LowForwardPayment
 import LX.OddReflectionNeighborFiber
 import LX.RankPeakReserve
-import LX.LowForwardPayment
+import LX.RankProfileGeometry
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

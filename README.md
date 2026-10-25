@@ -88,9 +88,11 @@ Actions tab.
 - [`ConjectureLower`](LX/ConjectureLower.lean): matching lower bounds.
 - [`SharpDiameterAll`](LX/SharpDiameterAll.lean): the combined theorem and routing.
 
-The `LRX`, `Research`, `GraphBridge`, `GraphLower`, and `Reachability` sources
-are local dependencies of the LX proof. The published source set is the
-transitive import closure of `LX.SharpDiameterAll`.
+The `LRX` sources provide local dependencies of the LX proof. The published
+source set contains 325 local modules in the transitive import closure of
+`LX.SharpDiameterAll`, plus the entry module and axiom verifier. Unused
+auxiliary theorems and imports have been removed; the public theorem statements
+are unchanged.
 
 ## Citation and license
 

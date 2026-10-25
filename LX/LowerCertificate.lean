@@ -1,4 +1,6 @@
-import LX.FiniteCertificate
+import LRX.PermutationCode
+import LX.WordMetric
+import Mathlib
 
 namespace LX
 variable {n : ℕ} [NeZero n]

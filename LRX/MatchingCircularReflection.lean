@@ -1,4 +1,6 @@
 import LRX.TwoFixedMatchingReflection
+import LRX.WindowMatchingReflection
+import Mathlib
 
 namespace LRX.FiniteCuts
 open scoped Fin.NatCast Fin.CommRing

@@ -1,5 +1,5 @@
-import LX.EvenUnitThreeSource
-import LRX.FixedCountReflection
+import LX.SingleThreeGeometry
+import Mathlib
 
 namespace LX.CycleGeometry
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

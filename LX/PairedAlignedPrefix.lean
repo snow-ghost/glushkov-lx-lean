@@ -1,4 +1,6 @@
-import LX.MinimumSmallGap
+import LX.NearTopPrefixBound
+import LX.NextOccupiedPhase
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

@@ -1,4 +1,5 @@
-import LRX.ShiftedAdjacentPairs
+import LRX.MatchingCircularReflection
+import Mathlib
 
 namespace LRX.FiniteCuts
 open scoped Fin.NatCast Fin.CommRing

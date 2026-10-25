@@ -1,4 +1,8 @@
+import LX.OddUnitFixedNeighbors
+import LX.PairCoreGeometry
+import LX.PairCorePorts
 import LX.ZeroDefectCycleGeometry
+import Mathlib
 
 namespace LX.CycleGeometry
 open LRX.FiniteCuts

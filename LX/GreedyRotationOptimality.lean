@@ -1,5 +1,6 @@
 import LX.AffineRankRotation
-import LX.DeadlinePrice
+import LX.DepthQueue
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

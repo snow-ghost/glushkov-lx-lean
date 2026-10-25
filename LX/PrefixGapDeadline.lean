@@ -1,4 +1,6 @@
-import LX.SharpScanDeletion
+import LX.AnchorPhasePrice
+import LX.EvenSecondHeight
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

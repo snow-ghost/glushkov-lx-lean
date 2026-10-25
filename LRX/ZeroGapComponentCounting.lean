@@ -1,4 +1,5 @@
-import LRX.ZeroGapPacketConnected
+import LRX.ZeroGapComponentSize
+import Mathlib
 
 namespace LRX.ZeroGap
 variable {n : ℕ} [NeZero n]
@@ -79,33 +80,5 @@ theorem event_product_fixed (events : List (Event n)) (i : Fin n)
     simp only [List.map_cons,List.prod_cons,Equiv.Perm.mul_apply,ih hrest,eventSwap]
     exact Equiv.swap_apply_of_ne_of_ne hneq.1 hneq.2
 
-theorem support_component_cover (events : List (Event n)) (root : Fin n) :
-    (events.map eventSwap).prod.support ⊆ eventComponent events root ∪ endpoints (outsideEvents events root) := by
-  classical
-  intro i hi
-  by_cases hr : EventReaches events root i
-  · exact Finset.mem_union_left _ ((mem_eventComponent events root i).mpr hr)
-  · have hm : i ∈ endpoints events := by
-      by_contra hn
-      exact (Equiv.Perm.mem_support.mp hi) (event_product_fixed events i hn)
-    obtain ⟨e,he,h⟩ := (mem_endpoints events i).mp hm
-    have hnot : ¬EventReaches events root e.1 := by
-      intro hre
-      apply hr
-      rcases h with rfl | rfl
-      · exact hre
-      · exact hre.tail ⟨e,he,Or.inl ⟨rfl,rfl⟩⟩
-    exact Finset.mem_union_right _ ((mem_endpoints _ i).mpr
-      ⟨e,by simp [outsideEvents,he,hnot],h⟩)
 
-theorem support_component_count (events : List (Event n)) (root : Fin n) :
-    (events.map eventSwap).prod.support.card+(eventComponent events root).card ≤ 2*events.length+2 := by
-  have hsub := Finset.card_le_card (support_component_cover events root)
-  have hunion := Finset.card_union_le (eventComponent events root) (endpoints (outsideEvents events root))
-  have hend := endpoints_card (outsideEvents events root)
-  have hcomp := component_selected_size events root
-  have hlen := component_events_length events root
-  omega
-
-#print axioms support_component_count
 end LRX.ZeroGap

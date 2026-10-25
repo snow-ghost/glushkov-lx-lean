@@ -1,5 +1,6 @@
+import LRX.BalancedSubsetEnergy
 import LX.DepthBound
-import LRX.MajorizedExtremeCount
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -112,20 +113,7 @@ theorem top_depth_count {p : State n} {c : ℤ} {d : Fin n → ℤ}
   have hc := depth_count_recurrence hd hm h hh
   simpa only [hz,Nat.cast_zero,mul_zero,add_zero] using hc
 
-/-- In an odd strictly short lift this is 5, and in an even strictly short
-lift this is 8, independently of the number of positions. -/
-theorem next_depth_count {p : State n} {c : ℤ} {d : Fin n → ℤ}
-    (hd : LRX.AffineLift.IsLift p c d) (hm : LRX.AffineLift.Majorized d)
-    (h : ℕ) (hpos : 0 < h) (hh : 2*h ≤ n) (hmax : ∀ i, backwardDepth d i ≤ h) :
-    (depthCount d (h-1) : ℤ) ≤ 3*((n : ℤ)-2*h)+2 := by
-  have hc := depth_count_recurrence hd hm (h-1) (by omega)
-  have ht := top_depth_count hd hm h hh hmax
-  rw [Nat.sub_add_cancel hpos] at hc
-  have he : ((h-1 : ℕ) : ℤ)=(h : ℤ)-1 := by omega
-  rw [he] at hc
-  linarith
 
 #print axioms crossing_pos_depth_lt
 #print axioms depth_count_recurrence
-#print axioms next_depth_count
 end LX.AffineScan

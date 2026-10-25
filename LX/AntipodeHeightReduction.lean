@@ -1,5 +1,7 @@
 import LX.AntipodeCandidates
-import LX.ExceptionalPriceLower
+import LX.DirectedTokenLower
+import LX.LiftedScanBridge
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

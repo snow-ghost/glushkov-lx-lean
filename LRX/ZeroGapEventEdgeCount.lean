@@ -1,5 +1,5 @@
 import LRX.ZeroGapEventGraph
-import Mathlib.Combinatorics.SimpleGraph.Acyclic
+import Mathlib
 
 /-! An event list bounds the number of distinct graph edges, including for
 an induced graph on a subset of physical positions. -/

@@ -1,4 +1,5 @@
 import LX.AnchorPhasePrice
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -66,21 +67,8 @@ theorem zero_slack_phase {p : State n} {a : Fin n} (ha : GlobalMinimum p a)
     have hge := global_minimum_exchanges hglobal a
     omega
 
-/-- Two tight subsets of different cardinalities give different cursor phases;
-no arbitrary identification of phase witnesses is used in counting them. -/
-theorem shifted_phases_distinct {p : State n} {a b₁ b₂ : Fin n}
-    {k₁ k₂ : ℕ} (hk₁ : k₁ < n) (hk₂ : k₂ < n) (hne : k₁≠k₂)
-    (hc₁ : (phase p b₁ : Fin n)=(phase p a : Fin n)+(k₁ : Fin n))
-    (hc₂ : (phase p b₂ : Fin n)=(phase p a : Fin n)+(k₂ : Fin n)) :
-    (phase p b₁ : Fin n) ≠ (phase p b₂ : Fin n) := by
-  intro hh
-  rw [hc₁,hc₂] at hh
-  have hk := congrArg Fin.val (add_left_cancel hh)
-  simp only [Fin.val_natCast,Nat.mod_eq_of_lt hk₁,Nat.mod_eq_of_lt hk₂] at hk
-  exact hne hk
 
 #print axioms exists_global_minimum
 #print axioms global_minimum_exchanges
 #print axioms zero_slack_phase
-#print axioms shifted_phases_distinct
 end LX.AnchoredPhases

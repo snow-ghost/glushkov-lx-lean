@@ -1,4 +1,5 @@
-import LRX.AffineDeletion
+import LRX.PairEvents
+import Mathlib
 
 /-! Relative order of periodic token copies. A physical X changes the order of
 exactly its own lifted pair orbit. This links reduced traces to inversions. -/

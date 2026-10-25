@@ -1,5 +1,5 @@
 import LX.FiniteDropBudget
-import LRX.ShallowRotation
+import Mathlib
 
 namespace LX.FiniteDropBudget
 open scoped BigOperators

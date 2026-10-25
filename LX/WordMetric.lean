@@ -1,6 +1,7 @@
-import LRX.WordMetric
 import LRX.Connected
 import LRX.RotationWords
+import LRX.WordMetric
+import Mathlib
 
 /-! Directed LX words. No inverse generator is included in the alphabet.
 The target bound is a proposition, not an axiom or an assumed estimate. -/
@@ -86,37 +87,10 @@ noncomputable def diameter (n : ℕ) [NeZero n] : ℕ :=
 theorem length_le_diameter {n : ℕ} [NeZero n] (p : State n) :
     length p ≤ diameter n := Finset.le_sup (f := fun p : State n => length p) (Finset.mem_univ p)
 
-theorem diameter_le_iff_words {n B : ℕ} [NeZero n] (hn : 2 ≤ n) :
-    diameter n ≤ B ↔ ∀ p : State n, ∃ w : List Letter, eval w = p ∧ w.length ≤ B := by
-  constructor
-  · intro h p
-    obtain ⟨w, hw, hl⟩ := exists_shortest_word hn p
-    exact ⟨w, hw, hl ▸ (length_le_diameter p).trans h⟩
-  · intro h
-    apply Finset.sup_le
-    intro p _
-    obtain ⟨w, hw, hl⟩ := h p
-    exact (hw ▸ length_le_word w).trans hl
 
 theorem dist_le_diameter {n : ℕ} [NeZero n] (a b : State n) :
     dist a b ≤ diameter n := length_le_diameter _
 
-theorem diameter_lt_iff_words {n : ℕ} [NeZero n] (hn : 2 ≤ n) (B : ℚ) :
-    (diameter n : ℚ) < B ↔
-      ∀ p : State n, ∃ w : List Letter, eval w = p ∧ (w.length : ℚ) < B := by
-  constructor
-  · intro h p
-    obtain ⟨w, hw, hl⟩ := exists_shortest_word hn p
-    refine ⟨w, hw, ?_⟩
-    rw [hl]
-    exact lt_of_le_of_lt (by exact_mod_cast length_le_diameter p) h
-  · intro h
-    obtain ⟨p, _, hp⟩ := Finset.exists_mem_eq_sup
-      (Finset.univ : Finset (State n)) ⟨1, Finset.mem_univ _⟩ length
-    obtain ⟨w, hw, hl⟩ := h p
-    have he : diameter n = length p := hp
-    rw [he]
-    exact lt_of_le_of_lt (by exact_mod_cast hw ▸ length_le_word w) hl
 
 /-- Exact rational specification of the requested bound, with C uniform in n. -/
 def QuadraticUpperBound : Prop :=
@@ -129,27 +103,7 @@ def QuadraticWordBound : Prop :=
     ∃ w : List Letter, eval w = p ∧
       4 * (w.length : ℤ) < 3 * (n : ℤ)^2 - 8 * n + 4 * C
 
-theorem quadratic_specification : QuadraticUpperBound ↔ QuadraticWordBound := by
-  constructor
-  · rintro ⟨C, h⟩
-    refine ⟨C, ?_⟩
-    intro n _ hn p
-    obtain ⟨w, hw, hl⟩ := (diameter_lt_iff_words (by omega : 2 ≤ n) _).mp (h n hn) p
-    refine ⟨w, hw, ?_⟩
-    have hh : 4 * (w.length : ℚ) < 3 * (n : ℚ)^2 - 8 * n + 4 * C := by linarith
-    exact_mod_cast hh
-  · rintro ⟨C, h⟩
-    refine ⟨C, ?_⟩
-    intro n _ hn
-    apply (diameter_lt_iff_words (by omega : 2 ≤ n) _).mpr
-    intro p
-    obtain ⟨w, hw, hl⟩ := h n hn p
-    refine ⟨w, hw, ?_⟩
-    have hh : 4 * (w.length : ℚ) < 3 * (n : ℚ)^2 - 8 * n + 4 * C := by exact_mod_cast hl
-    linarith
 
 #print axioms expand_eval
 #print axioms exists_shortest_word
-#print axioms diameter_le_iff_words
-#print axioms quadratic_specification
 end LX

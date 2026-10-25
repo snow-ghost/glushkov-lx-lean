@@ -1,4 +1,5 @@
 import LRX.ZeroGapDescent
+import Mathlib
 
 /-! Termination of the zero-gap sorting process and its exact number of
 endpoint transpositions. Recentring is part of the mathematical trace. -/
@@ -66,12 +67,6 @@ theorem exists_sorting_trace {p : State n} {d : Fin n → ℤ}
         simp only [hz,abs_zero,Finset.sum_const_zero,add_zero,identity_inversions,Nat.cast_zero]
   exact main (mass d) p d rfl hd hshort
 
-theorem inversions_le_mass {p : State n} {d : Fin n → ℤ}
-    (hd : AffineLift.IsLift p 0 d) (hshort : ∀ i, 2*|d i| < (n : ℤ)) :
-    (LiftedModel.inversionCount (fun i : Fin n => (i : ℤ)+d i) : ℤ) ≤ ∑ i : Fin n, |d i| := by
-  obtain ⟨M,_,h⟩ := exists_sorting_trace hd hshort
-  omega
 
 #print axioms exists_sorting_trace
-#print axioms inversions_le_mass
 end LRX.ZeroGap

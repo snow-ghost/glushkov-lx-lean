@@ -1,4 +1,6 @@
-import LX.OddHeadPredecessorCut
+import LX.MinimumSmallGap
+import LX.ThresholdDropBudget
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

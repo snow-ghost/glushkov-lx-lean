@@ -1,5 +1,5 @@
 import LRX.FiniteAdjacentInversions
-import LRX.FiniteDisplacementSum
+import Mathlib
 
 namespace LRX.FiniteCuts
 open scoped BigOperators

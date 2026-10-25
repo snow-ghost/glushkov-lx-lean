@@ -1,4 +1,8 @@
-import LX.AntipodeHeightReduction
+import LX.AntipodeCandidates
+import LX.DirectedTokenLower
+import LX.FiniteLowerDeadline
+import LX.LiftedScanBridge
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -141,25 +145,7 @@ theorem even_unpaid_boundary_phase (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
   simp only [Int.cast_neg,Int.cast_natCast,Nat.cast_add,Nat.cast_ofNat] at hh ⊢
   linear_combination -hh+hsum-hnfin
 
-/-- Complete height split for a hypothetically cheaper representation of
-the even candidate: a narrower strip, or one boundary phase with only two
-possible bottom positions. Neither alternative is assumed impossible. -/
-theorem even_unpaid_height_split (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
-    {c : Fin n} {d : Fin n → ℤ} (hd : LRX.AffineLift.IsLift even (c : ℤ) d)
-    {g : List Letter} (hg : ScanTrace d g)
-    (hu : inversions d+paidRotations c g < 3*m^2-4*m+3) :
-    (∀ i,1-(m : ℤ) ≤ d i) ∨
-      (c=((m+2 : ℕ) : Fin n) ∧ ∀ i,d i= -(m : ℤ) → i.val=1 ∨ i.val=2) := by
-  by_cases he : ∃ i,d i= -(m : ℤ)
-  · exact Or.inr ⟨even_unpaid_boundary_phase m hm hn hd hg hu he,
-      fun i hi => even_unpaid_bottom_positions m hm hn hd hg hu i hi⟩
-  · left
-    intro i
-    have hh := even_unpaid_lower_strip m hm hn hd hg hu i
-    have hne : d i ≠ -(m : ℤ) := fun hi => he ⟨i,hi⟩
-    omega
 
 #print axioms even_unpaid_bottom_positions
 #print axioms even_unpaid_boundary_phase
-#print axioms even_unpaid_height_split
 end LX.Antipode

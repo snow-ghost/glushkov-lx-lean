@@ -1,5 +1,5 @@
-import LRX.EventComponentRestriction
 import LRX.ShallowNeighborSplice
+import Mathlib
 
 namespace LRX.ZeroGap
 variable {n : ℕ} [NeZero n]

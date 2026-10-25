@@ -1,5 +1,7 @@
-import LRX.FiniteWindowLoad
+import LRX.FiniteWindow
+import LRX.InversionSet
 import LRX.ZeroGapInversionTerms
+import Mathlib
 
 namespace LRX.FiniteCuts
 open scoped BigOperators

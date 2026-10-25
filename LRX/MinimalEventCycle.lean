@@ -1,5 +1,7 @@
-import LRX.SwapOrbitMerge
+import LRX.EventComponentRestriction
 import LRX.MinimalEventCarrier
+import LRX.SwapOrbitMerge
+import Mathlib
 
 namespace LRX.ZeroGap
 variable {n : ℕ} [NeZero n]
@@ -83,38 +85,7 @@ theorem minimal_event_same_cycle (events : List (Event n)) (root : Fin n)
         exact (hall r hr).symm.trans (hall i hi)
   exact main events.length events root rfl hmin
 
-/-- A nontrivial minimal event component is exactly the support of one cycle. -/
-theorem minimal_event_product_cycle (events : List (Event n)) (root : Fin n)
-    (hmin : events.length+1=(eventComponent events root).card)
-    (hsize : 2 ≤ (eventComponent events root).card) :
-    (events.map eventSwap).prod.IsCycle ∧
-      (events.map eventSwap).prod.support=eventComponent events root := by
-  classical
-  let q := (events.map eventSwap).prod
-  have hall := minimal_event_same_cycle events root hmin
-  have hsub := minimal_product_support_subset events root hmin
-  have hroot : q root ≠ root := by
-    intro hf
-    have hc : (eventComponent events root).card ≤ 1 := by
-      apply Finset.card_le_one.mpr
-      intro i hi j hj
-      have he := (hall i hi).eq_of_left hf
-      have he' := (hall j hj).eq_of_left hf
-      exact he.symm.trans he'
-    omega
-  constructor
-  · refine ⟨root,hroot,?_⟩
-    intro i hi
-    exact hall i (hsub (Equiv.Perm.mem_support.mpr hi))
-  · apply Finset.Subset.antisymm hsub
-    intro i hi
-    apply Equiv.Perm.mem_support.mpr
-    intro hf
-    have he := (hall i hi).eq_of_right hf
-    apply hroot
-    simpa only [he] using hf
 
-#print axioms minimal_event_product_cycle
 #print axioms selected_same_cycle
 #print axioms minimal_event_same_cycle
 end LRX.ZeroGap

@@ -1,4 +1,5 @@
-import LRX.CycleLeafInsertion
+import LRX.Graph
+import Mathlib
 
 namespace LRX.ZeroGap
 variable {n : ℕ}

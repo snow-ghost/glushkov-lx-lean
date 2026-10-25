@@ -1,6 +1,8 @@
+import LRX.FiniteInversionDecomposition
 import LRX.MatchingEventsNoncrossing
-import LRX.StrictBandEqualityPairs
 import LRX.ShallowContraction
+import LRX.StrictBandEqualityPairs
+import Mathlib
 
 namespace LRX.FiniteCuts
 open scoped BigOperators

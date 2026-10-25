@@ -1,4 +1,5 @@
 import LRX.Graph
+import Mathlib
 
 namespace LRX
 
@@ -54,17 +55,5 @@ theorem generators_closure (n : ℕ) [NeZero n] (hn : 2 ≤ n) :
 theorem connected (n : ℕ) [NeZero n] (hn : 2 ≤ n) : (graph n).Connected :=
   connected_of_generates _ (generators_closure n hn)
 
-/-- A fully proved, but coarse, bound. This is not the sharp research claim. -/
-theorem ediam_le_factorial (n : ℕ) [NeZero n] (hn : 2 ≤ n) :
-    (graph n).ediam ≤ (n.factorial - 1 : ℕ) := by
-  apply SimpleGraph.ediam_le_of_edist_le
-  intro a b
-  apply (connected n hn a b).elim_path
-  intro p
-  have hlen := p.property.length_lt
-  have hcard : Fintype.card (State n) = n.factorial := by
-    simp [State, Fintype.card_perm]
-  rw [hcard] at hlen
-  exact p.val.edist_le.trans (by exact_mod_cast (show p.val.length ≤ n.factorial - 1 by omega))
 
 end LRX

@@ -1,4 +1,6 @@
+import LRX.InversionSet
 import LRX.ZeroGapInversionRows
+import Mathlib
 
 /-! Summing the zero-gap row identities gives the exact inversion decrease. -/
 namespace LRX.ZeroGap

@@ -1,5 +1,6 @@
-import LRX.InnermostEventComponent
+import LRX.LinearEventComponents
 import LRX.PaddedSortingEvents
+import Mathlib
 
 /-! Project the padded sorting trace back to its original finite interval.
 On a linear event graph, graph reachability already determines integer travel. -/

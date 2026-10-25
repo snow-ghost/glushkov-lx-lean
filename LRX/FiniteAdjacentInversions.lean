@@ -1,4 +1,5 @@
-import LRX.FiniteInversionDecomposition
+import LRX.FiniteWindowInversions
+import Mathlib
 
 namespace LRX.FiniteCuts
 open scoped BigOperators

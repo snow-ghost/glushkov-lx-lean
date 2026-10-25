@@ -1,5 +1,6 @@
-import LX.ShortestLiftRange
 import LX.GreedyPriceCharacterization
+import LX.ShortestLiftRange
+import Mathlib
 
 namespace LX
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

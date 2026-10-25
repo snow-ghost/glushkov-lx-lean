@@ -1,4 +1,5 @@
-import LRX.FiniteCycleAvailability
+import LRX.FiniteCutLoad
+import Mathlib
 
 /-! Extend a finite permutation to a contiguous window of a larger ambient
 permutation, fixing every external label. No ambient size is changed. -/
@@ -57,8 +58,6 @@ theorem permutation_outside (W : Window n b) (p : State b) (j : Fin n) (hj : ¬C
 @[simp] theorem permutation_symm (W : Window n b) (p : State b) :
     (permutation W p).symm=permutation W p.symm := rfl
 
-theorem permutation_is_cycle (W : Window n b) (p : State b) (hp : p.IsCycle) :
-    (permutation W p).IsCycle := hp.extendDomain (windowEquiv W)
 
 theorem displacement_embed (W : Window n b) (p : State b) (i : Fin b) :
     FiniteCuts.displacement (permutation W p) (embed W i)=FiniteCuts.displacement p i := by
@@ -70,6 +69,5 @@ theorem displacement_outside (W : Window n b) (p : State b) (j : Fin n) (hj : ¬
     FiniteCuts.displacement (permutation W p) j=0 := by
   simp [FiniteCuts.displacement,permutation_outside W p j hj]
 
-#print axioms permutation_is_cycle
 #print axioms displacement_embed
 end LRX.FiniteWindow

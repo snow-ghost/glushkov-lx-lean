@@ -1,8 +1,8 @@
-import Mathlib.GroupTheory.Perm.Cycle.Type
-import LRX.FiniteCycleSupportBudget
-import LRX.FiniteWindowSupport
 import LRX.FiniteWindowInversions
+import LRX.FiniteWindowLoad
+import LRX.FiniteWindowSupport
 import LRX.PacketCycleBudget
+import Mathlib
 
 namespace LRX.FiniteWindow
 variable {n b : ℕ}

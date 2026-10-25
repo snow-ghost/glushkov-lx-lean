@@ -1,4 +1,7 @@
-import LRX.ZeroGapFactorization
+import LRX.PortRoute
+import LRX.ZeroGapExchange
+import LRX.ZeroGapPair
+import Mathlib
 
 /-! Directed open arcs and the geometric condition satisfied by the ordered
 list of zero-gap exchanges. Later endpoints avoid each earlier open arc. -/
@@ -21,9 +24,6 @@ theorem distance_translate (u a b : Fin n) : distance (a+u) (b+u)=distance a b :
   congr 1
   ring
 
-theorem inside_translate (u : Fin n) (e : Event n) (i : Fin n) :
-    Inside (rotateEvent u e) (i+u) ↔ Inside e i := by
-  simp only [Inside,rotateEvent,distance_translate]
 
 theorem later_outside_translate (u : Fin n) {e f : Event n} (h : LaterOutside e f) :
     LaterOutside (rotateEvent u e) (rotateEvent u f) := by

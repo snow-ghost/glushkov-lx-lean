@@ -1,4 +1,6 @@
-import LX.OddBinaryRankObstruction
+import LX.FiberDepthGeometry
+import LX.OddPairedHigherPayment
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

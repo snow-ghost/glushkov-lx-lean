@@ -1,4 +1,6 @@
-import LX.MatchingFixedNeighbors
+import LRX.MajorizedExtremeCount
+import LX.AnchorPhasePrice
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -59,46 +61,7 @@ theorem three_fixed_matching_unique_cyclic_gap_two (hn4 : 4 ≤ n) (p : State n)
     omega
   exact (permutation p a).injective (Finset.card_le_one.mp hc1 _ him _ hjm)
 
-/-- The neighboring fixed positions are extracted from the actual unpaid
-odd unit-reserve input, rather than supplied as a geometric hypothesis. -/
-theorem odd_unit_reserve_adjacent_fixed {p : State n} {a : Fin n}
-    (hn4 : 4 ≤ n) (m : ℕ) (hn : n=2*m+1) (ha : GlobalMinimum p a)
-    (hunit : (inversions (displacement p a) : ℤ)+1=(m : ℤ)^2)
-    (hunpaid : ¬ ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) < 3*(n : ℤ)^2-8*n+4*32) :
-    ∃ b : Fin n,GlobalMinimum p b ∧ height p b+1=m ∧ anchorReserve p b=0 ∧
-      Function.Involutive (permutation p b) ∧ LRX.FiniteCuts.NoncrossingPairs (permutation p b) ∧
-      (LRX.FiniteCuts.fixedPositions (permutation p b)).card=3 ∧
-      ∃ u : Fin n,permutation p b u=u ∧ permutation p b (u+1)=u+1 := by
-  have hn7 : 7 ≤ n := by
-    by_contra hnot
-    obtain ⟨w,hw,hprice⟩ := exists_head_reserve_quadratic_word hn4 p⁻¹
-    apply hunpaid
-    refine ⟨w,by rw [hw,mul_inv_cancel],?_⟩
-    have hh : (n : ℤ)<7 := by omega
-    nlinarith
-  obtain ⟨b,hb,hh,hinv,hnc,hcard,_⟩ := odd_unit_reserve_three_fixed_matching hn4 m hn ha hunit hunpaid
-  have hm := global_minimum_majorized hb
-  have hparity : n=2*height p b+3 := by omega
-  have hs : 4 ≤ (permutation p b).support.card := by
-    have hf := LRX.FiniteCuts.fixed_positions_card (permutation p b)
-    omega
-  obtain ⟨u,hu,hu'⟩ := LX.MatchingGeometry.exists_adjacent_fixed (permutation p b) hinv hnc hs
-    (three_fixed_matching_no_cyclic_adjacent hn4 p b hm hparity hinv)
-    (three_fixed_matching_unique_cyclic_gap_two hn4 p b hm hparity hinv)
-  have hI : inversions (displacement p b)=inversions (displacement p a) := by
-    have hle := global_minimum_exchanges ha b
-    have hge := global_minimum_exchanges hb a
-    omega
-  have hzero : anchorReserve p b=0 := by
-    unfold anchorReserve
-    rw [hI]
-    have hh' : (height p b : ℤ)+1=m := by exact_mod_cast hh
-    have hn' : (n : ℤ)=2*(m : ℤ)+1 := by exact_mod_cast hn
-    nlinarith
-  exact ⟨b,hb,hh,hzero,hinv,hnc,hcard,u,hu,hu'⟩
 
 #print axioms cyclic_pair_reverse_coordinate
 #print axioms three_fixed_matching_unique_cyclic_gap_two
-#print axioms odd_unit_reserve_adjacent_fixed
 end LX.AnchoredPhases

@@ -1,4 +1,5 @@
 import LRX.AffineLift
+import Mathlib
 
 /-! Turn the finite balanced lift into a genuine periodic bijection of integers.
 This supplies the object on which affine crossings and routing are defined. -/
@@ -97,12 +98,7 @@ theorem normalize_phase {p : State n} {c : ℤ} {d : Fin n → ℤ}
   intro i
   exact (hd.2 i).trans ((modEq_residue c).add_left (p.symm i : ℤ))
 
-theorem exists_cyclic_lift (p : State n) :
-    ∃ c : Fin n, ∃ d : Fin n → ℤ, IsLift p (c : ℤ) d ∧ Majorized d := by
-  obtain ⟨c, d, hd, hm⟩ := exists_majorized (Nat.pos_of_ne_zero (NeZero.ne n)) p
-  exact ⟨Fin.intCast c, d, normalize_phase hd, hm⟩
 
 #print axioms periodicMap_injective
 #print axioms periodicMap_surjective
-#print axioms exists_cyclic_lift
 end LRX.AffineLift

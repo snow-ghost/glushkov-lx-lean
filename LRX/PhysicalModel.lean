@@ -1,4 +1,5 @@
 import LRX.ZeroLift
+import Mathlib
 
 /-! Physical positions, a paid cursor, and literal L/R/X words.
 Every physical operation is proved to induce the same visible generator.
@@ -66,26 +67,6 @@ def initial : Configuration n := ⟨1, 0⟩
 def Realizes (s : Configuration n) (d : Fin n → ℤ) : Prop :=
   ∀ i : Fin n, s.tokens.symm i = i + (d i : Fin n)
 
-theorem visible_of_realizes {p : State n} {s : Configuration n} {d : Fin n → ℤ}
-    (hd : IsLift p (s.cursor : ℤ) d) (hs : Realizes s d) : visible s = p := by
-  apply Equiv.ext
-  intro i
-  rw [visible_apply]
-  have he := lift_residue hd (p i)
-  have hcast : ((s.cursor : ℤ) : Fin n) = s.cursor := by simp
-  rw [hcast, Equiv.symm_apply_apply] at he
-  have hpos : s.tokens.symm (p i) = i + s.cursor := (hs (p i)).trans he
-  have h := congrArg s.tokens hpos
-  simpa only [Equiv.apply_symm_apply] using h.symm
-
-/-- No extra free rotation is needed or allowed: the final cursor is part of
-`IsLift`, and the executed physical word evaluates to the exact target. -/
-theorem eval_of_realizes (w : List Letter) {p : State n} {d : Fin n → ℤ}
-    (hd : IsLift p ((run w (initial (n := n))).cursor : ℤ) d)
-    (hs : Realizes (run w (initial (n := n))) d) : eval w = p := by
-  have h := visible_of_realizes hd hs
-  simpa only [visible_run, visible_initial, one_mul] using h
 
 #print axioms visible_step
-#print axioms eval_of_realizes
 end LRX.PhysicalModel

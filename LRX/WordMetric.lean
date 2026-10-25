@@ -1,4 +1,5 @@
 import LRX.Graph
+import Mathlib
 
 namespace LRX
 
@@ -45,30 +46,10 @@ theorem word_of_walk {n : ℕ} [NeZero n] {a b : State n}
     refine ⟨c :: w, ?_, by simp [hlen]⟩
     rw [eval_cons, ← mul_assoc, hc, hw]
 
-/-- Exact equivalence, useful as the specification for the missing constructor. -/
-theorem ediam_le_iff_words {n B : ℕ} [NeZero n] :
-    (graph n).ediam ≤ (B : ℕ∞) ↔
-      ∀ p : State n, ∃ w : List Letter, eval w = p ∧ w.length ≤ B := by
-  constructor
-  · intro h p
-    have hd : (graph n).edist 1 p ≤ (B : ℕ∞) :=
-      SimpleGraph.edist_le_ediam.trans h
-    have hfin : (graph n).edist 1 p ≠ ⊤ := ne_top_of_le_ne_top (by simp) hd
-    obtain ⟨path, hp⟩ :=
-      (SimpleGraph.reachable_of_edist_ne_top hfin).exists_walk_length_eq_edist
-    obtain ⟨w, hw, hlen⟩ := word_of_walk path
-    refine ⟨w, by simpa using hw, ?_⟩
-    have hb : (path.length : ℕ∞) ≤ (B : ℕ∞) := hp ▸ hd
-    rw [hlen]
-    exact_mod_cast hb
-  · exact ediam_le_of_words
 
 /-- The requested all-size theorem, recorded as a proposition, not an axiom. -/
 def SharpDiameterTheorem : Prop :=
   ∀ (n : ℕ) [NeZero n], 4 ≤ n → (graph n).ediam ≤ (n.choose 2 : ℕ∞)
 
-theorem sharp_specification : SharpDiameterTheorem ↔
-    ∀ (n : ℕ) [NeZero n], 4 ≤ n → SharpWordBound n := by
-  simp only [SharpDiameterTheorem, SharpWordBound, ediam_le_iff_words]
 
 end LRX

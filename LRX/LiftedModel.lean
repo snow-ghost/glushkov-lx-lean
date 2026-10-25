@@ -1,4 +1,6 @@
+import LRX.AffineCrossings
 import LRX.PhysicalModel
+import Mathlib
 
 /-! Literal LRX execution with an integer cursor and integer positions of every
 named token. The position log records winding, including exchanges at the seam.
@@ -123,24 +125,6 @@ theorem displacement_balanced (w : List Letter) :
   rw [Finset.sum_sub_distrib, position_sum_run]
   simp [initial]
 
-/-- Exact integer positions and the paid integer cursor suffice for the endpoint. -/
-theorem eval_of_exact_positions (hn : 2 ≤ n) (w : List Letter) {p : State n}
-    {d : Fin n → ℤ}
-    (hd : AffineLift.IsLift p (run w (initial (n := n))).cursor d)
-    (he : ∀ i, (run w (initial (n := n))).position i = (i : ℤ) + d i) :
-    eval w = p := by
-  have ha := run_aligned hn w (initial_aligned (n := n))
-  have hd' := AffineLift.normalize_phase hd
-  change AffineLift.IsLift p (((run w (initial (n := n))).cursor : Fin n) : ℤ) d at hd'
-  rw [ha.1] at hd'
-  have hr : PhysicalModel.Realizes (run w (initial (n := n))).physical d := by
-    intro i
-    rw [← ha.2 i, he i]
-    simp
-  have hp := PhysicalModel.visible_of_realizes hd' hr
-  rw [run_physical, PhysicalModel.visible_run] at hp
-  simpa only [initial, PhysicalModel.visible_initial, one_mul] using hp
-
 
 theorem cast_eq_iff_modEq (a b : ℤ) :
     (a : Fin n) = (b : Fin n) ↔ Int.ModEq (n : ℤ) a b := by
@@ -155,14 +139,7 @@ theorem cast_eq_iff_modEq (a b : ℤ) :
     exact hi
   · exact AffineLift.cast_eq_of_modEq
 
-theorem token_at_iff {s : Configuration n} (hs : Aligned s) (i : Fin n) (z : ℤ) :
-    s.physical.tokens (z : Fin n) = i ↔ Int.ModEq (n : ℤ) (s.position i) z := by
-  rw [← cast_eq_iff_modEq, hs.2 i]
-  constructor
-  · intro h; rw [← h, Equiv.symm_apply_apply]
-  · intro h; simpa using (congrArg s.physical.tokens h).symm
 
 #print axioms step_aligned
 #print axioms displacement_balanced
-#print axioms eval_of_exact_positions
 end LRX.LiftedModel

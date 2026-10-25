@@ -1,5 +1,6 @@
+import LRX.PacketCoreBalance
 import LRX.ZeroGapRootCoverCount
-import LRX.ZeroGapPacketConnected
+import Mathlib
 
 /-! Cycle representatives and fixed points give a root cover of the sorting
 event graph; all cycles inside the packet can share one root. -/
@@ -58,35 +59,6 @@ noncomputable def packetCycleRoots (p : State n) (d : Fin n → ℤ) (root : Fin
   classical
   exact root :: ((p⁻¹).supportᶜ.toList ++ (outsideCycles p d root).toList.map cycleRoot)
 
-theorem packet_cycle_roots_cover {p : State n} {d : Fin n → ℤ} {events : List (Event n)}
-    (hprod : (events.map eventSwap).prod=p) (hsep : events.Pairwise LaterOutside)
-    (htravel : ∀ i, Travel events i (p.symm i) (d i)) (root : Fin n) :
-    ∀ i : Fin n, ∃ r ∈ packetCycleRoots p d root, EventReaches events r i := by
-  classical
-  intro i
-  by_cases hc : i ∈ PrunedLift.core p d root
-  · exact ⟨root,by simp [packetCycleRoots],
-      core_event_reachable hprod hsep htravel ((PrunedLift.mem_core p d root i).mp hc)⟩
-  by_cases hi : i ∈ (p⁻¹).support
-  · obtain ⟨q,hq,hiq⟩ := (Equiv.Perm.mem_support_iff_mem_support_of_mem_cycleFactorsFinset).mp hi
-    have hout : q ∈ outsideCycles p d root := Finset.mem_filter.mpr ⟨hq,fun h => hc (h hiq)⟩
-    refine ⟨cycleRoot q,?_,cycle_event_reachable events p hprod (cycle_root_same_cycle hq hiq)⟩
-    apply List.mem_cons_of_mem
-    exact List.mem_append_right _ (List.mem_map.mpr ⟨q,by simpa using hout,rfl⟩)
-  · exact ⟨i,List.mem_cons_of_mem _ (List.mem_append_left _
-      (Finset.mem_toList.mpr (Finset.mem_compl.mpr hi))),Relation.ReflTransGen.refl⟩
-
-theorem packet_cycle_root_count {p : State n} {d : Fin n → ℤ} {events : List (Event n)}
-    (hprod : (events.map eventSwap).prod=p) (hsep : events.Pairwise LaterOutside)
-    (htravel : ∀ i, Travel events i (p.symm i) (d i)) (root : Fin n) :
-    p.support.card ≤ events.length+(outsideCycles p d root).card+1 := by
-  classical
-  have h := root_cover_count events (packetCycleRoots p d root) (packet_cycle_roots_cover hprod hsep htravel root)
-  have hs : p.support.card ≤ n := by simpa using Finset.card_le_univ p.support
-  simp only [packetCycleRoots,List.length_cons,List.length_append,List.length_map,Finset.length_toList,
-    Finset.card_compl,Finset.card_univ,Fintype.card_fin,Equiv.Perm.support_inv] at h
-  omega
 
 #print axioms cycle_root_count
-#print axioms packet_cycle_root_count
 end LRX.ZeroGap

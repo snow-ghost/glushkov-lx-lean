@@ -1,4 +1,4 @@
-import LX.ScanInversions
+import Mathlib
 
 namespace LX.ForwardCarrier
 
@@ -44,25 +44,6 @@ theorem lt_carrier_iff (F : ℕ → ℤ) (k : ℕ) (x : ℤ) :
   push Not
   rfl
 
-/-- If a token is the sweepPrefix maximum, it is carried until the first larger target. -/
-theorem first_larger_drop (F : ℕ → ℤ) (i r : ℕ) (hir : i < r)
-    (hprefix : ∀ j < r, F j ≤ F i) (hnext : F i < F r) :
-    sweepPrefix F r (r-1) = F i := by
-  have hr : 0 < r := by omega
-  have hcarrier : sweepPrefix F (r-1) (r-1) = F i := by
-    apply le_antisymm
-    · exact (carrier_le_iff F (r-1) (F i)).mpr (fun j hj => hprefix j (by omega))
-    · by_contra h
-      have hh : sweepPrefix F (r-1) (r-1) < F i := by omega
-      have hle := (carrier_le_iff F (r-1) (sweepPrefix F (r-1) (r-1))).mp le_rfl i (by omega)
-      omega
-  have he : r = (r-1)+1 := by omega
-  rw [he]
-  simp only [sweepPrefix, compareAt, hcarrier]
-  rw [show r-1+1=r by omega, prefix_tail F (r-1) r (by omega)]
-  rw [ite_eq_left rfl]
-  exact min_eq_left (le_of_lt hnext)
 
 #print axioms carrier_le_iff
-#print axioms first_larger_drop
 end LX.ForwardCarrier

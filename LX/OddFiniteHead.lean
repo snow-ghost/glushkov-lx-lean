@@ -1,4 +1,6 @@
 import LX.OddAlignedObstruction
+import LX.OddWideCutCount
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -58,44 +60,6 @@ theorem rank_two_unpaid_head_range (p : State n) (a : Fin n)
   · exact ⟨0,by omega,by omega,by simpa using hp0⟩
   · exact ⟨-1,by omega,by omega,by simpa using hp0⟩
 
-theorem rank_two_unpaid_inverse_one_position (p : State n) (a : Fin n)
-    (hn : n=2*height p a+3) (hh : 2 ≤ height p a)
-    (hmin : ∀ b,height p a ≤ height p b)
-    (hR : ∀ t : Fin n,rankSurplus p a t.val ≤ 2)
-    (hunpaid : ¬ ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) ≤ 3*(n : ℤ)^2-8*n+9) : (p.symm 1).val ≤ 4 := by
-  have hdual : ¬ ∃ w : List Letter,reverseDual p*eval w=1 ∧
-      4*(w.length : ℤ) ≤ 3*(n : ℤ)^2-8*n+9 := by
-    rintro ⟨w,hw,hprice⟩
-    exact hunpaid ⟨w.reverse,reverse_dual_sorting_word p w hw,by simpa using hprice⟩
-  have hheight := reverse_dual_height p a
-  obtain ⟨j,hjlo,hjhi,hj⟩ := rank_two_unpaid_head_range (reverseDual p) (dualPosition p a)
-    (by omega) (by omega) (reverse_dual_minimum_height p a hmin)
-    (fun t => by rw [reverse_dual_rank_surplus]; exact hR t) hdual
-  have he : (1 : Fin n)-p.symm 1=(j : Fin n) := by
-    simpa only [reverseDual,Equiv.Perm.mul_apply,Equiv.Perm.inv_def,
-      LRX.WordReflection.reflection_apply,sub_zero] using hj
-  have hpre : p.symm 1=((1-j : ℤ) : Fin n) := by
-    rw [Int.cast_sub,Int.cast_one]
-    linear_combination -he
-  have hv : ((1-j).toNat : ℤ)=1-j := Int.toNat_of_nonneg (by omega)
-  have hk : (1-j).toNat ≤ 4 := by omega
-  have hval : (p.symm 1).val=(1-j).toNat%n := by
-    rw [hpre,← hv,Int.cast_natCast]
-    rfl
-  rw [hval]
-  exact (Nat.mod_le _ _).trans hk
-
-theorem odd_unpaid_finite_head_constraints (hn5 : 5 ≤ n) (p : State n)
-    (m : ℕ) (hn : n=2*m+1)
-    (hunpaid : ¬ ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) ≤ 3*(n : ℤ)^2-8*n+9) :
-    (∃ j : ℤ,-3 ≤ j ∧ j ≤ 1 ∧ p 0=(j : Fin n)) ∧ (p.symm 1).val ≤ 4 := by
-  obtain ⟨a,_,hnlarge,_,hh,hmin,_,hR,_,_⟩ := odd_unpaid_rank_two_geometry hn5 p m hn hunpaid
-  exact ⟨rank_two_unpaid_head_range p a (by omega) (by omega) hmin hR hunpaid,
-    rank_two_unpaid_inverse_one_position p a (by omega) (by omega) hmin hR hunpaid⟩
 
 #print axioms rank_two_unpaid_head_range
-#print axioms rank_two_unpaid_inverse_one_position
-#print axioms odd_unpaid_finite_head_constraints
 end LX.AnchoredPhases

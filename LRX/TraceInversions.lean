@@ -1,4 +1,6 @@
+import LRX.EventTrace
 import LRX.PairOrder
+import Mathlib
 
 /-! A trace without repeated lifted pairs consists precisely of the pair orbits
 whose relative order differs between the initial and final configurations. -/

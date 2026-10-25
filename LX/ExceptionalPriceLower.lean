@@ -1,4 +1,6 @@
+import LX.BoundedGreedyNormalForm
 import LX.ExceptionalPrefixDelay
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -221,28 +223,10 @@ theorem odd_exception_price_lower (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1)
   have hsub := Nat.sub_add_cancel he
   nlinarith
 
-/-- The price bound applies to the literal word with its actual endpoint. -/
-theorem even_exception_word_lower (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
-    {p : State n} (hd : LRX.AffineLift.IsLift p ((m+3 : ℕ) : ℤ) (evenException m))
-    {g : List Letter} (hg : ScanTrace (evenException (n := n) m) g) :
-    eval (paidWord ((m+3 : ℕ) : Fin n) g)=p ∧
-      3*m^2-4*m+3 ≤ (paidWord ((m+3 : ℕ) : Fin n) g).length := by
-  obtain ⟨he,hprice⟩ := LX.greedy_lift_price_realized (by omega : 2 ≤ n) p (m+3) _ hd g hg
-  exact ⟨he,by rw [hprice]; exact even_exception_price_lower m hm hn hd hg⟩
-
-theorem odd_exception_word_lower (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1)
-    {p : State n} (hd : LRX.AffineLift.IsLift p ((m+2 : ℕ) : ℤ) (oddException m))
-    {g : List Letter} (hg : ScanTrace (oddException (n := n) m) g) :
-    eval (paidWord ((m+2 : ℕ) : Fin n) g)=p ∧
-      3*m^2-m+2 ≤ (paidWord ((m+2 : ℕ) : Fin n) g).length := by
-  obtain ⟨he,hprice⟩ := LX.greedy_lift_price_realized (by omega : 2 ≤ n) p (m+2) _ hd g hg
-  exact ⟨he,by rw [hprice]; exact odd_exception_price_lower m hm hn hd hg⟩
 
 #print axioms sum_depth_eq_inversions
 #print axioms even_exception_depth_lower
 #print axioms odd_exception_depth_lower
 #print axioms even_exception_price_lower
 #print axioms odd_exception_price_lower
-#print axioms even_exception_word_lower
-#print axioms odd_exception_word_lower
 end LX.AffineScan

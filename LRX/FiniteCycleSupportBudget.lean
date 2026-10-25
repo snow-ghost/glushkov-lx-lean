@@ -1,4 +1,5 @@
-import LRX.FiniteCycleLoads
+import LRX.Graph
+import Mathlib
 
 namespace LRX.FiniteCuts
 open scoped BigOperators

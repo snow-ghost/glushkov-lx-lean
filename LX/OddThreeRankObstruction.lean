@@ -1,4 +1,6 @@
+import LX.OddFourRankObstruction
 import LX.OddWideCutCount
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -42,16 +44,6 @@ theorem odd_unpaid_three_rank_geometry (hn5 : 5 ≤ n) (p : State n)
     norm_num at htri
     omega
 
-theorem second_excess_eq_rank_three_count (p : State n) (a : Fin n)
-    (hR : ∀ t : Fin n,rankSurplus p a t.val ≤ 3) :
-    secondExcess p a=(Finset.univ.filter fun t : Fin n => rankSurplus p a t.val=3).card := by
-  classical
-  have he (t : Fin n) : max (rankSurplus p a t.val-2) 0=
-      if rankSurplus p a t.val=3 then (1 : ℤ) else 0 := by
-    have ht := hR t
-    split_ifs <;> omega
-  simp only [secondExcess,he,Finset.sum_boole]
 
 #print axioms odd_unpaid_three_rank_geometry
-#print axioms second_excess_eq_rank_three_count
 end LX.AnchoredPhases

@@ -1,5 +1,8 @@
-import LX.ReflectionConjecture
-import LX.OddUnitPayment
+import LRX.FiniteShallowMatching
+import LX.AnchorReserveRigidity
+import LX.MatchingFixedNeighbors
+import LX.OddUnitFixedNeighbors
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

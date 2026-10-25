@@ -1,6 +1,6 @@
-import LX.WordMetric
-import LRX.LiftedModel
 import LRX.AffineReducedPrice
+import LX.WordMetric
+import Mathlib
 
 namespace LX.DirectedTokenLower
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -102,19 +102,8 @@ theorem word_inversion_cursor_lower (hn : 2 ≤ n) (w : List Letter) :
   rw [cursor_eq_left_count]
   exact_mod_cast hb
 
-/-- The actual directed word supplies both lower costs simultaneously;
-the rotation and exchange minima are never taken from different words. -/
-theorem word_token_total_lower (hn : 2 ≤ n) (w : List Letter) (i : Fin n) :
-    (inversionCount (run (w.map Letter.toLRX) (initial (n := n))).position : ℤ)+
-      (n : ℤ)*(i.val-1 : ℕ)-
-        ((n : ℤ)-1)*(run (w.map Letter.toLRX) (initial (n := n))).position i ≤
-      (w.length : ℤ) := by
-  have hc := word_cursor_lower hn w i
-  have ht := word_inversion_cursor_lower hn w
-  omega
 
 #print axioms token_budget_step
 #print axioms word_cursor_lower
 #print axioms word_inversion_cursor_lower
-#print axioms word_token_total_lower
 end LX.DirectedTokenLower

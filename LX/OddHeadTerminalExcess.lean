@@ -1,4 +1,7 @@
+import LX.OddHeadPredecessorCut
+import LX.OddWideCutCount
 import LX.OddZeroHeadCut
+import Mathlib
 
 namespace LX.AnchoredPhases
 open Classical

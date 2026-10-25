@@ -1,5 +1,6 @@
-import LX.OddUnitReserve
-import LX.ReflectionNeighbor
+import LRX.NestedMatchingGeometry
+import LX.WordMetric
+import Mathlib
 
 namespace LX.MatchingGeometry
 open scoped Fin.NatCast Fin.CommRing

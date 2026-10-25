@@ -1,4 +1,7 @@
+import LX.CriticalPhaseWord
+import LX.ForwardMinimumConjecture
 import LX.LowOffsetDropBudget
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

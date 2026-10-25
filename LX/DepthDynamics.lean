@@ -1,5 +1,6 @@
 import LX.DepthBound
-import LX.DepthReturn
+import LX.SweepCarrier
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

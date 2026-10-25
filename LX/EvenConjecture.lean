@@ -1,6 +1,7 @@
+import LX.EvenAntipodeLower
 import LX.EvenUnpaidHeadPattern
 import LX.ReverseDual
-import LX.EvenAntipodeLower
+import Mathlib
 
 namespace LX
 open scoped Fin.IntCast Fin.NatCast Fin.CommRing

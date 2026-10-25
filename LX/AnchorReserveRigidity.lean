@@ -1,6 +1,9 @@
-import LX.ZeroExchangeReserve
 import LRX.EventDefectParity
+import LRX.MajorizedExtremeCount
+import LRX.StrictBandEquality
 import LRX.TwoWindowCycleDefect
+import LX.AnchoredPhases
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -82,85 +85,9 @@ theorem unit_anchor_reserve_rigidity (p : State n) (a : Fin n)
   have hc := LRX.FiniteCuts.twice_cycle_count_le_support (permutation p a)
   exact ⟨hz,by omega,by omega,by omega,by omega⟩
 
-/-- The strip reserve and the dimension-wide reserve are compared explicitly;
-they must not be identified in the lower-height parity branch. -/
-theorem anchor_reserve_le_dimension_reserve (p : State n) (a : Fin n)
-    (hmaj : Majorized (displacement p a)) :
-    anchorReserve p a ≤ ((n/2 : ℕ) : ℤ)*((n : ℤ)-(n/2 : ℕ))-(n/2 : ℕ)-
-      inversions (displacement p a) := by
-  have hh := (short_coordinates (is_lift p a).1 hmaj a).2
-  rw [displacement_anchor] at hh
-  have hparity : (n : ℤ)=2*((n/2 : ℕ) : ℤ) ∨ (n : ℤ)=2*((n/2 : ℕ) : ℤ)+1 := by omega
-  unfold anchorReserve
-  rcases hparity with he | ho
-  · have hp := mul_nonneg
-      (show (0 : ℤ) ≤ ((n/2 : ℕ) : ℤ)-height p a by omega)
-      (show (0 : ℤ) ≤ ((n/2 : ℕ) : ℤ)-height p a-1 by omega)
-    nlinarith
-  · nlinarith [sq_nonneg (((n/2 : ℕ) : ℤ)-height p a)]
-
-theorem majorized_cycle_excess_bound (p : State n) (a : Fin n)
-    (hmaj : Majorized (displacement p a)) :
-    ((permutation p a).support.card : ℤ)-2*(permutation p a).cycleFactorsFinset.card ≤
-      2*anchorReserve p a := by
-  have hd := anchor_reserve_decomposition p a
-  have hnonneg := (anchor_cycle_defect_bounds p a).1
-  have hh := (short_coordinates (is_lift p a).1 hmaj a).2
-  rw [displacement_anchor] at hh
-  have hext := majorized_negative_level_count (is_lift p a).1 hmaj (height p a : ℤ) (by omega)
-  have hs := LRX.FiniteCuts.shifted_support_add_extreme_count (is_lift p a)
-    (height p a : ℤ) (displacement_band p a)
-  rw [shifted_anchor_permutation] at hs
-  omega
-
-/-- This conclusion uses the actual dimension-wide reserve of the global
-minimum, so it applies directly to the next unpaid branch. -/
-theorem small_global_reserve_rigidity {p : State n} {a : Fin n}
-    (ha : GlobalMinimum p a)
-    (hsmall : ((n/2 : ℕ) : ℤ)*((n : ℤ)-(n/2 : ℕ))-(n/2 : ℕ)-
-      inversions (displacement p a) ≤ 1) :
-    LRX.FiniteCuts.cycleDefect (permutation p a)=0 ∧
-      ((permutation p a).support.card : ℤ)-2*(permutation p a).cycleFactorsFinset.card ≤ 2 := by
-  have hm := global_minimum_majorized ha
-  have ha' := (anchor_reserve_le_dimension_reserve p a hm).trans hsmall
-  exact ⟨small_anchor_reserve_zero_defect p a ha',
-    (majorized_cycle_excess_bound p a hm).trans (by omega)⟩
-
-/-- A cycle of length at least three uses at most three times its excess
-over a transposition. Summing uses the actual disjoint cycle factorization. -/
-theorem nonpair_cycle_mass_bound (q : State n) :
-    ((∑ g ∈ q.cycleFactorsFinset.filter (fun g => g.support.card ≠ 2),g.support.card : ℕ) : ℤ) ≤
-      3*((q.support.card : ℤ)-2*q.cycleFactorsFinset.card) := by
-  classical
-  have hterm (g : State n) (hg : g ∈ q.cycleFactorsFinset) :
-      (if g.support.card ≠ 2 then (g.support.card : ℤ) else 0) ≤ 3*((g.support.card : ℤ)-2) := by
-    have hc := (Equiv.Perm.mem_cycleFactorsFinset_iff.mp hg).1.two_le_card_support
-    split_ifs <;> omega
-  have hs := Finset.sum_le_sum hterm
-  have htotal : (∑ g ∈ q.cycleFactorsFinset,(g.support.card : ℤ))=(q.support.card : ℤ) := by
-    exact_mod_cast LRX.FiniteCuts.cycle_support_card_sum q
-  have hr : (∑ g ∈ q.cycleFactorsFinset,3*((g.support.card : ℤ)-2))=
-      3*((q.support.card : ℤ)-2*q.cycleFactorsFinset.card) := by
-    rw [← Finset.mul_sum,Finset.sum_sub_distrib,htotal]
-    simp [mul_comm]
-  rw [hr] at hs
-  simpa only [Finset.sum_filter,Nat.cast_sum,Nat.cast_ite,Nat.cast_zero] using hs
-
-/-- In the unit-reserve branch all nontransposition cycles together occupy
-at most six positions. The other cycles still require geometric routing. -/
-theorem small_global_reserve_nonpair_mass {p : State n} {a : Fin n}
-    (ha : GlobalMinimum p a)
-    (hsmall : ((n/2 : ℕ) : ℤ)*((n : ℤ)-(n/2 : ℕ))-(n/2 : ℕ)-
-      inversions (displacement p a) ≤ 1) :
-    (∑ g ∈ (permutation p a).cycleFactorsFinset.filter (fun g => g.support.card ≠ 2),g.support.card) ≤ 6 := by
-  have hh := (small_global_reserve_rigidity ha hsmall).2
-  have hm := nonpair_cycle_mass_bound (permutation p a)
-  omega
 
 #print axioms anchor_reserve_decomposition
 #print axioms anchor_cycle_defect_bounds
 #print axioms small_anchor_reserve_zero_defect
 #print axioms unit_anchor_reserve_rigidity
-#print axioms small_global_reserve_rigidity
-#print axioms small_global_reserve_nonpair_mass
 end LX.AnchoredPhases

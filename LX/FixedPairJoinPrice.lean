@@ -1,6 +1,8 @@
-import LX.WordMetric
 import LRX.AdjacentBoundaryPrice
 import LRX.ShallowCutShift
+import LRX.ShallowRotation
+import LX.WordMetric
+import Mathlib
 
 namespace LX.FiniteJoin
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

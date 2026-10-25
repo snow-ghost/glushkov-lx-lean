@@ -1,5 +1,8 @@
-import LRX.TwoWindowCycleDefect
+import LRX.FiniteDisplacementSum
+import LRX.FiniteInversionBalance
 import LRX.PrunedPartition
+import LRX.TwoWindowCycleDefect
+import Mathlib
 
 namespace LRX.FiniteCuts
 open scoped BigOperators

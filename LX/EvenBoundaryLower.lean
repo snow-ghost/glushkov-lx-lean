@@ -1,6 +1,10 @@
-import LX.EvenBoundaryBase
 import LX.AntipodeBoundaryPhase
+import LX.AntipodeHeightReduction
+import LX.AntipodeProfileCertificates
+import LX.EvenBoundaryBase
+import LX.ExceptionalPriceLower
 import LX.SingleRaisePrice
+import Mathlib
 
 namespace LX.Antipode
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

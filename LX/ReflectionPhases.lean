@@ -1,5 +1,6 @@
-import LX.ExchangeReserve
-import LRX.CapacityEqualityReflection
+import LX.HeadReserve
+import LX.MinimumEnergyPhases
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -130,100 +131,8 @@ theorem reflection_depth_positions_even (p : State n) (r : Fin n)
     have hn' := i.isLt
     omega
 
-/-- For an even reflection the chosen late anchor bounds every maximal-depth
-position, and a small final phase residue pays the desired linear term. -/
-theorem reflection_anchor_zero_word_even (p : State n) (r : Fin n)
-    (hp : ∀ i,p i=r-i) (m : ℕ) (hn : n=2*m) (hm : 10 ≤ m)
-    (a : Fin n) (ha : m < a.val) (R : ℕ)
-    (hfinish : a.val+(-p a).val ≤ n+R) :
-    ∃ w : List Letter,p*eval w=1 ∧ (∀ i,run w (displacement p a) i=0) ∧
-      4*(w.length : ℤ) ≤ 3*(n : ℤ)^2-8*n+4*((R : ℤ)+1) := by
-  let h := height p a
-  have heighth : h=m-1 := reflection_height_even p r hp m hn (by omega) a
-  have hn2 : 2 ≤ n := by omega
-  have hpos : 2 ≤ h := by omega
-  have hap : 0 < a.val := by omega
-  have hd := is_lift p a
-  have hmajor := global_minimum_majorized (reflection_global_minimum p r hp a)
-  have hl (i : Fin n) : labels (displacement p a) i=p i+(phase p a : Fin n) := by
-    simpa only [labels,Equiv.symm_symm] using lift_residue hd i
-  have hinj : Function.Injective (labels (displacement p a)) := by
-    intro i j hij
-    rw [hl,hl] at hij
-    exact p.injective (add_right_cancel hij)
-  obtain ⟨hhead,hpositions⟩ := reflection_depth_positions_even p r hp m hn (by omega) a ha
-  have ht := majorized_scan_deadline hn2 hd hmajor hinj h a.val hpos (by omega)
-    (fun i => by exact_mod_cast (candidate_price_components p a).2 i) hhead hpositions
-  have hcount : 3*(n-2*h)+2=8 := by omega
-  rw [hcount,max_eq_left (by omega : 8 ≤ a.val)] at ht
-  let T := (h-1)*(n-1)+(a.val-1)+(-p a).val
-  have hT : scanDeadline (displacement p a) ≤ T := by dsimp [T]; omega
-  have hcast : (T : Fin n)=(phase p a : Fin n) := by
-    dsimp only [T,phase,h]
-    rw [Nat.cast_add,Nat.cast_add,Nat.cast_mul,
-      Nat.cast_sub (by omega : 1 ≤ height p a),Nat.cast_sub (by omega : 1 ≤ n),Nat.cast_sub hap]
-    simp only [Fin.natCast_self,Fin.cast_val_eq_self,Nat.cast_one,Int.cast_sub,Int.cast_natCast]
-    ring
-  obtain ⟨w,htw,_⟩ := candidate_sorting_word hn2 p a
-  obtain ⟨v,hv,hzero,hlen⟩ := htw.word_at_cursor_zero hn2 p (phase p a : Fin n) hd.1 hinj hl T
-    ((htw.rotations_le_deadline hn2 hd.1 hinj).trans hT)
-  rw [hcast,sub_self,Fin.val_zero,add_zero] at hlen
-  have hTi : (T : ℤ)=((h : ℤ)-1)*((n : ℤ)-1)+(a.val : ℤ)-1+((-p a).val : ℤ) := by
-    dsimp only [T]
-    push_cast [Nat.cast_sub (by omega : 1 ≤ h),Nat.cast_sub (by omega : 1 ≤ n),Nat.cast_sub hap]
-    ring
-  have hx := (candidate_price_components p a).1
-  change (inversions (displacement p a) : ℤ) ≤ (h : ℤ)*((n : ℤ)-h-1) at hx
-  have hlen' : (v.length : ℤ)=(inversions (displacement p a) : ℤ)+(T : ℤ) := by exact_mod_cast hlen
-  have hn' : (n : ℤ)=2*(h : ℤ)+2 := by omega
-  have hf : (a.val : ℤ)+((-p a).val : ℤ) ≤ (n : ℤ)+R := by exact_mod_cast hfinish
-  exact ⟨v,hv,hzero,by nlinarith⟩
-
-theorem reflection_anchor_word_even (p : State n) (r : Fin n)
-    (hp : ∀ i,p i=r-i) (m : ℕ) (hn : n=2*m) (hm : 10 ≤ m)
-    (a : Fin n) (ha : m < a.val)
-    (hfinish : a.val+(-p a).val ≤ n+2) :
-    ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) ≤ 3*(n : ℤ)^2-8*n+12 := by
-  obtain ⟨w,hw,_,hprice⟩ := reflection_anchor_zero_word_even p r hp m hn hm a ha 2 hfinish
-  exact ⟨w,hw,by simpa using hprice⟩
-
-/-- A literal LX upper bound for every circular reflection, including the
-even family which is not a complete mapping. -/
-theorem reflection_upper_word (hn : 4 ≤ n) (p : State n) (r : Fin n)
-    (hp : ∀ i,p i=r-i) :
-    ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) < 3*(n : ℤ)^2-8*n+4*32 := by
-  by_cases hsmall : n < 22
-  · obtain ⟨w,hw,hprice⟩ := exists_head_reserve_quadratic_word hn p⁻¹
-    refine ⟨w,?_,?_⟩
-    · rw [hw,mul_inv_cancel]
-    · have hs : (n : ℤ)<22 := by omega
-      nlinarith
-  · by_cases heven : n=2*(n/2)
-    · let m := n/2
-      have hm : 10 ≤ m := by dsimp [m]; omega
-      have hgood : ∃ a : Fin n,m < a.val ∧ a.val+(-p a).val ≤ n+2 := by
-        by_cases hr : m < r.val
-        · refine ⟨r,hr,?_⟩
-          simp only [hp,sub_self,neg_zero,Fin.val_zero,add_zero]
-          have := r.isLt
-          omega
-        · let a : Fin n := ⟨m+1,by dsimp [m] at *; omega⟩
-          refine ⟨a,by dsimp [a]; omega,?_⟩
-          have he : -p a=a-r := by rw [hp]; abel
-          rw [he,Fin.coe_sub_iff_le.mpr (show r ≤ a by change r.val ≤ a.val; dsimp [a]; omega)]
-          dsimp [a,m]
-          omega
-      obtain ⟨a,ha,hfinish⟩ := hgood
-      obtain ⟨w,hw,hprice⟩ := reflection_anchor_word_even p r hp m heven hm a ha hfinish
-      exact ⟨w,hw,by omega⟩
-    · exact complete_mapping_upper_word p
-        (reflection_complete_odd p r hp (n/2) (by omega)) hn
 
 #print axioms reflection_global_minimum
 #print axioms reflection_complete_odd
 #print axioms reflection_height_even
-#print axioms reflection_anchor_zero_word_even
-#print axioms reflection_upper_word
 end LX.AnchoredPhases

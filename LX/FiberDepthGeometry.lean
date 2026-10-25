@@ -1,4 +1,5 @@
-import LX.SingleHeadQuadraticUpper
+import LX.RankProfileGeometry
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -56,36 +57,8 @@ theorem exists_least_gap_above (p : State n) (h J : ℕ) :
     exact ⟨b,fun c hc hg => ⟨hb'.1,hb'.2,hmin c (Finset.mem_filter.mpr ⟨Finset.mem_univ _,hc,hg⟩)⟩⟩
   · exact ⟨0,fun c hc hg => False.elim (hs ⟨c,Finset.mem_filter.mpr ⟨Finset.mem_univ _,hc,hg⟩⟩)⟩
 
-omit [NeZero n] in
-/-- Two non-head forward arrows cannot simultaneously have the two
-largest possible non-head differences. -/
-theorem missing_large_forward_difference (p : State n) (hn : 4 ≤ n) :
-    ∃ q : ℕ,q ∈ Finset.Icc (n-4) (n-2) ∧
-      ∀ i : Fin n,0 < i.val → i.val < (p i).val → (p i).val-i.val ≠ q := by
-  by_cases hex : ∃ i : Fin n,0 < i.val ∧ (p i).val-i.val=n-2
-  · obtain ⟨i,hi,hd⟩ := hex
-    have hin := i.isLt
-    have hpin := (p i).isLt
-    have hiv : i.val=1 := by omega
-    have hpiv : (p i).val=n-1 := by omega
-    refine ⟨n-3,Finset.mem_Icc.mpr ⟨by omega,by omega⟩,?_⟩
-    intro j hj hjp he
-    have hjn := j.isLt
-    have hpjn := (p j).isLt
-    have hjcase : j.val=1 ∨ (p j).val=n-1 := by omega
-    rcases hjcase with hjcase | hjcase
-    · have hji : j=i := Fin.ext (by omega)
-      subst j
-      omega
-    · have hji : j=i := p.injective (Fin.ext (by omega))
-      subst j
-      omega
-  · refine ⟨n-2,Finset.mem_Icc.mpr ⟨by omega,le_rfl⟩,?_⟩
-    intro i hi _ he
-    exact hex ⟨i,hi,he⟩
 
 #print axioms rank_peak_next_depth_fiber
 #print axioms gap_separation_bounds_fixed
 #print axioms exists_least_gap_above
-#print axioms missing_large_forward_difference
 end LX.AnchoredPhases

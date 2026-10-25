@@ -1,4 +1,5 @@
 import LRX.ZeroGapEventEdgeCount
+import Mathlib
 
 /-! Every connected component of the event graph uses at least one fewer
 exchange events than its number of vertices. -/

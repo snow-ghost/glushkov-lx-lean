@@ -1,6 +1,7 @@
+import LX.ConjectureLower
 import LX.EvenConjecture
 import LX.OddConjecture
-import LX.ConjectureLower
+import Mathlib
 
 namespace LX
 

@@ -1,5 +1,8 @@
-import LRX.FiniteDepthRank
+import LRX.FiniteInversionDecomposition
+import LRX.FiniteWindowLoad
 import LRX.ShallowContraction
+import LRX.ZeroGapEvents
+import Mathlib
 
 namespace LRX.FiniteCuts
 open scoped BigOperators

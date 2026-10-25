@@ -1,4 +1,7 @@
+import LRX.FiniteShallowMatching
 import LRX.FixedCountReflection
+import LRX.ShiftedAdjacentPairs
+import Mathlib
 
 namespace LRX.FiniteCuts
 open scoped BigOperators Fin.NatCast Fin.CommRing

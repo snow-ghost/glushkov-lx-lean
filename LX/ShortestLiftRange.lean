@@ -1,5 +1,6 @@
 import LX.FinitePairReduction
-import LX.GreedyWordNormalForm
+import LX.LiftedScanBridge
+import Mathlib
 
 namespace LX.FinitePairReduction
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

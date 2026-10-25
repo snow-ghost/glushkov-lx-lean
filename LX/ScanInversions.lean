@@ -1,5 +1,6 @@
-import LX.GreedyScan
 import LRX.RecenteredCrossings
+import LX.GreedyScan
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

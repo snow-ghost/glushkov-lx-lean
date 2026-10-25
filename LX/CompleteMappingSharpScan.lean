@@ -1,4 +1,5 @@
-import LX.FiberDepthGeometry
+import LX.CompleteMapping
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -53,54 +54,6 @@ theorem complete_good_anchor_two (p : State n) (hp : CompleteMapping p) (h : ℕ
   simp only [Nat.card_Icc,Finset.card_singleton] at hcu hcu'
   omega
 
-/-- Complete mappings use the constant-height next-depth bound three. -/
-theorem complete_mapping_sharp_scan_word (p : State n) (hp : CompleteMapping p)
-    (hn : 7 ≤ n) :
-    ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) ≤ 3*(n : ℤ)^2-8*n+13 := by
-  let h := height p 0
-  have hparity : n=2*h+1 := complete_height p hp 0
-  have hall (a : Fin n) : height p a=h := by
-    have := complete_height p hp a
-    omega
-  have hfixed (a : Fin n) : (fixedPositions (permutation p a)).card=1 :=
-    odd_higher_fixed_unique p a (complete_majorized p hp a) (complete_height p hp a)
-  obtain ⟨a,ha,hforward,hcorner⟩ := complete_good_anchor_two p hp h hparity (by omega)
-  have hhead : p 0 ≠ p a-a := by
-    intro he
-    have hz := one_fixed_last_offset p a (hfixed a) 0 (by simpa using he)
-    have hv := congrArg Fin.val hz
-    simp only [Fin.val_zero] at hv
-    omega
-  have hlast (i : Fin n) (hi : p i-i=p a-a) : i.val ≤ a.val := by
-    rw [one_fixed_last_offset p a (hfixed a) i hi]
-  have hne : p a ≠ 0 := by
-    intro he
-    rw [he,Fin.val_zero] at hforward
-    omega
-  have hneg : (-p a).val=n-(p a).val := by simp [Fin.val_neg,hne]
-  have hc := constant_height_next_depth p h 1 hall (fun b => (hfixed b).le) (by omega) a
-  have hcount : depthCount (displacement p a) (height p a-1) ≤ a.val+(-p a).val := by
-    rw [hall a,hneg]
-    omega
-  obtain ⟨w,hw,hprice⟩ := odd_higher_anchor_reserve_price p a (by omega)
-    (complete_height p hp a) hhead hlast hcount
-  have hr := anchor_reserve_nonneg p a
-  rw [hneg,hall a] at hprice
-  exact ⟨w,hw,by omega⟩
-
-theorem complete_mapping_eight_word (p : State n) (hp : CompleteMapping p) (hn : 4 ≤ n) :
-    ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) < 3*(n : ℤ)^2-8*n+4*8 := by
-  by_cases hlarge : 7 ≤ n
-  · obtain ⟨w,hw,hprice⟩ := complete_mapping_sharp_scan_word p hp hlarge
-    exact ⟨w,hw,by omega⟩
-  · obtain ⟨w,hw,hprice⟩ := exists_head_reserve_quadratic_word hn p⁻¹
-    refine ⟨w,by rw [hw,mul_inv_cancel],?_⟩
-    have hn' : (n : ℤ) ≤ 5 := by have := complete_height p hp 0; omega
-    linarith
 
 #print axioms complete_good_anchor_two
-#print axioms complete_mapping_sharp_scan_word
-#print axioms complete_mapping_eight_word
 end LX.AnchoredPhases

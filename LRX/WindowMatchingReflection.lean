@@ -1,5 +1,6 @@
-import LRX.UniqueAdjacentReflection
 import LRX.FiniteWindowRestriction
+import LRX.UniqueAdjacentReflection
+import Mathlib
 
 namespace LRX.FiniteCuts
 variable {n b : ℕ}

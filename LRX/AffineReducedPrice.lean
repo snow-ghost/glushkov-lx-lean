@@ -1,5 +1,5 @@
 import LRX.InversionSet
-import LRX.ReachableService
+import Mathlib
 
 /-! Exact paid length after affine pair deletion, and its application to the
 service of all cycles reachable from the chosen root. -/
@@ -29,29 +29,5 @@ namespace LRX.BufferProgram
 open scoped BigOperators
 variable {n : ℕ} [NeZero n]
 
-/-- The reachable service now has a proved total price C(F)+Delta-lambda(0),
-including its X count. Sharp comparison with n.choose 2 is still separate. -/
-theorem reachable_service_price (hn : 2 ≤ n) {p : State n} {d : Fin n → ℤ}
-    (hd : AffineLift.IsLift p 0 d) (hroot : (p⁻¹) 0 ≠ 0)
-    (hreach : ∀ i : Fin n, d i ≠ 0 → Relation.ReflTransGen (ServiceEdge p d) 0 i) :
-    ∃ w : List Letter,
-      eval w=p ∧
-      (LiftedModel.run w (LiftedModel.initial (n := n))).cursor=0 ∧
-      (∀ i, (LiftedModel.run w (LiftedModel.initial (n := n))).position i=(i : ℤ)+d i) ∧
-      exchanges w=LiftedModel.inversionCount (fun i : Fin n => (i : ℤ)+d i) ∧
-      (w.length : ℤ)=(LiftedModel.inversionCount (fun i : Fin n => (i : ℤ)+d i) : ℤ)+
-        (∑ i : Fin n, |d i|)-
-        ∑ i : Fin n, PeriodicBuffer.edgePassages (n : ℤ) (i : ℤ) ((i : ℤ)+d i) := by
-  obtain ⟨raw, hp, hc, hpos, hr⟩ := reachable_lift_service hn hd hroot hreach
-  obtain ⟨w, he, hw, _, hx, hlen, _⟩ := LiftedModel.affine_reduction_exact hn raw
-  have hfun : (LiftedModel.run raw (LiftedModel.initial (n := n))).position=
-      fun i : Fin n => (i : ℤ)+d i := funext hpos
-  rw [hfun] at hx hlen
-  refine ⟨w, hw.trans hp, ?_, ?_, hx, ?_⟩
-  · rw [he]; exact hc
-  · intro i; rw [he]; exact hpos i
-  · rw [hlen, Nat.cast_add, hr]
-    ring
 
-#print axioms reachable_service_price
 end LRX.BufferProgram

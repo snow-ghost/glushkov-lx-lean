@@ -1,5 +1,5 @@
-import LX.DeadlinePrice
-import LRX.TraceInversions
+import LX.ScanInversions
+import Mathlib
 
 namespace LX.LiftedScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -180,12 +180,6 @@ theorem delete_crossing_word (hn : 2 ≤ n) (p : State n) (d : Fin n → ℤ) (w
       v.length+1=w.length ∧ v.count .l=w.count .l :=
   delete_event_word hn p w hp key (event_of_order_change hn d w hz key hk hchange)
 
-theorem paid_word_zero (d : Fin n → ℤ) (w : List Letter) (c : Fin n)
-    (hz : ∀ i,AffineScan.run w d i=0) :
-    ∀ i,AffineScan.run (AffineScan.paidWord c w) d i=0 := by
-  intro i
-  simp only [AffineScan.paidWord,AffineScan.run_append,AffineScan.run_left_apply]
-  exact hz _
 
 #print axioms remainder_step
 #print axioms exact_positions_of_zero

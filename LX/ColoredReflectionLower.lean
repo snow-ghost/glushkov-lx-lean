@@ -1,4 +1,5 @@
 import LX.AntipodeCandidates
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

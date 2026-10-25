@@ -1,6 +1,7 @@
-import LX.ReflectionLiftLower
-import LRX.WordReflection
 import LRX.FiniteAdjacentInversions
+import LRX.WordReflection
+import LX.ReflectionLiftLower
+import Mathlib
 
 namespace LX.Antipode
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

@@ -1,6 +1,8 @@
 import LRX.EventCoverEquality
 import LRX.EventTreeRankNeighbor
+import LRX.FiniteCutLoad
 import LRX.FullSupportShallowStep
+import Mathlib
 
 namespace LRX.ZeroGap
 variable {n : ℕ} [NeZero n]

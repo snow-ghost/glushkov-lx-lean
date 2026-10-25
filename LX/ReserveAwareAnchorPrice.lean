@@ -1,5 +1,8 @@
-import LX.EvenAnchorPrice
-import LX.OddGlobalHeight
+import LX.AnchorPhasePrice
+import LX.AnchorReserveRigidity
+import LX.CrowdedDeadline
+import LX.EvenSecondHeight
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -96,58 +99,6 @@ theorem odd_lower_anchor_reserve_price (p : State n) (a : Fin n)
   have hn' : (n : ℤ)=2*(height p a : ℤ)+3 := by exact_mod_cast hn
   nlinarith
 
-/-- A backward nonzero image makes the terminal allowance at least n.
-Then every possible next-depth position fits, without majorization. -/
-theorem backward_anchor_depth_count (p : State n) (a : Fin n)
-    (ha : 0 < (p a).val) (hback : (p a).val < a.val) :
-    depthCount (displacement p a) (height p a-1) ≤ a.val+(-p a).val := by
-  have hne : p a ≠ 0 := by
-    intro he
-    rw [he,Fin.val_zero] at ha
-    omega
-  have hneg : (-p a).val=n-(p a).val := by simp [Fin.val_neg,hne]
-  have hc : depthCount (displacement p a) (height p a-1) ≤ n := by
-    unfold depthCount
-    exact (Finset.card_filter_le _ _).trans (by simp)
-  rw [hneg]
-  have hh := (p a).isLt
-  omega
-
-/-- The saved exchanges pay a larger backward displacement directly. This
-criterion applies to any actual even maximal-height anchor. -/
-theorem even_backward_anchor_reserve_word (p : State n) (a : Fin n)
-    (hh : 2 ≤ height p a) (hn : n=2*height p a+2)
-    (hhead : p 0 ≠ p a-a)
-    (hlast : ∀ i : Fin n,p i-i=p a-a → i.val ≤ a.val)
-    (ha : 0 < (p a).val) (hback : (p a).val < a.val)
-    (hpaid : (a.val : ℤ)-(p a).val ≤ anchorReserve p a+30) :
-    ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) < 3*(n : ℤ)^2-8*n+4*32 := by
-  obtain ⟨w,hw,hprice⟩ := even_anchor_reserve_price p a hh hn hhead hlast
-    (backward_anchor_depth_count p a ha hback)
-  have hne : p a ≠ 0 := by intro he; rw [he,Fin.val_zero] at ha; omega
-  have hneg : (-p a).val=n-(p a).val := by simp [Fin.val_neg,hne]
-  rw [hneg,Nat.cast_sub (Nat.le_of_lt (p a).isLt)] at hprice
-  exact ⟨w,hw,by linarith⟩
-
-/-- In the odd lower phase, the height allowance and the exchange reserve
-are available together, rather than being discarded separately. -/
-theorem odd_backward_anchor_reserve_word (p : State n) (a : Fin n)
-    (hh : 2 ≤ height p a) (hn : n=2*height p a+3)
-    (hhead : p 0 ≠ p a-a)
-    (hlast : ∀ i : Fin n,p i-i=p a-a → i.val ≤ a.val)
-    (ha : 0 < (p a).val) (hback : (p a).val < a.val)
-    (hpaid : (a.val : ℤ)-(p a).val ≤ height p a+anchorReserve p a+32) :
-    ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) < 3*(n : ℤ)^2-8*n+4*32 := by
-  obtain ⟨w,hw,hprice⟩ := odd_lower_anchor_reserve_price p a hh hn hhead hlast
-    (backward_anchor_depth_count p a ha hback)
-  have hne : p a ≠ 0 := by intro he; rw [he,Fin.val_zero] at ha; omega
-  have hneg : (-p a).val=n-(p a).val := by simp [Fin.val_neg,hne]
-  rw [hneg,Nat.cast_sub (Nat.le_of_lt (p a).isLt)] at hprice
-  exact ⟨w,hw,by linarith⟩
 
 #print axioms aligned_anchor_exact_word
-#print axioms even_backward_anchor_reserve_word
-#print axioms odd_backward_anchor_reserve_word
 end LX.AnchoredPhases

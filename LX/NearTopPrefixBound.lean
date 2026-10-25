@@ -1,6 +1,7 @@
-import LX.NearTopPrefix
 import LX.ForwardPrefixBudget
 import LX.MinimumHeightPrefix
+import LX.NearTopPrefix
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -82,17 +83,7 @@ theorem minimum_height_early_low_depth (p : State n) (a : Fin n)
   change i.val ≤ j.val at hle
   omega
 
-theorem even_critical_early_low_depth (p : State n) (a : Fin n)
-    (hmin : ∀ b,height p a ≤ height p b) (hh : 2 ≤ height p a)
-    (hn : n=2*height p a+2) (hhead : permutation p a 0 ≠ 0) :
-    ∃ i : Fin n,backwardDepth (displacement p a) i < height p a-1 ∧
-      (i.val : ℤ) ≤ anchorReserve p a+3 := by
-  obtain ⟨i,hi,hb⟩ := minimum_height_early_low_depth p a hmin hh hhead
-  refine ⟨i,hi,?_⟩
-  have hn' : (n : ℤ)=2*height p a+2 := by exact_mod_cast hn
-  omega
 
 #print axioms minimum_height_near_top_prefix_bound
 #print axioms minimum_height_early_low_depth
-#print axioms even_critical_early_low_depth
 end LX.AnchoredPhases

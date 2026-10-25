@@ -1,5 +1,7 @@
-import LX.OddHeadDropContradiction
 import LX.OddAntipodeLower
+import LX.OddBinaryRankObstruction
+import LX.OddHeadDropContradiction
+import Mathlib
 
 namespace LX
 open scoped Fin.IntCast Fin.NatCast Fin.CommRing

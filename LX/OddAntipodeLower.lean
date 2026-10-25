@@ -1,7 +1,8 @@
-import LX.OddMiddleLower
 import LX.OddExceptionLower
+import LX.OddMiddleLower
 import LX.OddOuterLower
 import LX.Small5Exact
+import Mathlib
 
 namespace LX.Antipode
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

@@ -1,4 +1,7 @@
+import LRX.AffineDeletion
 import LRX.InversionIndices
+import LRX.TraceInversions
+import Mathlib
 
 /-! A finite set of all affine inversions, with its explicit double-sum cardinality. -/
 namespace LRX.LiftedModel

@@ -1,4 +1,5 @@
-import LX.SmallExchangeReserve
+import LX.MinimumEnergyPhases
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -47,45 +48,6 @@ theorem odd_maximal_minima_complete (p : State n) (m : ℕ) (hn : n=2*m+1)
   simp only [Fin.cast_val_eq_self] at hbr
   exact ⟨b,by linear_combination hbr⟩
 
-/-- An unpaid odd input has a globally minimal, majorized phase exactly
-one below the maximal height. The chosen phase is not merely height-minimal. -/
-theorem odd_unpaid_lower_global_minimum (hn4 : 4 ≤ n) (p : State n)
-    (m : ℕ) (hn : n=2*m+1)
-    (hunpaid : ¬ ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) < 3*(n : ℤ)^2-8*n+4*32) :
-    ∃ a : Fin n,GlobalMinimum p a ∧ height p a+1=m := by
-  by_contra hnone
-  have hheight (a : Fin n) (ha : GlobalMinimum p a) : height p a=m := by
-    have hh := (short_coordinates (is_lift p a).1 (global_minimum_majorized ha) a).2
-    rw [displacement_anchor] at hh
-    by_contra hnot
-    have hne : height p a+1 ≠ m := fun he => hnone ⟨a,ha,he⟩
-    have hlow : 2*height p a+5 ≤ n := by omega
-    obtain ⟨w,hw,hprice⟩ := height_five_word (by omega : 2 ≤ n) p a hlow
-    exact hunpaid ⟨w,hw,by linarith⟩
-  exact hunpaid (complete_mapping_upper_word p (odd_maximal_minima_complete p m hn hheight) hn4)
-
-/-- The lower global phase removes a whole additional lap from the uniform
-odd budget. Any unpaid odd input has reserve at most m-29, for n=2m+1. -/
-theorem odd_unpaid_reserve_upper {p : State n} {a : Fin n}
-    (hn4 : 4 ≤ n) (m : ℕ) (hn : n=2*m+1) (ha : GlobalMinimum p a)
-    (hunpaid : ¬ ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) < 3*(n : ℤ)^2-8*n+4*32) :
-    (m : ℤ)^2-inversions (displacement p a) ≤ (m : ℤ)-29 := by
-  obtain ⟨b,hb,hh⟩ := odd_unpaid_lower_global_minimum hn4 p m hn hunpaid
-  have hx : inversions (displacement p b)=inversions (displacement p a) :=
-    Nat.le_antisymm (global_minimum_exchanges hb a) (global_minimum_exchanges ha b)
-  by_contra hnot
-  obtain ⟨w,hw,hprice⟩ := majorized_exchange_reserve_word (by omega : 2 ≤ n)
-    p (phase p b) (displacement p b) (is_lift p b) (global_minimum_majorized hb)
-    (height p b) (by omega) (by omega)
-    (fun i => by exact_mod_cast (candidate_price_components p b).2 i)
-  rw [hx] at hprice
-  have hn' : (n : ℤ)=2*(m : ℤ)+1 := by exact_mod_cast hn
-  have hh' : (height p b : ℤ)+1=m := by exact_mod_cast hh
-  exact hunpaid ⟨w,hw,by nlinarith⟩
 
 #print axioms odd_maximal_minima_complete
-#print axioms odd_unpaid_lower_global_minimum
-#print axioms odd_unpaid_reserve_upper
 end LX.AnchoredPhases

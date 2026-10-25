@@ -1,4 +1,6 @@
+import LRX.LiftedModel
 import LX.WordMetric
+import Mathlib
 
 /-! Local invariants for the forward scan used to construct LX words.
 This module proves progress and energy descent, not the quadratic price. -/
@@ -48,10 +50,6 @@ omit [NeZero n] in
 theorem rotate_sum (d : Fin n → ℤ) : ∑ i, rotate d i = ∑ i, d i :=
   Equiv.sum_comp (finRotate n) d
 
-omit [NeZero n] in
-theorem rotate_energy (d : Fin n → ℤ) :
-    LRX.AffineLift.energy (rotate d) = LRX.AffineLift.energy d :=
-  Equiv.sum_comp (finRotate n) (fun i => (d i).natAbs ^ 2)
 
 theorem exchange_sum (d : Fin n → ℤ) : ∑ i, exchange d i = ∑ i, d i := by
   simp [exchange, Finset.sum_add_distrib, Finset.sum_sub_distrib, Equiv.sum_comp]
@@ -218,56 +216,8 @@ theorem run_left_energy (k : ℕ) (d : Fin n → ℤ) :
   simp only [LRX.AffineLift.energy, run_left_apply]
   exact Equiv.sum_comp ((LRX.L n)^k) (fun i => (d i).natAbs ^ 2)
 
-/-- Every balanced valid affine board can be sorted using forward moves only.
-The remaining task is a sharp bound on the rotations and exchanges of such words. -/
-theorem exists_zero_word (hn : 2 ≤ n) (d : Fin n → ℤ)
-    (hb : ∑ i, d i = 0) (hi : Function.Injective (labels d)) :
-    ∃ w : List Letter, ∀ i, run w d i = 0 := by
-  generalize he : LRX.AffineLift.energy d = E
-  induction E using Nat.strong_induction_on generalizing d with
-  | h E ih =>
-    by_cases hz : ∀ i, d i = 0
-    · exact ⟨[], hz⟩
-    obtain ⟨i, hdesc⟩ := exists_descent hn d hb hi hz
-    let u : List Letter := List.replicate i.val .l
-    let e := run u d
-    have he0 : e 0 = d i := by
-      simp [e, u, run_left_apply, LRX.AffineLift.rotation_power_apply]
-    have he1 : e 1 = d (finRotate n i) := by
-      simp only [e, u, run_left_apply, LRX.AffineLift.rotation_power_apply,
-        Fin.cast_val_eq_self, finRotate_apply]
-      congr 1
-      abel
-    have henergy : LRX.AffineLift.energy e = E := (run_left_energy i.val d).trans he
-    have hlt : LRX.AffineLift.energy (exchange e) < E := by
-      rw [← henergy]
-      apply exchange_energy_lt hn
-      simpa only [he0, he1] using hdesc
-    have hb' : ∑ j, exchange e j = 0 := by rw [exchange_sum, run_sum, hb]
-    have hi' : Function.Injective (labels (exchange e)) :=
-      exchange_injective hn e (run_injective hn u d hi)
-    obtain ⟨v, hv⟩ := ih _ hlt (exchange e) hb' hi' rfl
-    refine ⟨u ++ .x :: v, ?_⟩
-    intro j
-    simpa only [run_append, run, step, e] using hv j
-
-/-- The affine construction applies to an actual permutation and any balanced phase lift. -/
-theorem exists_realized_sorting_word (hn : 2 ≤ n) (p : State n) (c : ℤ)
-    (d : Fin n → ℤ) (hd : LRX.AffineLift.IsLift p.symm c d) :
-    ∃ w : List Letter, (∀ i, run w d i = 0) ∧
-      p * eval (w ++ List.replicate ((c : Fin n) - (w.count .l : Fin n)).val .l) = 1 := by
-  have hlabels (i : Fin n) : labels d i = p i + (c : Fin n) := by
-    simpa only [labels, Equiv.symm_symm] using LRX.AffineLift.lift_residue hd i
-  have hi : Function.Injective (labels d) := by
-    intro i j hij
-    rw [hlabels, hlabels] at hij
-    exact p.injective (add_right_cancel hij)
-  obtain ⟨w, hw⟩ := exists_zero_word hn d hd.1 hi
-  exact ⟨w, hw, sorting_word_of_zero hn p (c : Fin n) d hlabels w hw⟩
 
 #print axioms exchange_energy_lt
 #print axioms exists_descent
-#print axioms exists_zero_word
 #print axioms sorting_word_of_zero
-#print axioms exists_realized_sorting_word
 end LX.AffineScan

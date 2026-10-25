@@ -1,6 +1,7 @@
-import LX.QueueDeadlineLower
 import LX.DepthCrowding
 import LX.FiniteLowerDeadline
+import LX.QueueDeadlineLower
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

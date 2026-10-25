@@ -1,4 +1,6 @@
+import LRX.FiniteDepthRank
 import LRX.PaddedSortingEvents
+import Mathlib
 
 namespace LRX.ZeroGap
 variable {n : ℕ}

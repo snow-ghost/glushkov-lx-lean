@@ -1,4 +1,7 @@
 import LX.OddAlignedMinimumHead
+import LX.OddFiniteHead
+import LX.OddHeadTerminalExcess
+import Mathlib
 
 namespace LX.AnchoredPhases
 open Classical
@@ -56,17 +59,7 @@ theorem rank_two_unpaid_aligned_exists (p : State n) (a : Fin n)
   rw [ite_eq_right hK,ite_eq_right hnot] at hbound
   omega
 
-theorem rank_two_unpaid_minimum_head_value (p : State n) (a : Fin n)
-    (hn : n=2*height p a+3) (hh : 2 ≤ height p a)
-    (hmin : ∀ b,height p a ≤ height p b)
-    (hR : ∀ t : Fin n,rankSurplus p a t.val ≤ 2)
-    (hhead : height p 0=height p a)
-    (hunpaid : ¬ ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) ≤ 3*(n : ℤ)^2-8*n+9) : p 0=1 := by
-  obtain ⟨b,hb⟩ := rank_two_unpaid_aligned_exists p a hn hh hmin hR hunpaid
-  exact rank_two_unpaid_aligned_minimum_head p a b hn hh hR hhead hb hunpaid
 
 #print axioms rank_two_unpaid_no_head_predecessor
 #print axioms rank_two_unpaid_aligned_exists
-#print axioms rank_two_unpaid_minimum_head_value
 end LX.AnchoredPhases

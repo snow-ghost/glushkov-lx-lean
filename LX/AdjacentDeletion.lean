@@ -1,4 +1,5 @@
 import LX.LiftedScanBridge
+import Mathlib
 
 namespace LX.LiftedScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

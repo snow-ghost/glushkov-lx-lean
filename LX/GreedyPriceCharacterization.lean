@@ -1,4 +1,5 @@
 import LX.GreedyWordNormalForm
+import Mathlib
 
 namespace LX
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

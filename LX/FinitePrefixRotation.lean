@@ -1,5 +1,7 @@
-import LX.ForwardPrefixContraction
 import LRX.FiniteInversionBalance
+import LRX.ShallowRotation
+import LX.FiniteDropBudget
+import Mathlib
 
 namespace LX.FiniteDropBudget
 open scoped BigOperators

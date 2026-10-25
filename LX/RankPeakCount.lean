@@ -1,4 +1,5 @@
-import LX.ConstantHeightOddPayment
+import LX.NextOccupiedPhase
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -100,42 +101,6 @@ private theorem interval_rank_bonus_sum (r R : ℕ) (hbound : r+R ≤ n) :
   have ht := LRX.FiniteCoordinates.range_sum_twice R
   nlinarith
 
-/-- The triangular tail of a rank peak forces additional minimum-height
-offsets even when anchor heights vary. -/
-theorem even_minimum_anchor_count_with_peak (p : State n) (a r : Fin n) (R : ℕ)
-    (hmin : ∀ b,height p a ≤ height p b) (hn : n=2*height p a+2)
-    (hpeak : rankSurplus p a r.val=R) :
-    (n : ℤ)+(R : ℤ)*(R-1) ≤
-      2*((Finset.univ.filter (fun t : Fin n => rankSurplus p a t.val=0)).card : ℤ) := by
-  have hcard : belowCount p a r.val ≤ n :=
-    (Finset.card_le_univ _).trans_eq (Fintype.card_fin n)
-  have hbound : r.val+R ≤ n := by unfold rankSurplus at hpeak; omega
-  have hp : (∑ t : Fin n,if rankSurplus p a t.val=0 then (0 : ℤ) else 1)+
-      (∑ t : Fin n,if r.val ≤ t.val ∧ t.val < r.val+R then (R : ℤ)+r.val-t.val-1 else 0) ≤
-        ∑ t : Fin n,rankSurplus p a t.val := by
-    rw [← Finset.sum_add_distrib]
-    apply Finset.sum_le_sum
-    intro t _
-    have hnonneg := rank_surplus_nonnegative p a hmin t.val (Nat.le_of_lt t.isLt)
-    by_cases ht : r.val ≤ t.val ∧ t.val < r.val+R
-    · have hmono := below_count_mono p a ht.1
-      have hpos : 0 < rankSurplus p a t.val := by unfold rankSurplus at *; omega
-      rw [ite_eq_right (ne_of_gt hpos),ite_eq_left ht]
-      unfold rankSurplus at *
-      omega
-    · rw [ite_eq_right ht,add_zero]
-      split_ifs <;> omega
-  have hcomp : (∑ t : Fin n,if rankSurplus p a t.val=0 then (0 : ℤ) else 1)=
-      (n : ℤ)-(Finset.univ.filter (fun t : Fin n => rankSurplus p a t.val=0)).card := by
-    have he (t : Fin n) : (if rankSurplus p a t.val=0 then (0 : ℤ) else 1)=
-        1-(if rankSurplus p a t.val=0 then 1 else 0) := by split_ifs <;> norm_num
-    simp_rw [he]
-    simp [Finset.sum_sub_distrib]
-  rw [hcomp] at hp
-  have hb := interval_rank_bonus_sum r.val R hbound
-  have hs := rank_surplus_sum p a
-  have hn' : (n : ℤ)=2*(height p a : ℤ)+2 := by exact_mod_cast hn
-  nlinarith
 
 def minimumHeightOffsets (p : State n) (h : ℕ) : Finset (Fin n) :=
   (Finset.univ.filter fun i => height p i=h).image (fun i => p i-i)
@@ -171,7 +136,6 @@ theorem zero_surplus_count_eq_minimum_offsets (p : State n) (a : Fin n)
   exact hc
 
 #print axioms rank_peak_anchor_bounds
-#print axioms even_minimum_anchor_count_with_peak
 #print axioms zero_surplus_count_eq_minimum_offsets
 
 /-- The second rank excess pays the peak, with the exact total-rank correction. -/
@@ -216,16 +180,6 @@ theorem minimum_count_minus_high_count (p : State n) (a r : Fin n) (R : ℕ)
   rw [Nat.cast_sub hRpos,Nat.cast_one] at hb hp
   nlinarith
 
-/-- In odd size the total-rank correction vanishes. -/
-theorem odd_minimum_count_minus_high_count (p : State n) (a r : Fin n) (R : ℕ)
-    (hmin : ∀ b,height p a ≤ height p b) (hn : n=2*height p a+3)
-    (hRpos : 0 < R) (hpeak : rankSurplus p a r.val=R) :
-    ((R : ℤ)-1)*(R-2) ≤
-      2*((Finset.univ.filter (fun t : Fin n => rankSurplus p a t.val=0)).card : ℤ)-
-        2*((Finset.univ.filter (fun t : Fin n => 2 ≤ rankSurplus p a t.val)).card : ℤ) := by
-  have h := minimum_count_minus_high_count p a r R hmin hRpos hpeak
-  have hn' : (n : ℤ)=2*(height p a : ℤ)+3 := by exact_mod_cast hn
-  nlinarith
 
 /-- A surplus-one threshold is occupied, or the immediately following
 threshold is a minimum-height anchor. This includes the cyclic seam. -/
@@ -263,6 +217,5 @@ theorem rank_one_occupied_or_next_minimum (p : State n) (a t : Fin n)
         simpa only [Nat.cast_add,Fin.cast_val_eq_self,Nat.cast_one] using he
       exact Or.inr ⟨a,by simp [cyclicOffset,hz],rfl⟩
 
-#print axioms odd_minimum_count_minus_high_count
 #print axioms rank_one_occupied_or_next_minimum
 end LX.AnchoredPhases

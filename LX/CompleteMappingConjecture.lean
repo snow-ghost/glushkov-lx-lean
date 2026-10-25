@@ -1,5 +1,11 @@
 import LX.CompleteMappingSharpScan
+import LX.ConstantHeightEvenGeometry
+import LX.EvenOneFixedObstruction
+import LX.HigherPhasePayment
+import LX.ReflectionPhases
 import LX.Small5
+import LX.ZeroExchangeReserve
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

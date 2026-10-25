@@ -1,4 +1,6 @@
 import LX.PairedAlignedPrefix
+import LX.PrefixGapDeadline
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

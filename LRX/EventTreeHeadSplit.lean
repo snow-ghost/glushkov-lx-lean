@@ -1,4 +1,5 @@
-import LRX.ShallowEventTree
+import LRX.ZeroGapComponentSize
+import Mathlib
 
 namespace LRX.ZeroGap
 variable {n : ℕ} [NeZero n]

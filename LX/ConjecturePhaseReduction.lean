@@ -1,7 +1,9 @@
 import LX.CompleteMappingConjecture
+import LX.OddGlobalHeight
 import LX.Small4
 import LX.Small6
-import LX.LowForwardPayment
+import LX.SmallConstantPhases
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

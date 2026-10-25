@@ -1,4 +1,6 @@
 import LX.OddPositiveExcessHead
+import LX.OddThreeRankObstruction
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -23,16 +25,6 @@ theorem odd_unpaid_rank_two_geometry (hn5 : 5 ≤ n) (p : State n)
   rw [he] at hpeak hR
   exact ⟨a,r,hnlarge,ha,hh,hmin,hpeak,hR,hs,hresup⟩
 
-/-- In the last odd profile the three possible anchor heights have
-fixed-fiber bounds three, two, and one, respectively. -/
-theorem rank_two_anchor_fibers (p : State n) (a : Fin n)
-    (hmin : ∀ b,height p a ≤ height p b)
-    (hR : ∀ t : Fin n,rankSurplus p a t.val ≤ 2) :
-    ∀ b,height p b ≤ height p a+2 ∧
-      ((fixedPositions (permutation p b)).card : ℤ)+height p b ≤ (height p a : ℤ)+3 := by
-  intro b
-  exact ⟨((rank_peak_anchor_bounds p a 2 hmin hR).1 b).2,rank_peak_fixed_count p a 2 hR b⟩
 
 #print axioms odd_unpaid_rank_two_geometry
-#print axioms rank_two_anchor_fibers
 end LX.AnchoredPhases

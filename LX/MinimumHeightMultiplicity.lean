@@ -1,4 +1,5 @@
-import LX.MinimumPhasePrice
+import LX.NextOccupiedPhase
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -85,59 +86,6 @@ theorem even_minimum_anchor_count_with_fixed (p : State n) (a : Fin n)
 def rawOffsets (p : State n) : Finset (Fin n) :=
   Finset.univ.image (fun i => p i-i)
 
-/-- A fixed fiber consumes its full triangular rank surplus. This bound
-uses minimum height only and applies in both parities. -/
-theorem minimum_height_fixed_triangle (p : State n) (a : Fin n)
-    (hmin : ∀ b,height p a ≤ height p b) :
-    ((fixedPositions (permutation p a)).card : ℤ)*
-        (((fixedPositions (permutation p a)).card : ℤ)-1) ≤
-      (n : ℤ)*((n : ℤ)-1-2*height p a) := by
-  classical
-  let f := (fixedPositions (permutation p a)).card
-  have hf : 0 < f := Finset.card_pos.mpr
-    ⟨a,(mem_fixedPositions _ _).mpr (permutation_anchor p a)⟩
-  have hfn : f ≤ n := (Finset.card_le_univ _).trans_eq (Fintype.card_fin n)
-  have hcount : (∑ t : Fin n,if 0 < t.val ∧ t.val < f then (1 : ℤ) else 0)=(f : ℤ)-1 := by
-    rw [Fin.sum_univ_eq_sum_range (fun k : ℕ => if 0 < k ∧ k < f then (1 : ℤ) else 0) n]
-    have he : (∑ k ∈ Finset.range n,if 0 < k ∧ k < f then (1 : ℤ) else 0)=
-        ∑ k ∈ Finset.range f,if 0 < k ∧ k < f then (1 : ℤ) else 0 := by
-      symm
-      apply Finset.sum_subset (Finset.range_mono hfn)
-      intro k _ hk
-      simp only [Finset.mem_range] at hk
-      simp [hk]
-    rw [he]
-    calc
-      _ = ∑ k ∈ Finset.range f,((1 : ℤ)-(if k=0 then 1 else 0)) := by
-        apply Finset.sum_congr rfl
-        intro k hk
-        have hk' := Finset.mem_range.mp hk
-        by_cases hz : k=0
-        · subst k; simp
-        · simp [hz,hk',show 0 < k by omega]
-      _ = _ := by simp [Finset.sum_sub_distrib,hf]
-  have hp : (∑ t : Fin n,if 0 < t.val ∧ t.val < f then (1 : ℤ) else 0)+
-      (∑ t : Fin n,if 0 < t.val ∧ t.val < f then (f : ℤ)-t.val-1 else 0) ≤
-        ∑ t : Fin n,rankSurplus p a t.val := by
-    rw [← Finset.sum_add_distrib]
-    apply Finset.sum_le_sum
-    intro t _
-    by_cases ht : 0 < t.val ∧ t.val < f
-    · have hbelow : f ≤ belowCount p a t.val := by
-        apply Finset.card_le_card
-        intro i hi
-        have hz := (offset_zero_iff_source_fixed p a i).mpr ((mem_fixedPositions _ _).mp hi)
-        exact Finset.mem_filter.mpr ⟨Finset.mem_univ _,by rw [hz,Fin.val_zero]; exact ht.1⟩
-      rw [ite_eq_left ht,ite_eq_left ht]
-      unfold rankSurplus
-      omega
-    · rw [ite_eq_right ht,ite_eq_right ht,add_zero]
-      exact rank_surplus_nonnegative p a hmin t.val (Nat.le_of_lt t.isLt)
-  rw [hcount] at hp
-  have hb := rank_bonus_sum f hf hfn
-  have hs := rank_surplus_sum p a
-  change (f : ℤ)*(f-1) ≤ _
-  nlinarith
 
 theorem zero_surplus_count_le_raw_offsets (p : State n) (a : Fin n)
     (hmin : ∀ b,height p a ≤ height p b) :
@@ -169,5 +117,4 @@ theorem even_raw_offset_count_with_fixed (p : State n) (a : Fin n)
 #print axioms even_minimum_anchor_count_with_fixed
 #print axioms zero_surplus_count_le_raw_offsets
 #print axioms even_raw_offset_count_with_fixed
-#print axioms minimum_height_fixed_triangle
 end LX.AnchoredPhases

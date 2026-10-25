@@ -1,4 +1,6 @@
-import LRX.MatchingCircularReflection
+import LRX.MajorizedExtremeCount
+import LRX.StrictBandInversionCapacity
+import Mathlib
 
 namespace LRX.FiniteCuts
 open scoped BigOperators

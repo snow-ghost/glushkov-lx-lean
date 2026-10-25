@@ -1,4 +1,4 @@
-import LX.ScanInversions
+import Mathlib
 
 namespace LX
 open scoped BigOperators

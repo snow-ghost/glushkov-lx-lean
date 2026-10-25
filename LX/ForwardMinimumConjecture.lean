@@ -1,5 +1,8 @@
+import LX.EvenTerminalWindow
 import LX.NearTopPrefixBound
-import LX.CircularRankPayment
+import LX.OddTerminalWindow
+import LX.PrefixGapDeadline
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

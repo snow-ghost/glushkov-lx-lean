@@ -1,5 +1,5 @@
 import LRX.FiniteWindow
-import LRX.PrunedLift
+import Mathlib
 
 /-! Extract the finite permutation of an invariant physical window. -/
 namespace LRX.FiniteWindow

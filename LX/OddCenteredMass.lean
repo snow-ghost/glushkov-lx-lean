@@ -1,4 +1,6 @@
 import LX.CenteredLiftSelection
+import LX.WordMetric
+import Mathlib
 
 namespace LX.CenteredLift
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

@@ -1,5 +1,6 @@
-import LX.WordMetric
 import LRX.PermutationCode
+import LX.WordMetric
+import Mathlib
 
 namespace LX
 

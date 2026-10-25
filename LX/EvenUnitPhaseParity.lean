@@ -1,4 +1,6 @@
-import LX.EvenUnitThreePayment
+import LX.EvenUnitStructure
+import LX.OddUnitFixedNeighbors
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -89,44 +91,6 @@ theorem even_unit_two_fixed_next_phase {p : State n} {a : Fin n}
   unfold cyclicOffset
   linear_combination -hphase'
 
-/-- If no minimal phase has one fixed position, successive exact two-step
-phase changes exclude every odd cyclic offset. This conclusion is derived
-from the unpaid hypothesis, not assumed as a symmetry of the input. -/
-theorem even_unit_unpaid_offsets_even {p : State n} {a : Fin n}
-    (hn4 : 4 ≤ n) (m : ℕ) (hn : n=2*m) (ha : GlobalMinimum p a)
-    (hunit : (inversions (displacement p a) : ℤ)+1=(m : ℤ)*(m-1))
-    (hunpaid : ¬ ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) < 3*(n : ℤ)^2-8*n+4*32) :
-    ∀ b : Fin n,GlobalMinimum p b → ∀ i : Fin n,(cyclicOffset p b i).val%2=0 := by
-  have hfixed := even_unit_unpaid_all_minima_two_fixed hn4 m hn ha hunit hunpaid
-  have hunit_at (b : Fin n) (hb : GlobalMinimum p b) :
-      (inversions (displacement p b) : ℤ)+1=(m : ℤ)*(m-1) := by
-    have hx := Nat.le_antisymm (global_minimum_exchanges hb a) (global_minimum_exchanges ha b)
-    rwa [hx]
-  have main : ∀ r : ℕ,∀ b : Fin n,GlobalMinimum p b → ∀ i : Fin n,
-      (cyclicOffset p b i).val=r → r%2=0 := by
-    intro r
-    induction r using Nat.strong_induction_on with
-    | h r ih =>
-      intro b hb i hir
-      have hh := (even_unit_reserve_height m hn hb (hunit_at b hb)).1
-      have hno := two_fixed_no_offset_one p b (global_minimum_majorized hb)
-        (by omega) (hfixed b hb) i
-      by_cases hr : r < 2
-      · have hz : r=0 := by omega
-        simp [hz]
-      · obtain ⟨c,hc,hbc⟩ := even_unit_two_fixed_next_phase hn4 m hn hb (hunit_at b hb) (hfixed b hb)
-        have hval2 : (2 : Fin n).val=2 := by simp [Nat.mod_eq_of_lt (by omega : 2 < n)]
-        have hci : (cyclicOffset p c i).val=r-2 := by
-          rw [cyclic_offset_reanchor p b c i,hbc,Fin.coe_sub_iff_le.mpr (show (2 : Fin n) ≤ cyclicOffset p b i by
-            change (2 : Fin n).val ≤ (cyclicOffset p b i).val
-            rw [hval2,hir]
-            omega),hir,hval2]
-        have hh' := ih (r-2) (by omega) c hc i hci
-        omega
-  intro b hb i
-  exact main _ b hb i rfl
 
 #print axioms even_unit_two_fixed_next_phase
-#print axioms even_unit_unpaid_offsets_even
 end LX.AnchoredPhases

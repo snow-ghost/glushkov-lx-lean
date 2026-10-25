@@ -1,4 +1,5 @@
 import LX.AffineRankOrder
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

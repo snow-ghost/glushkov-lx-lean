@@ -1,5 +1,6 @@
-import LX.DepthBound
 import LRX.StrictBandInversionCapacity
+import LX.DepthBound
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -125,28 +126,9 @@ theorem recovers_strict_strip {p : State n} {c : ℤ} {d : Fin n → ℤ}
   simp only [Equiv.symm_symm, he] at hnew hold
   exact add_left_cancel (hnew.symm.trans hold)
 
-/-- The finite candidate family contains an actual globally majorized short lift. -/
-theorem exists_short_candidate (p : State n) : ∃ a : Fin n,
-    LRX.AffineLift.Majorized (displacement p a) ∧
-      (∀ i, 2*|displacement p a i| ≤ (n : ℤ)-1) ∧
-      height p a ≤ (n-1)/2 := by
-  obtain ⟨c,d,hd,hm,hshort,hwidth,_⟩ := LRX.AffineLift.exists_short_lift (NeZero.pos n) p.symm
-  obtain ⟨a,_,ha⟩ := Finset.exists_min_image (Finset.univ : Finset (Fin n)) d
-    ⟨0, Finset.mem_univ _⟩
-  have hmin (i : Fin n) := ha i (Finset.mem_univ _)
-  have he := (recovers_strict_strip hd a hmin (fun i => by have := hwidth i a; omega)).1
-  refine ⟨a, ?_, ?_, ?_⟩
-  · rwa [he]
-  · rwa [he]
-  · have hh := hshort a
-    have hanchor := displacement_anchor p a
-    rw [he] at hanchor
-    rw [hanchor, abs_neg, abs_of_nonneg (Nat.cast_nonneg _)] at hh
-    omega
 
 #print axioms is_lift
 #print axioms candidate_price_components
 #print axioms candidate_sorting_word
 #print axioms recovers_strict_strip
-#print axioms exists_short_candidate
 end LX.AnchoredPhases

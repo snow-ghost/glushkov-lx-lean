@@ -1,5 +1,5 @@
 import LX.LowerCertificate
-import LX.Small5
+import Mathlib
 
 namespace LX.Small5
 set_option maxRecDepth 100000
@@ -37,9 +37,6 @@ theorem diameter_lower : 11 ≤ diameter 5 := by
     potential_zero potential_edges farthest
   simpa only [farthest_score] using hb
 
-theorem exact_diameter : diameter 5=11 :=
-  Nat.le_antisymm sharp_diameter diameter_lower
 
 #print axioms diameter_lower
-#print axioms exact_diameter
 end LX.Small5

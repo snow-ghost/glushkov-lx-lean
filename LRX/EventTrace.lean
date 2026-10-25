@@ -1,4 +1,5 @@
 import LRX.PairEvents
+import Mathlib
 
 /-! Exact event traces and detection of repeated lifted pairs in a literal word. -/
 namespace LRX.LiftedModel

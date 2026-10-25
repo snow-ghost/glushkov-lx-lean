@@ -1,4 +1,5 @@
-import LX.ReflectionConjecture
+import LX.WordMetric
+import Mathlib
 
 namespace LX.AnchoredPhases
 set_option maxRecDepth 100000

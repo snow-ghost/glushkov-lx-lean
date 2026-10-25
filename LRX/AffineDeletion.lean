@@ -1,5 +1,6 @@
-import LRX.EventTrace
 import LRX.BufferProgram
+import LRX.EventTrace
+import Mathlib
 
 /-! Repeated lifted pairs can be eliminated from every finite LRX word. The
 integer endpoint configuration and the entire L/R subsequence are preserved.

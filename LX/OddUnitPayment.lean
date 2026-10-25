@@ -1,5 +1,9 @@
-import LX.JoinMinimumPair
+import LX.AnchorReserveRigidity
 import LX.FixedPairJoinPrice
+import LX.JoinMinimumPair
+import LX.OddUnitFixedNeighbors
+import LX.ZeroExchangeReserve
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -71,40 +75,7 @@ theorem odd_zero_strip_join_reflection (hn4 : 4 ≤ n) (p : State n) (a : Fin n)
     nlinarith
   exact majorized_capacity_reflection heLift heMajor heq
 
-/-- The entire odd unit-reserve branch is paid, with no matching shape,
-fixed-point location, or routing assumption remaining. -/
-theorem odd_unit_reserve_upper_word {p : State n} {a : Fin n}
-    (hn4 : 4 ≤ n) (m : ℕ) (hn : n=2*m+1) (ha : GlobalMinimum p a)
-    (hunit : (inversions (displacement p a) : ℤ)+1=(m : ℤ)^2) :
-    ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) < 3*(n : ℤ)^2-8*n+4*32 := by
-  by_contra hunpaid
-  obtain ⟨b,hb,hh,hzero,_,_,_,u,hu,hv⟩ := odd_unit_reserve_adjacent_fixed hn4 m hn ha hunit hunpaid
-  obtain ⟨r,hr⟩ := odd_zero_strip_join_reflection hn4 p b (by omega)
-    (global_minimum_majorized hb) hzero u hu hv
-  obtain ⟨w,hw,hprice⟩ := reflection_neighbor_upper_word hn4 (p*Equiv.swap u (u+1)) r hr u
-  have he : (p*Equiv.swap u (u+1))*Equiv.swap u (u+1)=p := by simp [mul_assoc]
-  rw [he] at hw
-  exact hunpaid ⟨w,hw,hprice⟩
-
-/-- The remaining odd inputs have at least two units of exchange reserve;
-the zero and unit branches have both been paid by literal LX words. -/
-theorem odd_unpaid_reserve_at_least_two {p : State n} {a : Fin n}
-    (hn4 : 4 ≤ n) (m : ℕ) (hn : n=2*m+1) (ha : GlobalMinimum p a)
-    (hunpaid : ¬ ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) < 3*(n : ℤ)^2-8*n+4*32) :
-    2 ≤ (m : ℤ)^2-inversions (displacement p a) := by
-  have hpos := unpaid_positive_exchange_reserve hn4 ha hunpaid
-  have hm : n/2=m := by omega
-  rw [hm] at hpos
-  have hn' : (n : ℤ)=2*(m : ℤ)+1 := by exact_mod_cast hn
-  have hpos' : (inversions (displacement p a) : ℤ)<(m : ℤ)^2 := by nlinarith
-  by_contra hnot
-  have heq : (inversions (displacement p a) : ℤ)+1=(m : ℤ)^2 := by omega
-  exact hunpaid (odd_unit_reserve_upper_word hn4 m hn ha heq)
 
 #print axioms joined_source_permutation
 #print axioms odd_zero_strip_join_reflection
-#print axioms odd_unit_reserve_upper_word
-#print axioms odd_unpaid_reserve_at_least_two
 end LX.AnchoredPhases

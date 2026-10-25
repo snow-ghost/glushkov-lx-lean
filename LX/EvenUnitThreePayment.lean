@@ -1,4 +1,6 @@
+import LX.MatchingFixedNeighbors
 import LX.SingleThreeReflection
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -64,38 +66,6 @@ theorem even_unit_one_fixed_reflection_neighbor {p : State n} {a : Fin n}
   change p (Equiv.swap (u+a) ((u+a)+1) i)=a+p a-i
   linear_combination hh
 
-/-- Full LX payment of the even unit-reserve subcase having a globally
-minimal source with exactly one fixed position. -/
-theorem even_unit_one_fixed_upper_word {p : State n} {a : Fin n}
-    (hn4 : 4 ≤ n) (m : ℕ) (hn : n=2*m) (ha : GlobalMinimum p a)
-    (hunit : (inversions (displacement p a) : ℤ)+1=(m : ℤ)*(m-1))
-    (hfixed : (fixedPositions (permutation p a)).card=1) :
-    ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) < 3*(n : ℤ)^2-8*n+4*32 := by
-  obtain ⟨u,r,hr⟩ := even_unit_one_fixed_reflection_neighbor m hn ha hunit hfixed
-  obtain ⟨w,hw,hprice⟩ := reflection_neighbor_upper_word hn4 (p*Equiv.swap u (u+1)) r hr u
-  have he : (p*Equiv.swap u (u+1))*Equiv.swap u (u+1)=p := by simp [mul_assoc]
-  rw [he] at hw
-  exact ⟨w,hw,hprice⟩
-
-/-- Any remaining even unit-reserve input has two fixed positions in every
-globally minimal phase. A single exceptional phase would already pay it. -/
-theorem even_unit_unpaid_all_minima_two_fixed {p : State n} {a : Fin n}
-    (hn4 : 4 ≤ n) (m : ℕ) (hn : n=2*m) (ha : GlobalMinimum p a)
-    (hunit : (inversions (displacement p a) : ℤ)+1=(m : ℤ)*(m-1))
-    (hunpaid : ¬ ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) < 3*(n : ℤ)^2-8*n+4*32) :
-    ∀ b : Fin n,GlobalMinimum p b → (fixedPositions (permutation p b)).card=2 := by
-  intro b hb
-  have hx : inversions (displacement p b)=inversions (displacement p a) :=
-    Nat.le_antisymm (global_minimum_exchanges hb a) (global_minimum_exchanges ha b)
-  have hbunit : (inversions (displacement p b) : ℤ)+1=(m : ℤ)*(m-1) := by rwa [hx]
-  have hcases := (even_unit_reserve_source m hn hb hbunit).2.2.1
-  rcases hcases with h | h
-  · exact False.elim (hunpaid (even_unit_one_fixed_upper_word hn4 m hn hb hbunit h))
-  · exact h
 
 #print axioms even_unit_one_fixed_reflection_neighbor
-#print axioms even_unit_one_fixed_upper_word
-#print axioms even_unit_unpaid_all_minima_two_fixed
 end LX.AnchoredPhases

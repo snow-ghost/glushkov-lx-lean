@@ -1,4 +1,6 @@
 import LX.FinitePrefixRotation
+import LX.ForwardPrefixContraction
+import Mathlib
 
 namespace LX.FiniteDropBudget
 open scoped BigOperators

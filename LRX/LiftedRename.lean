@@ -1,4 +1,5 @@
 import LRX.LiftedModel
+import Mathlib
 
 /-! Periodic renaming of lifted tokens commutes with physical execution. The
 integer offset is retained, so this symmetry records winding as well as labels. -/

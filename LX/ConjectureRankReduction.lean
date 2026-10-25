@@ -1,6 +1,10 @@
+import LX.ConjecturePhaseReduction
 import LX.ConjectureTerminalWindow
-import LX.SecondExcess
+import LX.LowForwardPayment
+import LX.MinimumGapPhases
 import LX.RankPeakReserve
+import LX.SecondExcess
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

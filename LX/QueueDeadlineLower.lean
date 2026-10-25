@@ -1,5 +1,7 @@
-import LX.GreedyLowerCertificate
+import LX.DeadlinePrice
 import LX.FirstLapFormula
+import LX.GreedyRotationOptimality
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -112,11 +114,6 @@ theorem scan_deadline_le_any_word (hn : 2 ≤ n) (d : Fin n → ℤ)
   unfold scanDeadline
   omega
 
-theorem ScanTrace.rotations_eq_deadline (hn : 2 ≤ n) {d : Fin n → ℤ} {g : List Letter}
-    (hg : ScanTrace d g) (hb : ∑ i,d i=0) (hi : Function.Injective (labels d))
-    (hq : 0 < queueDeadline (sweep d (n-1))) : g.count .l=scanDeadline d :=
-  Nat.le_antisymm (hg.rotations_le_deadline hn hb hi)
-    (scan_deadline_le_any_word hn d hb hi hq g hg.run_zero)
 
 /-- A positive depth emitted at position j forces this many rotations,
 even if the word uses a different sequence of exchanges. -/
@@ -163,6 +160,5 @@ theorem prefix_record_rotation_lower (hn : 2 ≤ n) (d : Fin n → ℤ)
   exact (prefix_minimum_le_iff _ _ _).mpr (fun k hk => hd k (by omega))
 
 #print axioms scan_deadline_le_any_word
-#print axioms ScanTrace.rotations_eq_deadline
 #print axioms prefix_record_rotation_lower
 end LX.AffineScan

@@ -1,4 +1,5 @@
-import LRX.ZeroGapEvents
+import LRX.ZeroGapEventGeometry
+import Mathlib
 
 /-! Connected components of the event graph contain the cycles of the
 original permutation and are invariant under it. -/
@@ -72,13 +73,6 @@ noncomputable def eventComponent (events : List (Event n)) (root : Fin n) : Fins
   classical
   simp [eventComponent]
 
-theorem event_component_invariant (events : List (Event n)) (p : State n)
-    (hprod : (events.map eventSwap).prod=p) (root i : Fin n) :
-    p i ∈ eventComponent events root ↔ i ∈ eventComponent events root := by
-  have hp : EventReaches events (p i) i := by simpa using target_event_reachable events p hprod (p i)
-  simp only [mem_eventComponent]
-  exact ⟨fun h => h.trans hp,fun h => h.trans (event_reaches_symm events hp)⟩
 
 #print axioms cycle_event_reachable
-#print axioms event_component_invariant
 end LRX.ZeroGap

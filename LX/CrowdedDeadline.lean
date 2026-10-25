@@ -1,5 +1,7 @@
-import LX.FirstLapFormula
+import LX.DeadlinePrice
 import LX.DepthCrowding
+import LX.FirstLapFormula
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -101,19 +103,6 @@ theorem scan_deadline_of_crowding (hn : 2 ≤ n) (d : Fin n → ℤ)
   unfold scanDeadline
   omega
 
-/-- The crowding condition is supplied by the original majorized lift.
-For the two near-half parity cases the fixed prefix allowances are 5 and 8. -/
-theorem majorized_scan_deadline {p : State n} {c : ℤ} {d : Fin n → ℤ}
-    (hn : 2 ≤ n) (hd : LRX.AffineLift.IsLift p c d)
-    (hm : LRX.AffineLift.Majorized d) (hi : Function.Injective (labels d))
-    (h M : ℕ) (hpos : 2 ≤ h) (hh : 2*h ≤ n)
-    (hmax : ∀ i, backwardDepth d i ≤ h) (hhead : backwardDepth d 0 < h)
-    (hpositions : ∀ i, backwardDepth d i=h → i.val ≤ M) :
-    scanDeadline d ≤ (h-1)*(n-1)+max M (3*(n-2*h)+2)-1 := by
-  apply scan_deadline_of_crowding hn d hi h M (3*(n-2*h)+2) hpos hmax hhead hpositions
-  have hc := next_depth_count hd hm h (by omega) hh hmax
-  omega
 
 #print axioms scan_deadline_of_crowding
-#print axioms majorized_scan_deadline
 end LX.AffineScan

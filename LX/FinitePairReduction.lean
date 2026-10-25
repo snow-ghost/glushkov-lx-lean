@@ -1,4 +1,5 @@
-import LX.LiftedScanBridge
+import LX.WordMetric
+import Mathlib
 
 namespace LX.FinitePairReduction
 open scoped Fin.IntCast Fin.NatCast Fin.CommRing

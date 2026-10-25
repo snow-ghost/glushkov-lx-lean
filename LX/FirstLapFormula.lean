@@ -1,4 +1,5 @@
-import LX.DeadlinePrice
+import LX.DepthQueue
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -119,11 +120,6 @@ def sourceDeadline (d : Fin n → ℤ) : ℕ :=
     let b := if i=0 then 0 else emittedDepth d i.val
     if b=0 then 0 else (n-1)*(b-1)+i.val)-1
 
-theorem scan_deadline_eq_source (hn : 2 ≤ n) (d : Fin n → ℤ)
-    (hi : Function.Injective (labels d)) : scanDeadline d=sourceDeadline d := by
-  unfold scanDeadline queueDeadline sourceDeadline
-  simp only [first_lap_depth_formula hn d hi]
 
 #print axioms first_lap_depth_formula
-#print axioms scan_deadline_eq_source
 end LX.AffineScan

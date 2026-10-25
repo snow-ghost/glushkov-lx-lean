@@ -1,4 +1,5 @@
 import LRX.LiftedRename
+import Mathlib
 
 /-! A lifted pair is a pair of finite labels together with an integer relative
 copy offset. Equal pair events implement the same periodic involution. -/
@@ -21,11 +22,6 @@ theorem pair_offset_cancel (a b : Fin n) (shift : ℤ) (hab : a ≠ b) (i : Fin 
     · subst i; simp [pairOffset, Ne.symm hab]
     · simp [pairOffset, ha, hb, Equiv.swap_apply_of_ne_of_ne ha hb]
 
-omit [NeZero n] in
-theorem pair_rename_involutive (a b : Fin n) (shift : ℤ) (hab : a ≠ b) :
-    Function.Involutive (pairRename a b shift) :=
-  rename_involutive (Equiv.swap a b) (pairOffset a b shift)
-    (Equiv.swap_apply_self a b) (pair_offset_cancel a b shift hab)
 
 omit [NeZero n] in
 theorem configuration_ext_components {s t : Configuration n}
@@ -90,6 +86,5 @@ theorem pair_offset_dvd {s : Configuration n} (hs : Aligned s)
   simpa only [sub_self] using hh
 
 #print axioms x_as_pair_rename
-#print axioms pair_rename_involutive
 #print axioms pair_offset_dvd
 end LRX.LiftedModel

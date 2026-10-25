@@ -1,5 +1,6 @@
-import LX.OddAnchorPrice
 import LRX.FiniteCoordinateCapacity
+import LX.AnchoredPhases
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -113,72 +114,7 @@ theorem complete_positive_count (p : State n) (hp : CompleteMapping p) (h : ℕ)
     (descendingPositions p).card+1=n at hsum
   omega
 
-/-- A complete mapping has an anchor with almost half-circle forward span;
-only five exceptional displacement values/positions need be discarded. -/
-theorem complete_good_anchor (p : State n) (hp : CompleteMapping p) (h : ℕ)
-    (hn : n=2*h+1) (hh : 6 ≤ h) :
-    ∃ a : Fin n, 0 < a.val ∧ a.val+h ≤ (p a).val+5 ∧
-      5 ≤ a.val+(n-(p a).val) := by
-  let P := Finset.univ.filter (fun i : Fin n => i.val < (p i).val)
-  let δ := fun i : Fin n => (p i).val-i.val
-  have hcard : P.card=h := complete_positive_count p hp h hn
-  have hinj : Set.InjOn δ P := by
-    intro i hi j hj he
-    have hi' := (Finset.mem_filter.mp hi).2
-    have hj' := (Finset.mem_filter.mp hj).2
-    apply hp
-    have hcast := congrArg (fun k : ℕ => (k : Fin n)) he
-    simpa only [δ,Nat.cast_sub (Nat.le_of_lt hi'),Nat.cast_sub (Nat.le_of_lt hj'),
-      Fin.cast_val_eq_self] using hcast
-  by_contra hnone
-  push Not at hnone
-  let S : Finset ℕ := (Finset.Icc 1 (h-6) ∪ Finset.Icc (n-4) (n-1)) ∪ {δ 0}
-  have hsub : P.image δ ⊆ S := by
-    intro x hx
-    obtain ⟨a,ha,rfl⟩ := Finset.mem_image.mp hx
-    have hpa := (Finset.mem_filter.mp ha).2
-    have hpn := (p a).isLt
-    by_cases ha0 : a=0
-    · subst a
-      simp [S]
-    · have hap : 0 < a.val := Fin.pos_iff_ne_zero.mpr ha0
-      by_cases hlo : δ a ≤ h-6
-      · have hδpos : 0 < δ a := by dsimp [δ]; omega
-        simp only [S,Finset.mem_union,Finset.mem_Icc,Finset.mem_singleton]
-        exact Or.inl (Or.inl ⟨hδpos,hlo⟩)
-      · have hforward : a.val+h ≤ (p a).val+5 := by dsimp [δ] at hlo; omega
-        have hnot := hnone a hap hforward
-        have hδhi : n-4 ≤ δ a ∧ δ a ≤ n-1 := by dsimp [δ]; omega
-        simp only [S,Finset.mem_union,Finset.mem_Icc,Finset.mem_singleton]
-        exact Or.inl (Or.inr hδhi)
-  have hc := Finset.card_le_card hsub
-  rw [Finset.card_image_iff.mpr hinj,hcard] at hc
-  have hcu := Finset.card_union_le (Finset.Icc 1 (h-6) ∪ Finset.Icc (n-4) (n-1)) {δ 0}
-  have hcu' := Finset.card_union_le (Finset.Icc 1 (h-6)) (Finset.Icc (n-4) (n-1))
-  change S.card ≤ _ at hcu
-  simp only [Nat.card_Icc,Finset.card_singleton] at hcu hcu'
-  omega
-
-/-- The requested quadratic and linear terms hold uniformly for the complete
-mapping family. The constant also pays all dimensions below the crowding range. -/
-theorem complete_mapping_upper_word (p : State n) (hp : CompleteMapping p) (hn : 4 ≤ n) :
-    ∃ w : List Letter, p*eval w=1 ∧
-      4*(w.length : ℤ) < 3*(n : ℤ)^2-8*n+4*32 := by
-  by_cases hsmall : n < 13
-  · obtain ⟨w,hw,hprice⟩ := exists_quadratic_coarse_word (by omega : 2 ≤ n) p⁻¹
-    refine ⟨w,?_,?_⟩
-    · rw [hw,mul_inv_cancel]
-    · nlinarith
-  · let h := height p 0
-    have hparity : n=2*h+1 := complete_height p hp 0
-    obtain ⟨a,ha,hforward,hcorner⟩ := complete_good_anchor p hp h hparity (by omega)
-    have hheight : height p a=h := by have := complete_height p hp a; omega
-    obtain ⟨w,hw,hprice⟩ := odd_forward_anchor_word p a 5 (complete_majorized p hp a)
-      (by omega) (by omega) ha (by omega) hcorner
-    exact ⟨w,hw,by norm_num at hprice ⊢; omega⟩
 
 #print axioms complete_height
 #print axioms complete_majorized
-#print axioms complete_good_anchor
-#print axioms complete_mapping_upper_word
 end LX.AnchoredPhases

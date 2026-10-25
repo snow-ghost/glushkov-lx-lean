@@ -1,4 +1,6 @@
+import LRX.ClockwiseLiftCount
 import LRX.FiniteCrossPairCount
+import Mathlib
 
 namespace LRX.FiniteCuts
 open scoped BigOperators

@@ -1,6 +1,10 @@
-import LX.EvenUnitReflectionGeometry
+import LX.FiberDepthGeometry
 import LX.PrefixGapDeadline
+import LX.RankPeakCount
 import LX.RankPeakReserve
+import LX.ReflectionPhases
+import LX.ReserveAwareAnchorPrice
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

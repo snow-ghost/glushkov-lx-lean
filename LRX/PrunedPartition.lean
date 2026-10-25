@@ -1,4 +1,5 @@
 import LRX.PrunedLift
+import Mathlib
 
 /-! The retained and removed unions of cycles partition both the permutation
 and every integer displacement, with disjoint physical targets. -/
@@ -25,14 +26,6 @@ theorem permutation_partition (p : State n) (S : Finset (Fin n))
   · simp [Equiv.Perm.mul_apply,hi]
   · simp [Equiv.Perm.mul_apply,hi,hS]
 
-theorem displacement_partition (S : Finset (Fin n)) (d : Fin n → ℤ) (i : Fin n) :
-    displacement S d i+displacement Sᶜ d i=d i := by
-  by_cases hi : i ∈ S <;> simp [displacement,hi]
-
-theorem absolute_partition (S : Finset (Fin n)) (d : Fin n → ℤ) (i : Fin n) :
-    |displacement S d i|+|displacement Sᶜ d i|=|d i| := by
-  by_cases hi : i ∈ S <;> simp [displacement,hi]
 
 #print axioms permutation_partition
-#print axioms displacement_partition
 end LRX.PrunedLift

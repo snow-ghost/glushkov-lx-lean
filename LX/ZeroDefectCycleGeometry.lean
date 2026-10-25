@@ -1,6 +1,9 @@
-import LX.EvenUnitStructure
+import LRX.EventCoverEquality
 import LRX.LinearSortingTrace
 import LRX.MinimalEventCycle
+import LRX.TwoWindowCycleDefect
+import LX.WordMetric
+import Mathlib
 
 namespace LX.EventGeometry
 open LRX.ZeroGap
@@ -145,19 +148,7 @@ theorem zero_defect_cycle_gap_invariant (q : LX.State n) (hq : cycleDefect q=0)
 end LX.CycleGeometry
 
 namespace LX.AnchoredPhases
-open LX.AffineScan
 variable {n : ℕ} [NeZero n]
 
-/-- Noncrossing of actual cycles holds in every phase of the remaining
-even unit-reserve input, including phases which are not majorized. -/
-theorem even_unit_all_anchor_cycles_noncrossing {p : State n} {a : Fin n}
-    (m : ℕ) (hn : n=2*m) (ha : GlobalMinimum p a)
-    (hunit : (inversions (displacement p a) : ℤ)+1=(m : ℤ)*(m-1)) (b : Fin n)
-    (i j k l : Fin n) (hij : i.val < j.val) (hjk : j.val < k.val) (hkl : k.val < l.val)
-    (hik : (permutation p b).SameCycle i k) (hjl : (permutation p b).SameCycle j l) :
-    (permutation p b).SameCycle i j :=
-  LX.CycleGeometry.zero_defect_cycles_noncrossing (permutation p b)
-    (even_unit_all_anchor_zero_defect m hn ha hunit b) i j k l hij hjk hkl hik hjl
 
-#print axioms even_unit_all_anchor_cycles_noncrossing
 end LX.AnchoredPhases

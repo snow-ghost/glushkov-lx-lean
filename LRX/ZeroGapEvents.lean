@@ -1,4 +1,7 @@
+import LRX.ClosedReachableService
 import LRX.ZeroGapEventTravel
+import LRX.ZeroGapSorting
+import Mathlib
 
 /-! The sorting trace yields an ordered event list in the original physical
 coordinates, together with factorization and noncrossing certificates. -/

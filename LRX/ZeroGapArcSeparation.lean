@@ -1,4 +1,5 @@
 import LRX.ZeroGapEventGraph
+import Mathlib
 
 /-! The ordered event condition gives a barrier: a different event component
 cannot cross either endpoint of a chosen open event arc. -/

@@ -1,5 +1,5 @@
-import LRX.ZeroGapComponentSize
-import Mathlib.Data.List.Dedup
+import LRX.ZeroGapEventGraph
+import Mathlib
 
 namespace LRX.ZeroGap
 variable {n : ℕ}

@@ -1,6 +1,8 @@
-import LX.GreedyRotationOptimality
 import LX.DirectedLiftLower
+import LX.DirectedTokenLower
+import LX.GreedyRotationOptimality
 import LX.LiftedScanBridge
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

@@ -1,5 +1,6 @@
-import LX.PhaseExchangePrice
 import LX.MinimumHeightRanks
+import LX.PhaseExchangePrice
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -62,15 +63,6 @@ theorem anchor_energy_inversion_invariant (p : State n) (a b : Fin n) :
     (displacement_strict_width p a) (reanchor_set_top p a b)
   rwa [← reanchor_displacement] at hh
 
-/-- Exchange differences across arbitrary actual phases, with every selected
-coordinate determined by the original permutation. -/
-theorem reanchor_inversion_difference (p : State n) (a b : Fin n) :
-    (inversions (displacement p b) : ℤ)-inversions (displacement p a)=
-      ((reanchorSet p a b).card : ℤ)*((n : ℤ)-(reanchorSet p a b).card)-
-        2*∑ i ∈ reanchorSet p a b,displacement p a i := by
-  have hh := top_phase_inversions (is_lift p a) (reanchorSet p a b)
-    (displacement_strict_width p a) (reanchor_set_top p a b)
-  rwa [← reanchor_displacement] at hh
 
 /-- Minimizing energy and minimizing the exchange price select the same
 anchor phases. This does not assert that they minimize the total LX price. -/
@@ -93,6 +85,5 @@ theorem minimum_energy_iff_minimum_exchanges (p : State n) (a : Fin n) :
     omega
 
 #print axioms anchor_energy_inversion_invariant
-#print axioms reanchor_inversion_difference
 #print axioms minimum_energy_iff_minimum_exchanges
 end LX.AnchoredPhases

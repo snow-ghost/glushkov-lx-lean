@@ -1,4 +1,6 @@
 import LRX.ExtremeNeighborInsertion
+import LRX.TwoMovingNeighborStep
+import Mathlib
 
 namespace LRX.ZeroGap
 variable {n : ℕ} [NeZero n]

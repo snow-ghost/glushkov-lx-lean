@@ -1,4 +1,6 @@
+import LX.AntipodeCandidates
 import LX.EvenCenteredMass
+import Mathlib
 
 namespace LX.Antipode
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -32,13 +34,6 @@ theorem even_lift_single_raise (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m) (c : Fin n)
   exact balanced_single_raise m d (evenBase m c) hd.1 hlo
     (even_base_bounds m c) (even_base_residue m c hd) (even_base_mass m hm hn c)
 
-theorem even_unpaid_single_raise (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
-    {c : Fin n} {d : Fin n → ℤ} (hd : LRX.AffineLift.IsLift even (c : ℤ) d)
-    {g : List Letter} (hg : ScanTrace d g)
-    (hu : inversions d+paidRotations c g < 3*m^2-4*m+3) :
-    d=evenBase m c ∨ ∃ a,d=raiseAt (evenBase m c) a :=
-  even_lift_single_raise m (by omega) hn c hd (even_unpaid_lower_strip m hm hn hd hg hu)
 
 #print axioms even_lift_single_raise
-#print axioms even_unpaid_single_raise
 end LX.Antipode

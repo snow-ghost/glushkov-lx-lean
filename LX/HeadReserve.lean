@@ -1,6 +1,8 @@
-import LX.FirstLapFormula
+import LX.DeadlinePrice
 import LX.DepthCrowding
-import LX.HeightReduction
+import LX.FirstLapFormula
+import LX.ScanBound
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -191,21 +193,8 @@ theorem height_five_word (hn : 2 ≤ n) (p : State n) (a : Fin n)
       (show (0 : ℤ) ≤ (n : ℤ)-2*height p a-5 by omega)
     nlinarith [sq_nonneg ((n : ℤ)-2*height p a-5)]
 
-/-- Only the first odd height branch remains: the second is now paid by a
-literal LX word with the required quadratic and linear terms. -/
-theorem odd_unpaid_single_height (p : State n) (h : ℕ) (hn : n=2*h+1) (hn4 : 4 ≤ n)
-    (hunpaid : ¬ ∃ w : List Letter, p*eval w=1 ∧
-      4*(w.length : ℤ) < 3*(n : ℤ)^2-8*n+4*32) :
-    ∃ a : Fin n, (∀ b, height p a ≤ height p b) ∧ height p a+1=h := by
-  obtain ⟨a,ha,hcases⟩ := odd_unpaid_height_cases p h hn hn4 hunpaid
-  refine ⟨a,ha,?_⟩
-  rcases hcases with hfirst | hsecond
-  · exact hfirst
-  · obtain ⟨w,hw,hprice⟩ := height_five_word (by omega : 2 ≤ n) p a (by omega)
-    exact False.elim (hunpaid ⟨w,hw,by linarith⟩)
 
 #print axioms early_head_reserve
 #print axioms candidate_head_reserve_word
 #print axioms height_five_word
-#print axioms odd_unpaid_single_height
 end LX.AnchoredPhases

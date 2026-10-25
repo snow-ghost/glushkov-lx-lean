@@ -1,4 +1,8 @@
+import LRX.RecenteredCrossings
+import LRX.ZeroGapCentered
+import LRX.ZeroGapExchange
 import LRX.ZeroGapInversionSum
+import Mathlib
 
 /-! Every nonzero short balanced lift has a genuine endpoint-transposition
 step with exact displacement and affine-inversion decreases. -/

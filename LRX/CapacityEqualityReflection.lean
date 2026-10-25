@@ -1,6 +1,6 @@
 import LRX.CapacityEqualityReflectionAtZero
-import LRX.RecenteredCrossings
 import LRX.PacketCoordinateSymmetry
+import Mathlib
 
 namespace LRX.FiniteCuts
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

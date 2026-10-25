@@ -1,4 +1,6 @@
-import LX.ScanBound
+import LX.AnchoredPhases
+import LX.DepthQueue
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -105,20 +107,5 @@ def deadlinePrice (p : State n) (a : Fin n) : ℕ :=
   inversions (displacement p a)+scanDeadline (displacement p a)+
     ((phase p a : Fin n)-(scanDeadline (displacement p a) : Fin n)).val
 
-/-- The price is a certificate for an actual two-generator word. No phase
-optimization assumption occurs in this theorem. -/
-theorem deadline_price_word (hn : 2 ≤ n) (p : State n) (a : Fin n) :
-    ∃ w : List Letter, p*eval w=1 ∧ w.length=deadlinePrice p a := by
-  obtain ⟨w,ht,_⟩ := candidate_sorting_word hn p a
-  have hd := is_lift p a
-  have hl (i : Fin n) : labels (displacement p a) i=p i+(phase p a : Fin n) := by
-    simpa only [labels,Equiv.symm_symm] using LRX.AffineLift.lift_residue hd i
-  have hi : Function.Injective (labels (displacement p a)) := by
-    intro i j hij
-    rw [hl,hl] at hij
-    exact p.injective (add_right_cancel hij)
-  exact ht.word_at_cursor hn p (phase p a : Fin n) hd.1 hi hl _
-    (ht.rotations_le_deadline hn hd.1 hi)
 
-#print axioms deadline_price_word
 end LX.AnchoredPhases

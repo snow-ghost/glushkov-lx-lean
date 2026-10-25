@@ -1,4 +1,5 @@
 import LX.FiniteCertificate
+import Mathlib
 
 -- Generated witnesses; the Lean kernel checks semantics, coverage and length.
 namespace LX.Small6
@@ -737,9 +738,6 @@ theorem sharp_words (p : State 6) :
     ∃ w : List Letter,eval w=p ∧ w.length ≤ 18 :=
   words_of_code_certificate table checked p
 
-theorem sharp_diameter : diameter 6 ≤ 18 :=
-  (diameter_le_iff_words (by decide)).mpr sharp_words
 
 #print axioms sharp_words
-#print axioms sharp_diameter
 end LX.Small6

@@ -1,5 +1,5 @@
 import LRX.ClockwiseInversionFormula
-import LRX.FiniteInversionDecomposition
+import Mathlib
 
 namespace LRX.FiniteCuts
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -63,49 +63,6 @@ theorem strict_short_strip (d : Fin n → ℤ)
   have hm := neg_abs_le (d i)
   omega
 
-/-- The non-strict part of Lemma 12 for every balanced strictly short phase lift. -/
-theorem strict_band_inversion_capacity {p : State n} {c : ℤ} {d : Fin n → ℤ}
-    (hd : AffineLift.IsLift p c d) (hshort : ∀ i, 2*|d i| < (n : ℤ)) :
-    (LiftedModel.inversionCount (fun i : Fin n => (i : ℤ)+d i) : ℤ) ≤
-      ((n/2 : ℕ) : ℤ)*((n : ℤ)-(n/2 : ℕ))-(n/2 : ℕ) := by
-  have h := shifted_lift_inversion_capacity hd (((n-1)/2 : ℕ) : ℤ)
-    (strict_short_strip d hshort)
-  have hn : 0<n := Nat.pos_of_ne_zero (NeZero.ne n)
-  have hevenodd : n=2*(n/2) ∨ n=2*(n/2)+1 := by omega
-  rcases hevenodd with he | ho
-  · have hh : (n-1)/2=n/2-1 := by omega
-    have hnint : (n : ℤ)=2*((n/2 : ℕ) : ℤ) := by exact_mod_cast he
-    have hhint : (((n-1)/2 : ℕ) : ℤ)=((n/2 : ℕ) : ℤ)-1 := by omega
-    rw [hhint] at h
-    nlinarith
-  · have hh : (n-1)/2=n/2 := by omega
-    have hnint : (n : ℤ)=2*((n/2 : ℕ) : ℤ)+1 := by exact_mod_cast ho
-    rw [hh] at h
-    nlinarith
-
-/-- Canonical finite permutations inherit the global inversion capacity. -/
-theorem finite_strict_band_inversion_capacity (p : State n)
-    (hshort : ∀ i, 2*|displacement p i| < (n : ℤ)) :
-    (inversionNumber p : ℤ) ≤
-      ((n/2 : ℕ) : ℤ)*((n : ℤ)-(n/2 : ℕ))-(n/2 : ℕ) := by
-  have h := strict_band_inversion_capacity (canonical_lift p) hshort
-  have hf : (fun i : Fin n => (i : ℤ)+displacement p i)=(fun i => (p i : ℤ)) := by
-    funext i
-    unfold displacement
-    omega
-  rwa [hf, canonical_inversion_count] at h
-
-/-- The input of maximal canonical routing has a nonnegative inversion reserve. -/
-theorem majorized_canonical_inversion_capacity (p : State n)
-    (hm : AffineLift.Majorized (displacement p.symm)) :
-    (inversionNumber p : ℤ) ≤
-      ((n/2 : ℕ) : ℤ)*((n : ℤ)-(n/2 : ℕ))-(n/2 : ℕ) := by
-  have h := finite_strict_band_inversion_capacity p.symm
-    (FiniteWindow.majorized_short (canonical_lift p.symm) hm)
-  change (inversionNumber p⁻¹ : ℤ) ≤ _ at h
-  rwa [inversion_number_inverse] at h
 
 #print axioms shifted_lift_inversion_formula
-#print axioms strict_band_inversion_capacity
-#print axioms majorized_canonical_inversion_capacity
 end LRX.FiniteCuts

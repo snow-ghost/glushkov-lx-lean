@@ -1,5 +1,6 @@
-import LX.WordMetric
 import LRX.WordReflection
+import LX.WordMetric
+import Mathlib
 
 namespace LX
 open LRX.WordReflection

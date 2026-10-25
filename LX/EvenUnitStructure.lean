@@ -1,4 +1,6 @@
-import LX.OddUnitFixedNeighbors
+import LX.MinimumEnergyPhases
+import LX.PairCorePorts
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -62,36 +64,6 @@ theorem even_unit_all_anchor_bounds {p : State n} {a : Fin n}
   rw [hcap]
   omega
 
-/-- No new majorization premise is needed when changing the actual anchor:
-all normalized sources in this even branch have zero finite event defect. -/
-theorem even_unit_all_anchor_zero_defect {p : State n} {a : Fin n}
-    (m : ℕ) (hn : n=2*m) (ha : GlobalMinimum p a)
-    (hunit : (inversions (displacement p a) : ℤ)+1=(m : ℤ)*(m-1)) (b : Fin n) :
-    LRX.FiniteCuts.cycleDefect (permutation p b)=0 := by
-  have hb := (even_unit_all_anchor_bounds m hn ha hunit b).2.2
-  exact small_anchor_reserve_zero_defect p b (by omega)
-
-/-- A phase at the higher of the two possible heights cannot minimize the
-energy; it has exactly one extra exchange and zero strip reserve. -/
-theorem even_unit_higher_anchor {p : State n} {a : Fin n}
-    (m : ℕ) (hn : n=2*m) (ha : GlobalMinimum p a)
-    (hunit : (inversions (displacement p a) : ℤ)+1=(m : ℤ)*(m-1)) (b : Fin n)
-    (hb : height p b=m) :
-    inversions (displacement p b)=inversions (displacement p a)+1 ∧
-      anchorReserve p b=0 := by
-  have hcases := (even_unit_all_anchor_bounds m hn ha hunit b).2.1
-  have hx : inversions (displacement p b)=inversions (displacement p a)+1 := by
-    rcases hcases with he | he
-    · have hg := global_minimum_of_equal_exchanges ha he
-      have hh := (even_unit_reserve_height m hn hg (by rwa [he])).1
-      omega
-    · exact he
-  refine ⟨hx,?_⟩
-  unfold anchorReserve
-  rw [hb,hx]
-  have hn' : (n : ℤ)=2*(m : ℤ) := by exact_mod_cast hn
-  push_cast
-  nlinarith
 
 /-- Exact rank and fixed-point constraints, extracted from the actual input.
 The two possible fixed-point counts give one or two units of cycle excess. -/
@@ -165,26 +137,8 @@ theorem small_cycle_excess_profile (q : State n) (e : ℕ) (he2 : e ≤ 2)
     2*cycleSizeCount q 4 at hs
   omega
 
-/-- The complete cycle-size alternatives for the even unit-reserve source:
-one 3-cycle, one 4-cycle, or two 3-cycles, with all other cycles being pairs.
-Geometric exclusion or routing of these alternatives is still required. -/
-theorem even_unit_reserve_cycle_profile {p : State n} {a : Fin n}
-    (m : ℕ) (hn : n=2*m) (ha : GlobalMinimum p a)
-    (hunit : (inversions (displacement p a) : ℤ)+1=(m : ℤ)*(m-1)) :
-    let q := permutation p a
-    (∀ g ∈ q.cycleFactorsFinset,g.support.card=2 ∨ g.support.card=3 ∨ g.support.card=4) ∧
-      ((LRX.FiniteCuts.fixedPositions q).card=1 ∧ cycleSizeCount q 3=1 ∧ cycleSizeCount q 4=0 ∨
-       (LRX.FiniteCuts.fixedPositions q).card=2 ∧ cycleSizeCount q 3=0 ∧ cycleSizeCount q 4=1 ∨
-       (LRX.FiniteCuts.fixedPositions q).card=2 ∧ cycleSizeCount q 3=2 ∧ cycleSizeCount q 4=0) := by
-  obtain ⟨_,_,hf,he⟩ := even_unit_reserve_source m hn ha hunit
-  obtain ⟨hs,hcount⟩ := small_cycle_excess_profile (permutation p a)
-    (LRX.FiniteCuts.fixedPositions (permutation p a)).card (by omega) he
-  exact ⟨hs,by omega⟩
 
 #print axioms even_unit_reserve_height
 #print axioms even_unit_all_anchor_bounds
-#print axioms even_unit_all_anchor_zero_defect
-#print axioms even_unit_higher_anchor
 #print axioms even_unit_reserve_source
-#print axioms even_unit_reserve_cycle_profile
 end LX.AnchoredPhases

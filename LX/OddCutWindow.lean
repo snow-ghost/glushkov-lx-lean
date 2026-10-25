@@ -1,4 +1,8 @@
+import LX.ConjectureTerminalWindow
+import LX.EvenBinaryRankObstruction
 import LX.MinimumSmallGap
+import LX.SecondExcess
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -10,27 +14,6 @@ private theorem raw_value_from_gap (p : State n) (b : Fin n) (hg : 0 < (b-p b).v
   have he : p b-b= -(b-p b) := by ring
   rw [he,Fin.val_neg,ite_eq_right (Fin.ne_of_val_ne (by simpa using Nat.ne_of_gt hg))]
 
-/-- Except for the least-gap minimum phase, every remaining minimum
-offset lies outside the full odd payment interval. -/
-theorem odd_unpaid_other_minimum_gap (p : State n) (a b c : Fin n)
-    (hn : n=2*height p a+3) (hh : 0 < height p a)
-    (hb : height p b=height p a) (hc : height p c=height p a)
-    (hble : (b-p b).val ≤ (c-p c).val) (hne : p c-c ≠ p b-b)
-    (hunpaid : ¬ ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) ≤ 3*(n : ℤ)^2-8*n+9) :
-    height p a+3 < (c-p c).val := by
-  have hlt : (b-p b).val < (c-p c).val := by
-    have hvne : (b-p b).val ≠ (c-p c).val := by
-      intro he
-      have he' : b-p b=c-p c := Fin.ext he
-      apply hne
-      linear_combination he'
-    omega
-  have hf := smaller_gap_bounds_fixed p c b (by omega) hlt
-  by_contra hnot
-  obtain ⟨w,hw,hprice⟩ := odd_fixed_gap_exact_word p c (by omega) (by omega) (by omega)
-  have hr := anchor_reserve_nonneg p c
-  exact hunpaid ⟨w,hw,by omega⟩
 
 /-- Counting below the least terminal higher phase uses its own height
 `h+1`, eliminating the global rank peak from the backward-arrow budget. -/
@@ -232,6 +215,5 @@ theorem odd_unpaid_cut_second_excess (p : State n) (a : Fin n) (R : ℕ)
     rw [hexcess]
     omega
 
-#print axioms odd_unpaid_other_minimum_gap
 #print axioms odd_unpaid_cut_second_excess
 end LX.AnchoredPhases

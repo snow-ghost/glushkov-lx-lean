@@ -1,4 +1,6 @@
+import LX.EvenConstantHeightObstruction
 import LX.MaximalOffsetDrops
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

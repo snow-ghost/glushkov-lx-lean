@@ -1,4 +1,7 @@
+import LX.DepthBound
+import LX.PhaseExchangePrice
 import LX.PhaseMinimumRescue
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

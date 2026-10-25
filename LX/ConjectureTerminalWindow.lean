@@ -1,4 +1,10 @@
-import LX.ConjecturePhaseReduction
+import LX.CriticalPhaseWord
+import LX.EvenTerminalWindow
+import LX.FiberDepthGeometry
+import LX.HigherPhasePayment
+import LX.OddTerminalWindow
+import LX.RankPeakCount
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

@@ -1,4 +1,5 @@
-import LX.OddHeadLeastGap
+import LX.OddAlignedHeadFiber
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

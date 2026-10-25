@@ -1,5 +1,7 @@
-import LX.OddMiddleMass
 import LX.AntipodeBoundaryPhase
+import LX.EvenBoundaryBase
+import LX.OddSingleRaise
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

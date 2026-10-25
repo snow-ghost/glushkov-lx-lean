@@ -1,4 +1,5 @@
-import LX.SweepCarrier
+import LX.ScanInversions
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -51,43 +52,6 @@ theorem rotate_backward_depth (hn : 2 ≤ n) (d : Fin n → ℤ) (i : Fin n) :
   exact Equiv.sum_comp (finRotate n)
     (fun j => (-LRX.AffineLift.crossing d (finRotate n i) j).toNat)
 
-/-- The head has an inverted predecessor exactly when an earlier-period target exceeds it. -/
-theorem backward_depth_head_pos_iff (d : Fin n → ℤ)
-    (hi : Function.Injective (labels d)) :
-    0 < backwardDepth d 0 ↔ ∃ j : Fin n, targets d 0 + n < targets d j := by
-  rw [backward_depth_head, Finset.sum_pos_iff_of_nonneg (fun _ _ => Nat.zero_le _)]
-  simp only [Finset.mem_univ, true_and]
-  have hn : (0 : ℤ) < n := by exact_mod_cast NeZero.pos n
-  have hne (j : Fin n) : targets d j-targets d 0 ≠ n := by
-    intro h
-    have he : labels d j=labels d 0 := by
-      have hc := congrArg (fun z : ℤ => (z : Fin n)) h
-      have hcast (i : Fin n) : ((targets d i : ℤ) : Fin n)=labels d i := by simp [targets, labels]
-      simp only [Int.cast_sub, hcast] at hc
-      have hn0 : ((n : ℤ) : Fin n)=0 := by simp
-      rw [hn0] at hc
-      exact sub_eq_zero.mp hc
-    have hj := hi he
-    subst j
-    simp at h
-    omega
-  constructor
-  · rintro ⟨j,hj⟩
-    refine ⟨j, ?_⟩
-    have hq : 0 < (targets d j-targets d 0)/(n : ℤ) := by omega
-    have hdiv := Int.ediv_mul_add_emod (targets d j-targets d 0) (n : ℤ)
-    have hr := Int.emod_nonneg (targets d j-targets d 0) (ne_of_gt hn)
-    have hh := hne j
-    have hq1 : 1 ≤ (targets d j-targets d 0)/(n : ℤ) := by omega
-    have hp := mul_le_mul_of_nonneg_right hq1 (le_of_lt hn)
-    simp only [one_mul] at hp
-    omega
-  · rintro ⟨j,hj⟩
-    refine ⟨j, ?_⟩
-    have hdiv := Int.ediv_mul_add_emod (targets d j-targets d 0) (n : ℤ)
-    have hr := Int.emod_lt_of_pos (targets d j-targets d 0) hn
-    have hq : 0 < (targets d j-targets d 0)/(n : ℤ) := by nlinarith
-    omega
 
 /-- One backwards move consumes exactly one inverted predecessor. -/
 theorem exchange_backward_depth (hn : 2 ≤ n) (d : Fin n → ℤ)
@@ -151,7 +115,6 @@ theorem exchange_other_depth (hn : 2 ≤ n) (d : Fin n → ℤ) (i : Fin n)
 
 #print axioms crossing_quotient
 #print axioms rotate_backward_depth
-#print axioms backward_depth_head_pos_iff
 #print axioms exchange_backward_depth
 #print axioms exchange_other_depth
 end LX.AffineScan

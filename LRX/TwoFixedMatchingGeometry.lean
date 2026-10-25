@@ -1,4 +1,5 @@
-import LRX.WindowMatchingReflection
+import LRX.LinearMatchingGeometry
+import Mathlib
 
 namespace LRX.FiniteCuts
 variable {n : ℕ} [NeZero n]

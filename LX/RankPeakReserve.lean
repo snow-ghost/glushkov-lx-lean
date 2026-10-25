@@ -1,4 +1,7 @@
-import LX.SecondExcess
+import LX.AnchorReserveRigidity
+import LX.MinimumEnergyPhases
+import LX.TopSetPhases
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

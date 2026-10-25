@@ -53,43 +53,10 @@ def leftTranslate {G : Type*} [Group G] (S : Set G) (a : G) :
     intro u v h
     exact (SimpleGraph.mulCayley_adj_mul_iff_right).mpr h
 
-theorem word_edist_le {n : ℕ} [NeZero n] (a : State n) (w : List Letter) :
-    (graph n).edist a (a * eval w) ≤ (w.length : ℕ∞) := by
-  induction w generalizing a with
-  | nil => simp
-  | cons c w ih =>
-    have step : (graph n).edist a (a * c.eval) ≤ 1 := by
-      apply SimpleGraph.edist_le_one_iff_adj_or_eq.mpr
-      by_cases h : a = a * c.eval
-      · exact Or.inr h
-      · exact Or.inl ((SimpleGraph.mulCayley_adj' _ _ _).mpr
-          ⟨h, c.eval, c.eval_mem, Or.inl rfl⟩)
-    calc
-      (graph n).edist a (a * eval (c :: w)) =
-          (graph n).edist a ((a * c.eval) * eval w) := by rw [eval_cons, mul_assoc]
-      _ ≤ (graph n).edist a (a * c.eval) +
-          (graph n).edist (a * c.eval) ((a * c.eval) * eval w) :=
-        SimpleGraph.edist_triangle
-      _ ≤ 1 + (w.length : ℕ∞) := add_le_add step (ih _)
-      _ = ((c :: w).length : ℕ∞) := by simp [add_comm]
-
-/-- A bounded word for every permutation suffices, without a factor of two. -/
-theorem ediam_le_of_words {n B : ℕ} [NeZero n]
-    (h : ∀ p : State n, ∃ w : List Letter, eval w = p ∧ w.length ≤ B) :
-    (graph n).ediam ≤ (B : ℕ∞) := by
-  apply SimpleGraph.ediam_le_of_edist_le
-  intro a b
-  obtain ⟨w, hw, hlen⟩ := h (a⁻¹ * b)
-  have hd := word_edist_le a w
-  rw [hw, mul_inv_cancel_left] at hd
-  exact hd.trans (by exact_mod_cast hlen)
 
 /-- The exact missing constructive statement for the sharp research bound. -/
 def SharpWordBound (n : ℕ) [NeZero n] : Prop :=
   ∀ p : State n, ∃ w : List Letter, eval w = p ∧ w.length ≤ n.choose 2
 
-/-- Conditional transfer only: `SharpWordBound` is not assumed as an axiom. -/
-theorem sharp_ediam_of_words {n : ℕ} [NeZero n] (h : SharpWordBound n) :
-    (graph n).ediam ≤ (n.choose 2 : ℕ∞) := ediam_le_of_words h
 
 end LRX

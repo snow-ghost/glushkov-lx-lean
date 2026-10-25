@@ -1,4 +1,8 @@
-import LX.MinimumHeightMultiplicity
+import LX.AllGlobalOddGeometry
+import LX.EvenSecondFewFixed
+import LX.NearMinimumPhases
+import LX.NextOccupiedPhase
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing

@@ -1,5 +1,7 @@
-import LRX.MajorizedExtremeCount
 import LRX.FinitePairCycles
+import LRX.MajorizedExtremeCount
+import LRX.StrictBandEquality
+import Mathlib
 
 namespace LRX.FiniteCuts
 open scoped BigOperators

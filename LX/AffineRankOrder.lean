@@ -1,5 +1,5 @@
-import LX.ScanInversions
-import LX.SweepCarrier
+import LX.DepthReturn
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -13,8 +13,6 @@ def thresholdRank (d : Fin n → ℤ) (r : Fin n) (v : ℤ) : ℤ :=
 def RankLE (d e : Fin n → ℤ) : Prop :=
   ∀ r v,thresholdRank d r v ≤ thresholdRank e r v
 
-omit [NeZero n] in
-theorem rank_le_refl (d : Fin n → ℤ) : RankLE d d := fun _ _ => le_rfl
 
 omit [NeZero n] in
 theorem rank_le_trans {d e f : Fin n → ℤ} (hde : RankLE d e) (hef : RankLE e f) :

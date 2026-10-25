@@ -1,4 +1,8 @@
-import LX.EvenUnitPhaseParity
+import LRX.CycleDefectMonotonicity
+import LRX.FixedCountReflection
+import LRX.InnermostEventComponent
+import LX.ZeroDefectCycleGeometry
+import Mathlib
 
 namespace LX.CycleGeometry
 open scoped BigOperators

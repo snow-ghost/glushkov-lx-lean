@@ -1,4 +1,5 @@
 import LRX.FiniteEnergyRotation
+import Mathlib
 
 namespace LRX.FiniteCuts
 open scoped BigOperators
@@ -40,33 +41,6 @@ theorem rotation_energy_minus_inversions (p : State (k+1)) :
   have hI := rotation_inversion_change p
   linarith only [hE,hI]
 
-theorem rotate_conjugate_symm {n : ℕ} (p : State n) :
-    (rotateConjugate p).symm=rotateConjugate p.symm := by
-  change (rotateConjugate p)⁻¹=rotateConjugate p⁻¹
-  simp [rotateConjugate,mul_inv_rev,mul_assoc]
-
-theorem rotate_conjugate_support_card {n : ℕ} (p : State n) :
-    (rotateConjugate p).support.card=p.support.card := by
-  simpa only [rotateConjugate,inv_inv] using
-    Equiv.Perm.card_support_conj (σ := (finRotate n)⁻¹) (τ := p)
-
-theorem rotate_conjugate_is_cycle {n : ℕ} {p : State n} (hp : p.IsCycle) :
-    (rotateConjugate p).IsCycle := by
-  simpa only [rotateConjugate,inv_inv] using hp.conj (g := (finRotate n)⁻¹)
-
-/-- Moving the finite cut by one preserves the canonical shallow equality. -/
-theorem shallow_rotate (p : State (k+1))
-    (h : (∑ i : Fin (k+1), |displacement p.symm i|)=
-      (LiftedModel.inversionCount (fun i : Fin (k+1) => (p.symm i : ℤ)) : ℤ)+
-        (p.support.card : ℤ)-1) :
-    (∑ i : Fin (k+1), |displacement (rotateConjugate p).symm i|)=
-      (LiftedModel.inversionCount (fun i : Fin (k+1) => ((rotateConjugate p).symm i : ℤ)) : ℤ)+
-        ((rotateConjugate p).support.card : ℤ)-1 := by
-  rw [canonical_inversion_count] at h ⊢
-  rw [rotate_conjugate_symm,rotate_conjugate_support_card]
-  have he := rotation_energy_minus_inversions p.symm
-  linarith only [he,h]
 
 #print axioms rotation_energy_minus_inversions
-#print axioms shallow_rotate
 end LRX.FiniteCuts

@@ -1,5 +1,5 @@
 import LX.EvenConstantThreeFiber
-import LX.ConjectureObstruction
+import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
@@ -131,41 +131,6 @@ theorem even_critical_constant_conjecture_word (p : State n) (h : ℕ)
   norm_num at hlow
   omega
 
-/-- Every even constant-anchor-height input has the conjectured upper
-bound; the remaining upper-bound problem has varying heights only. -/
-theorem even_constant_height_conjecture_word (hn4 : 4 ≤ n) (p : State n)
-    (m : ℕ) (hn : n=2*m) (hall : ∀ a b,height p a=height p b) :
-    ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) ≤ 3*(n : ℤ)^2-8*n+12 := by
-  by_contra hnone
-  have hbase : 3*(n : ℤ)^2-8*n+12=4*(3*(m : ℤ)^2-4*m+3) := by
-    have hn' : (n : ℤ)=2*(m : ℤ) := by exact_mod_cast hn
-    rw [hn']; ring
-  have hunpaid : ¬ ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) < 3*(n : ℤ)^2-8*n+4*(4-(0 : ℤ)) := by
-    rintro ⟨w,hw,hprice⟩
-    apply hnone
-    refine ⟨w,hw,?_⟩
-    omega
-  obtain ⟨a,_,_,hnlarge,_,hh,_,_⟩ :=
-    conjecture_unpaid_reserve_geometry hn4 p m 0 (by omega) (by omega) hunpaid
-  exact hnone (even_critical_constant_conjecture_word p (height p a)
-    (fun b => hall b a) (by omega) (by omega))
-
-theorem even_conjecture_unpaid_height_variation (hn4 : 4 ≤ n) (p : State n)
-    (m : ℕ) (hn : n=2*m)
-    (hunpaid : ¬ ∃ w : List Letter,p*eval w=1 ∧
-      4*(w.length : ℤ) < 3*(n : ℤ)^2-8*n+16) :
-    ∃ a b : Fin n,height p a < height p b := by
-  by_contra hnot
-  have hall (a b : Fin n) : height p a=height p b := by
-    have ha : ¬height p a < height p b := fun h => hnot ⟨a,b,h⟩
-    have hb : ¬height p b < height p a := fun h => hnot ⟨b,a,h⟩
-    omega
-  obtain ⟨w,hw,hprice⟩ := even_constant_height_conjecture_word hn4 p m hn hall
-  exact hunpaid ⟨w,hw,by omega⟩
 
 #print axioms even_critical_constant_conjecture_word
-#print axioms even_constant_height_conjecture_word
-#print axioms even_conjecture_unpaid_height_variation
 end LX.AnchoredPhases

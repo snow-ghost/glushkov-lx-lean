@@ -1,6 +1,6 @@
-import LX.OddUnitFixedNeighbors
-import LRX.AdjacentBoundaryPrice
-import LRX.ShallowCutShift
+import LRX.LiftedModel
+import LX.WordMetric
+import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
