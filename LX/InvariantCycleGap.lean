@@ -1,12 +1,12 @@
-import LRX.CycleDefectMonotonicity
-import LRX.FixedCountReflection
-import LRX.InnermostEventComponent
+import LX.CycleDefectMonotonicity
+import LX.FixedCountReflection
+import LX.InnermostEventComponent
 import LX.ZeroDefectCycleGeometry
 import Mathlib
 
 namespace LX.CycleGeometry
 open scoped BigOperators
-open LRX.FiniteCuts LRX.ZeroGap
+open LX.Core.FiniteCuts LX.Core.ZeroGap
 variable {n : ℕ} [NeZero n]
 
 /-- An invariant interval with no fixed point would have a unit arrow in
@@ -23,7 +23,7 @@ theorem zero_defect_invariant_gap_fixed (q : State n) (hq : cycleDefect q=0)
   let S := Finset.univ.filter (fun i : Fin n => a.val < i.val ∧ i.val < c.val)
   have hS (i : Fin n) : q i ∈ S ↔ i ∈ S := by
     simpa only [S,Finset.mem_filter,Finset.mem_univ,true_and] using hinv i
-  let g := LRX.PrunedLift.permutation q S hS
+  let g := LX.Core.PrunedLift.permutation q S hS
   have hgzero : cycleDefect g=0 := zero_defect_pruned_factor q S hS hq
   have hgSupport : g.support=S := by
     ext i

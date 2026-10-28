@@ -6,7 +6,7 @@ import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.FiniteCuts LRX.AffineLift
+open LX.AffineScan LX.Core.FiniteCuts LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 theorem even_unit_two_fixed_offsets_even {p : State n} {a : Fin n}

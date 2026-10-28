@@ -3,17 +3,9 @@ import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.AffineLift
+open LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
-/-- A controlled additive loss in the subset inequalities. Unlike full
-majorization, this permits the slightly more expensive phases needed by LX. -/
-def NearMajorized (d : Fin n → ℤ) (K : ℕ) : Prop :=
-  ∀ S : Finset (Fin n),2*(∑ i ∈ S,d i) ≤ (S.card : ℤ)*((n : ℤ)-S.card)+K
-
-
-/-- Width n is sufficient here; a tied endpoint split across the seam is
-allowed, as in raiseMinimum. -/
 theorem crossing_unit_of_width (d : Fin n → ℤ)
     (hwidth : ∀ i j,d i-d j ≤ (n : ℤ)) (i j : Fin n) : |crossing d i j| ≤ 1 := by
   have hhi := hwidth j i
@@ -52,7 +44,7 @@ end LX.AffineScan
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.AffineLift
+open LX.AffineScan LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 

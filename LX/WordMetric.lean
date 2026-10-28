@@ -1,24 +1,24 @@
-import LRX.Connected
-import LRX.RotationWords
-import LRX.WordMetric
+import LX.Connected
+import LX.RotationWords
+import LX.SymmetricWordMetric
 import Mathlib
 
 /-! Directed LX words. No inverse generator is included in the alphabet.
 The target bound is a proposition, not an axiom or an assumed estimate. -/
 namespace LX
 
-abbrev State := LRX.State
+abbrev State := LX.Core.State
 
 inductive Letter where
   | l | x
   deriving DecidableEq, Repr
 
-def Letter.toLRX : Letter → LRX.Letter
+def Letter.toCore : Letter → LX.Core.Letter
   | .l => .l
   | .x => .x
 
 def eval {n : ℕ} [NeZero n] (w : List Letter) : State n :=
-  LRX.eval (w.map Letter.toLRX)
+  LX.Core.eval (w.map Letter.toCore)
 
 @[simp] theorem eval_nil {n : ℕ} [NeZero n] : eval (n := n) [] = 1 := rfl
 
@@ -27,40 +27,40 @@ def eval {n : ℕ} [NeZero n] (w : List Letter) : State n :=
   simp [eval]
 
 /-- A correctness bridge only: expanding R this way does not prove a quadratic bound. -/
-def expandLetter (n : ℕ) : LRX.Letter → List Letter
+def expandLetter (n : ℕ) : LX.Core.Letter → List Letter
   | .l => [.l]
   | .r => List.replicate (n - 1) .l
   | .x => [.x]
 
-def expand (n : ℕ) (w : List LRX.Letter) : List Letter :=
+def expand (n : ℕ) (w : List LX.Core.Letter) : List Letter :=
   w.flatMap (expandLetter n)
 
-theorem expandLetter_eval {n : ℕ} [NeZero n] (c : LRX.Letter) :
+theorem expandLetter_eval {n : ℕ} [NeZero n] (c : LX.Core.Letter) :
     eval (expandLetter n c) = c.eval (n := n) := by
   cases c with
-  | l => simp [expandLetter, eval, Letter.toLRX, LRX.eval, LRX.Letter.eval]
-  | x => simp [expandLetter, eval, Letter.toLRX, LRX.eval, LRX.Letter.eval]
+  | l => simp [expandLetter, eval, Letter.toCore, LX.Core.eval, LX.Core.Letter.eval]
+  | x => simp [expandLetter, eval, Letter.toCore, LX.Core.eval, LX.Core.Letter.eval]
   | r =>
     have hn : 0 < n := NeZero.pos n
-    have hp := LRX.RotationWords.rotation_period (n := n)
-    have he : LRX.L n ^ (n - 1) * LRX.L n = 1 := by
+    have hp := LX.Core.RotationWords.rotation_period (n := n)
+    have he : LX.Core.L n ^ (n - 1) * LX.Core.L n = 1 := by
       rw [← pow_succ, Nat.sub_add_cancel hn, hp]
-    have hi : LRX.L n ^ (n - 1) = (LRX.L n)⁻¹ := by
+    have hi : LX.Core.L n ^ (n - 1) = (LX.Core.L n)⁻¹ := by
       exact eq_inv_of_mul_eq_one_left he
-    simpa [expandLetter, eval, Letter.toLRX, LRX.eval, LRX.Letter.eval, LRX.R] using hi
+    simpa [expandLetter, eval, Letter.toCore, LX.Core.eval, LX.Core.Letter.eval, LX.Core.R] using hi
 
-theorem expand_eval {n : ℕ} [NeZero n] (w : List LRX.Letter) :
-    eval (expand n w) = LRX.eval (n := n) w := by
+theorem expand_eval {n : ℕ} [NeZero n] (w : List LX.Core.Letter) :
+    eval (expand n w) = LX.Core.eval (n := n) w := by
   induction w with
   | nil => rfl
   | cons c w ih =>
     change eval (expandLetter n c ++ expand n w) = _
-    rw [eval_append, expandLetter_eval, ih, LRX.eval_cons]
+    rw [eval_append, expandLetter_eval, ih, LX.Core.eval_cons]
 
 theorem exists_word {n : ℕ} [NeZero n] (hn : 2 ≤ n) (p : State n) :
     ∃ w : List Letter, eval w = p := by
-  obtain ⟨path⟩ := LRX.connected n hn 1 p
-  obtain ⟨w, hw, _⟩ := LRX.word_of_walk path
+  obtain ⟨path⟩ := LX.Core.connected n hn 1 p
+  obtain ⟨w, hw, _⟩ := LX.Core.word_of_walk path
   exact ⟨expand n w, by simpa [expand_eval] using hw⟩
 
 /-- Minimum directed length from the identity; reachability is proved separately. -/
@@ -90,18 +90,6 @@ theorem length_le_diameter {n : ℕ} [NeZero n] (p : State n) :
 
 theorem dist_le_diameter {n : ℕ} [NeZero n] (a b : State n) :
     dist a b ≤ diameter n := length_le_diameter _
-
-
-/-- Exact rational specification of the requested bound, with C uniform in n. -/
-def QuadraticUpperBound : Prop :=
-  ∃ C : ℕ, ∀ (n : ℕ) [NeZero n], 4 ≤ n →
-    (diameter n : ℚ) < (3 * (n : ℚ)^2 - 8 * n) / 4 + C
-
-/-- Integer word-price formulation; subtraction never takes place in ℕ. -/
-def QuadraticWordBound : Prop :=
-  ∃ C : ℕ, ∀ (n : ℕ) [NeZero n], 4 ≤ n → ∀ p : State n,
-    ∃ w : List Letter, eval w = p ∧
-      4 * (w.length : ℤ) < 3 * (n : ℤ)^2 - 8 * n + 4 * C
 
 
 #print axioms expand_eval

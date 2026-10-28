@@ -1,10 +1,10 @@
-import LRX.AffineReducedPrice
+import LX.AffineReducedPrice
 import LX.WordMetric
 import Mathlib
 
 namespace LX.DirectedTokenLower
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.LiftedModel
+open LX.Core.LiftedModel
 variable {n : ℕ} [NeZero n]
 
 /-- A token cannot make repeated net backward progress without paying
@@ -13,13 +13,13 @@ def TokenBudget (s : Configuration n) : Prop :=
   ∀ i : Fin n,(n : ℤ)*(i.val-1 : ℕ) ≤ s.cursor+((n : ℤ)-1)*s.position i
 
 theorem token_budget_step (hn : 2 ≤ n) (a : Letter) (s : Configuration n)
-    (hs : Aligned s) (hb : TokenBudget s) : TokenBudget (step a.toLRX s) := by
+    (hs : Aligned s) (hb : TokenBudget s) : TokenBudget (step a.toCore s) := by
   intro i
   have hi := hb i
   have hn' : (2 : ℤ) ≤ n := by exact_mod_cast hn
   cases a with
   | l =>
-    simp only [Letter.toLRX,step,increment]
+    simp only [Letter.toCore,step,increment]
     linarith
   | x =>
     by_cases hleft : i=s.physical.tokens s.physical.cursor
@@ -27,7 +27,7 @@ theorem token_budget_step (hn : 2 ≤ n) (a : Letter) (s : Configuration n)
         intro he
         exact neighboring_positions_distinct hn s.physical.cursor
           (s.physical.tokens.injective (hleft.symm.trans he))
-      simp only [Letter.toLRX,step,increment,ite_eq_left hleft,ite_eq_right hright,sub_zero,add_zero]
+      simp only [Letter.toCore,step,increment,ite_eq_left hleft,ite_eq_right hright,sub_zero,add_zero]
       nlinarith only [hi,hn']
     · by_cases hright : i=s.physical.tokens (s.physical.cursor+1)
       · have hz : (s.position i : Fin n)=(s.cursor : Fin n)+1 := by
@@ -45,9 +45,9 @@ theorem token_budget_step (hn : 2 ≤ n) (a : Letter) (s : Configuration n)
           have hmul := mul_le_mul_of_nonneg_left hle (show (0 : ℤ) ≤ n by omega)
           nlinarith only [hi,hk,hmul]
         have hmul := mul_le_mul_of_nonneg_left hklo (show (0 : ℤ) ≤ n by omega)
-        simp only [Letter.toLRX,step,increment,ite_eq_right hleft,ite_eq_left hright,add_zero]
+        simp only [Letter.toCore,step,increment,ite_eq_right hleft,ite_eq_left hright,add_zero]
         nlinarith only [hk,hmul]
-      · simpa only [Letter.toLRX,step,increment,ite_eq_right hleft,ite_eq_right hright,add_zero,sub_zero] using hi
+      · simpa only [Letter.toCore,step,increment,ite_eq_right hleft,ite_eq_right hright,add_zero,sub_zero] using hi
 
 theorem token_budget_initial : TokenBudget (initial (n := n)) := by
   intro i
@@ -60,43 +60,43 @@ theorem token_budget_initial : TokenBudget (initial (n := n)) := by
     nlinarith only [hi]
 
 theorem token_budget_run (hn : 2 ≤ n) (w : List Letter) (s : Configuration n)
-    (hs : Aligned s) (hb : TokenBudget s) : TokenBudget (run (w.map Letter.toLRX) s) := by
+    (hs : Aligned s) (hb : TokenBudget s) : TokenBudget (run (w.map Letter.toCore) s) := by
   induction w generalizing s with
   | nil => exact hb
   | cons a w ih =>
-    exact ih (step a.toLRX s) (step_aligned hn a.toLRX hs) (token_budget_step hn a s hs hb)
+    exact ih (step a.toCore s) (step_aligned hn a.toCore hs) (token_budget_step hn a s hs hb)
 
 /-- An unconditional rotation lower bound for every token of every
 literal LX word, expressed in its exact integer endpoint. -/
 theorem word_cursor_lower (hn : 2 ≤ n) (w : List Letter) (i : Fin n) :
-    (n : ℤ)*(i.val-1 : ℕ)-((n : ℤ)-1)*(run (w.map Letter.toLRX) (initial (n := n))).position i ≤
-      (run (w.map Letter.toLRX) (initial (n := n))).cursor := by
+    (n : ℤ)*(i.val-1 : ℕ)-((n : ℤ)-1)*(run (w.map Letter.toCore) (initial (n := n))).position i ≤
+      (run (w.map Letter.toCore) (initial (n := n))).cursor := by
   have hb := token_budget_run hn w initial initial_aligned token_budget_initial i
   omega
 
 theorem cursor_eq_left_count (w : List Letter) :
-    (run (w.map Letter.toLRX) (initial (n := n))).cursor=(w.count .l : ℤ) := by
+    (run (w.map Letter.toCore) (initial (n := n))).cursor=(w.count .l : ℤ) := by
   rw [cursor_run]
   simp only [initial,zero_add,List.map_map]
   induction w with
   | nil => rfl
-  | cons a w ih => cases a <;> simp [Letter.toLRX,increment,ih,add_comm]
+  | cons a w ih => cases a <;> simp [Letter.toCore,increment,ih,add_comm]
 
 theorem rotations_eq_left_count (w : List Letter) :
-    LRX.BufferProgram.rotations (w.map Letter.toLRX)=w.count .l := by
+    LX.Core.BufferProgram.rotations (w.map Letter.toCore)=w.count .l := by
   induction w with
   | nil => rfl
   | cons a w ih =>
     cases a with
-    | l => simpa [LRX.BufferProgram.rotations,Letter.toLRX] using congrArg Nat.succ ih
-    | x => simpa [LRX.BufferProgram.rotations,Letter.toLRX] using ih
+    | l => simpa [LX.Core.BufferProgram.rotations,Letter.toCore] using congrArg Nat.succ ih
+    | x => simpa [LX.Core.BufferProgram.rotations,Letter.toCore] using ih
 
 /-- Swap cancellation preserves the endpoint and all paid rotations;
 therefore its exact inversion price is a lower bound for every LX word. -/
 theorem word_inversion_cursor_lower (hn : 2 ≤ n) (w : List Letter) :
-    (inversionCount (run (w.map Letter.toLRX) (initial (n := n))).position : ℤ)+
-      (run (w.map Letter.toLRX) (initial (n := n))).cursor ≤ (w.length : ℤ) := by
-  obtain ⟨v,_,_,_,_,hlen,hsub⟩ := affine_reduction_exact hn (w.map Letter.toLRX)
+    (inversionCount (run (w.map Letter.toCore) (initial (n := n))).position : ℤ)+
+      (run (w.map Letter.toCore) (initial (n := n))).cursor ≤ (w.length : ℤ) := by
+  obtain ⟨v,_,_,_,_,hlen,hsub⟩ := affine_reduction_exact hn (w.map Letter.toCore)
   have hb := hsub.length_le
   rw [hlen,rotations_eq_left_count,List.length_map] at hb
   rw [cursor_eq_left_count]

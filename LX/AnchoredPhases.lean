@@ -1,10 +1,10 @@
-import LRX.StrictBandInversionCapacity
+import LX.StrictBandInversionCapacity
 import LX.DepthBound
 import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.FiniteCuts LX.AffineScan
+open LX.Core.FiniteCuts LX.AffineScan
 variable {n : ℕ} [NeZero n]
 
 /-- One concrete phase candidate for each original position. -/
@@ -52,12 +52,12 @@ theorem height_lt (p : State n) (a : Fin n) : height p a < n := by
 
 /-- The candidate is a balanced lift of the original permutation, not an abstract strip. -/
 theorem is_lift (p : State n) (a : Fin n) :
-    LRX.AffineLift.IsLift p.symm (phase p a) (displacement p a) := by
+    LX.Core.AffineLift.IsLift p.symm (phase p a) (displacement p a) := by
   refine ⟨displacement_balance p a, ?_⟩
   intro i
   have hq : Int.ModEq (n : ℤ) (permutation p a i : ℤ)
       ((p i : ℤ)+(a : ℤ)-(p a : ℤ)) := by
-    apply (LRX.LiftedModel.cast_eq_iff_modEq _ _).mp
+    apply (LX.Core.LiftedModel.cast_eq_iff_modEq _ _).mp
     simp [permutation, Int.cast_sub, Int.cast_add, add_sub_assoc]
   have hm := ((clockwise_representative_modEq (permutation p a) i).trans hq).sub_right (height p a : ℤ)
   change Int.ModEq (n : ℤ) ((i : ℤ)+displacement p a i) ((p i : ℤ)+phase p a)
@@ -83,18 +83,18 @@ theorem candidate_sorting_word (hn : 2 ≤ n) (p : State n) (a : Fin n) :
 
 /-- Every balanced lift of width less than n is recovered by anchoring a minimum coordinate. -/
 theorem recovers_strict_strip {p : State n} {c : ℤ} {d : Fin n → ℤ}
-    (hd : LRX.AffineLift.IsLift p.symm c d) (a : Fin n)
+    (hd : LX.Core.AffineLift.IsLift p.symm c d) (a : Fin n)
     (hmin : ∀ i, d a ≤ d i) (hwidth : ∀ i, d i-d a < (n : ℤ)) :
     displacement p a = d ∧ (phase p a : Fin n) = (c : Fin n) := by
   let g : Fin n → ℤ := fun i => (i : ℤ)+d i-d a
   have hphase : (c : Fin n)-(d a : Fin n)=a-p a := by
-    have hh := LRX.AffineLift.lift_residue hd a
+    have hh := LX.Core.AffineLift.lift_residue hd a
     simp only [Equiv.symm_symm] at hh
     apply sub_eq_sub_iff_add_eq_add.mpr
     simpa only [add_comm] using hh.symm
   have hmod (i : Fin n) : Int.ModEq (n : ℤ) (g i) (permutation p a i : ℤ) := by
-    apply (LRX.LiftedModel.cast_eq_iff_modEq _ _).mp
-    have hh := LRX.AffineLift.lift_residue hd i
+    apply (LX.Core.LiftedModel.cast_eq_iff_modEq _ _).mp
+    have hh := LX.Core.AffineLift.lift_residue hd i
     simp only [Equiv.symm_symm] at hh
     simp only [g, Int.cast_sub, Int.cast_add, Int.cast_natCast, Fin.cast_val_eq_self]
     rw [hh]
@@ -121,8 +121,8 @@ theorem recovers_strict_strip {p : State n} {c : ℤ} {d : Fin n → ℤ}
     simp only [displacement, ← hg, hheight, g]
     ring
   refine ⟨he, ?_⟩
-  have hnew := LRX.AffineLift.lift_residue (is_lift p a) a
-  have hold := LRX.AffineLift.lift_residue hd a
+  have hnew := LX.Core.AffineLift.lift_residue (is_lift p a) a
+  have hold := LX.Core.AffineLift.lift_residue hd a
   simp only [Equiv.symm_symm, he] at hnew hold
   exact add_left_cancel (hnew.symm.trans hold)
 

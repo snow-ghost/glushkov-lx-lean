@@ -4,7 +4,7 @@ import Mathlib
 
 namespace LX.Antipode
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LX.CenteredLift LRX.AffineLift
+open LX.AffineScan LX.CenteredLift LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 /-- In every nonexceptional balanced phase, a smallest token is either

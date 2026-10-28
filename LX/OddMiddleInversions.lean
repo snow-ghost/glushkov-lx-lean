@@ -37,7 +37,7 @@ theorem odd_middle_winding_two (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1)
   rw [hr2,hv2]
   have hq : ((c : ℤ)+1-((m+1 : ℕ) : ℤ)-(2 : ℕ)+m)/(n : ℤ)=0 := by
     have hclt := c.isLt
-    apply LRX.PeriodicBuffer.quotient_eq_of_bounds hn' <;> push_cast <;> omega
+    apply LX.Core.PeriodicBuffer.quotient_eq_of_bounds hn' <;> push_cast <;> omega
   rw [hq,neg_zero]
 
 theorem odd_middle_tail_winding (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1)
@@ -55,7 +55,7 @@ theorem odd_middle_tail_winding (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1)
   have hq : ((c : ℤ)+1-((j.val-1 : ℕ) : ℤ)-(j : ℤ)+m)/(n : ℤ)= -1 := by
     have hjpred : ((j.val-1 : ℕ) : ℤ)=(j : ℤ)-1 := by omega
     rw [hjpred]
-    apply LRX.PeriodicBuffer.quotient_eq_of_bounds hn' <;> omega
+    apply LX.Core.PeriodicBuffer.quotient_eq_of_bounds hn' <;> omega
   rw [hq]
   norm_num
 

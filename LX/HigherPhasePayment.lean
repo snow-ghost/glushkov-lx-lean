@@ -4,7 +4,7 @@ import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.AffineLift
+open LX.AffineScan LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 
@@ -46,12 +46,12 @@ theorem odd_higher_anchor_reserve_price (p : State n) (b : Fin n)
 /-- A majorized odd maximal-height source has one fixed position. -/
 theorem odd_higher_fixed_unique (p : State n) (b : Fin n)
     (hm : Majorized (displacement p b)) (hn : n=2*height p b+1) :
-    (LRX.FiniteCuts.fixedPositions (permutation p b)).card=1 := by
+    (LX.Core.FiniteCuts.fixedPositions (permutation p b)).card=1 := by
   have hc := top_depth_count (is_lift p b) hm (height p b) (by omega)
     (fun i => by exact_mod_cast (candidate_price_components p b).2 i)
   rw [top_depth_count_eq_fixed] at hc
-  have hp : 0 < (LRX.FiniteCuts.fixedPositions (permutation p b)).card := Finset.card_pos.mpr
-    ⟨b,(LRX.FiniteCuts.mem_fixedPositions _ _).mpr (permutation_anchor p b)⟩
+  have hp : 0 < (LX.Core.FiniteCuts.fixedPositions (permutation p b)).card := Finset.card_pos.mpr
+    ⟨b,(LX.Core.FiniteCuts.mem_fixedPositions _ _).mpr (permutation_anchor p b)⟩
   omega
 
 

@@ -3,15 +3,15 @@ import Mathlib
 
 namespace LX.FiniteDropBudget
 open scoped BigOperators
-open LRX.FiniteCuts
+open LX.Core.FiniteCuts
 variable {n : ℕ} [NeZero n]
 
-private def invTerm (p : LRX.State n) (i j : Fin n) : ℕ :=
+private def invTerm (p : LX.Core.State n) (i j : Fin n) : ℕ :=
   if i.val < j.val ∧ (p j).val < (p i).val then 1 else 0
 
 /-- Erasing an ascending chain vertex increases the finite inversion count
 by exactly one when all intervening positions are fixed. -/
-theorem head_merge_inversions (p : LRX.State n) (b : Fin n)
+theorem head_merge_inversions (p : LX.Core.State n) (b : Fin n)
     (hb : 0 < b.val) (hhead : p 0=b) (hnext : b.val < (p b).val)
     (hfix : ∀ j : Fin n,0 < j.val → j.val < b.val → p j=j) :
     inversionNumber (p*Equiv.swap 0 b)=inversionNumber p+1 := by
@@ -52,14 +52,14 @@ theorem head_merge_inversions (p : LRX.State n) (b : Fin n)
         split_ifs <;> omega
       · simp only [hil,false_and,ite_false]
     · simp only [invTerm,hqi i hi0 hib,hqi j hj0 hjb]
-  let row := fun t : LRX.State n => fun i : Fin n => ∑ j,invTerm t i j
+  let row := fun t : LX.Core.State n => fun i : Fin n => ∑ j,invTerm t i j
   have hrow : row q 0+row q b=row p 0+row p b+1 := by
     have hh := Finset.sum_congr (s₁ := Finset.univ) rfl (fun j _ => hend j)
     simpa only [Finset.sum_add_distrib,Finset.sum_ite_eq',Finset.mem_univ,ite_true] using hh
   have hr (i : Fin n) (hi0 : i ≠ 0) (hib : i ≠ b) : row q i=row p i := by
     apply Finset.sum_congr rfl
     exact fun j _ => hother i hi0 hib j
-  have decomp (t : LRX.State n) : inversionNumber t=row t 0+row t b+
+  have decomp (t : LX.Core.State n) : inversionNumber t=row t 0+row t b+
       ∑ i ∈ (Finset.univ.erase (0 : Fin n)).erase b,row t i := by
     have h0 := Finset.sum_erase_add Finset.univ (row t) (Finset.mem_univ (0 : Fin n))
     have h1 := Finset.sum_erase_add (Finset.univ.erase (0 : Fin n)) (row t)
@@ -75,7 +75,7 @@ theorem head_merge_inversions (p : LRX.State n) (b : Fin n)
   rw [decomp q,decomp p,he,hrow]
   omega
 
-theorem head_merge_mass (p : LRX.State n) (b : Fin n)
+theorem head_merge_mass (p : LX.Core.State n) (b : Fin n)
     (hb : 0 < b.val) (hhead : p 0=b) (hnext : b.val < (p b).val) :
     (∑ i, |displacement (p*Equiv.swap 0 b) i|)=∑ i, |displacement p i| := by
   have hb0 : (0 : Fin n) ≠ b := by intro he; have := congrArg Fin.val he; simp only [Fin.val_zero] at this; omega
@@ -101,7 +101,7 @@ theorem head_merge_mass (p : LRX.State n) (b : Fin n)
   simp only [Finset.sum_add_distrib,Finset.sum_ite_eq',Finset.mem_univ,ite_true] at hh
   omega
 
-theorem head_merge_drops (p : LRX.State n) (b : Fin n)
+theorem head_merge_drops (p : LX.Core.State n) (b : Fin n)
     (hb : 0 < b.val) (hhead : p 0=b) (hnext : b.val < (p b).val) :
     descendingPositions (p*Equiv.swap 0 b)=descendingPositions p ∧
       backwardUnits (p*Equiv.swap 0 b)=backwardUnits p := by

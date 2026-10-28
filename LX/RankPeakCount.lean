@@ -3,7 +3,7 @@ import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.FiniteCuts
+open LX.Core.FiniteCuts
 variable {n : ℕ} [NeZero n]
 
 omit [NeZero n] in
@@ -98,7 +98,7 @@ private theorem interval_rank_bonus_sum (r R : ℕ) (hbound : r+R ≤ n) :
         ring
       _ = _ := by simp [Finset.sum_sub_distrib]; ring
   rw [hz,zero_add,he]
-  have ht := LRX.FiniteCoordinates.range_sum_twice R
+  have ht := LX.Core.FiniteCoordinates.range_sum_twice R
   nlinarith
 
 

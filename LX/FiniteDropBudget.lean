@@ -1,13 +1,13 @@
-import LRX.FiniteDescentRank
-import LRX.FiniteInversionRotation
-import LRX.FiniteWindowRestriction
+import LX.FiniteDescentRank
+import LX.FiniteInversionRotation
+import LX.FiniteWindowRestriction
 import Mathlib
 
 namespace LX.FiniteDropBudget
 open scoped BigOperators
-open LRX.FiniteCuts
+open LX.Core.FiniteCuts
 
-def backwardUnits {n : ℕ} (p : LRX.State n) : Finset (Fin n) :=
+def backwardUnits {n : ℕ} (p : LX.Core.State n) : Finset (Fin n) :=
   Finset.univ.filter fun i => (p i).val+1=i.val
 
 theorem forward_rotate_int {k : ℕ} (i : Fin (k+1)) :
@@ -18,7 +18,7 @@ theorem forward_rotate_int {k : ℕ} (i : Fin (k+1)) :
   · rw [rotate_castSucc]
     simp
 
-theorem forward_mass_change {k : ℕ} (p : LRX.State (k+1)) :
+theorem forward_mass_change {k : ℕ} (p : LX.Core.State (k+1)) :
     (∑ i, |displacement (finRotate (k+1)*p) i|)=
       (∑ i, |displacement p i|)+2*(p.symm (Fin.last k) : ℤ)-
         2*(descendingPositions p).card := by
@@ -52,7 +52,7 @@ theorem forward_mass_change {k : ℕ} (p : LRX.State (k+1)) :
 
 /-- Rotating the values gives a drop-count bound with the exact number of
 backward unit arrows. No shallow or minimum-phase assumption is needed. -/
-theorem three_drops_bound {k : ℕ} (p : LRX.State (k+1)) :
+theorem three_drops_bound {k : ℕ} (p : LX.Core.State (k+1)) :
     3*((descendingPositions p).card : ℤ) ≤ (k+1 : ℤ)+
       (∑ i, |displacement p i|)-(inversionNumber p : ℤ)+
         (backwardUnits p).card-1 := by
@@ -89,34 +89,34 @@ theorem three_drops_bound {k : ℕ} (p : LRX.State (k+1)) :
 
 #print axioms three_drops_bound
 
-theorem three_drops_bound_of_pos {n : ℕ} (p : LRX.State n) (hn : 0 < n) :
+theorem three_drops_bound_of_pos {n : ℕ} (p : LX.Core.State n) (hn : 0 < n) :
     3*((descendingPositions p).card : ℤ) ≤ (n : ℤ)+
       (∑ i, |displacement p i|)-(inversionNumber p : ℤ)+(backwardUnits p).card-1 := by
   cases n with
   | zero => omega
   | succ k => simpa only [Nat.cast_add,Nat.cast_one] using three_drops_bound p
 
-theorem window_stat_count {n b : ℕ} (W : LRX.FiniteWindow.Window n b)
-    (p : LRX.State b) (P : ℤ → Prop) [DecidablePred P] (hP : ¬P 0) :
-    (Finset.univ.filter fun i => P (displacement (LRX.FiniteWindow.permutation W p) i)).card=
+theorem window_stat_count {n b : ℕ} (W : LX.Core.FiniteWindow.Window n b)
+    (p : LX.Core.State b) (P : ℤ → Prop) [DecidablePred P] (hP : ¬P 0) :
+    (Finset.univ.filter fun i => P (displacement (LX.Core.FiniteWindow.permutation W p) i)).card=
       (Finset.univ.filter fun i => P (displacement p i)).card := by
   classical
   simp only [Finset.card_filter]
-  rw [LRX.FiniteWindow.sum_window_nat W _ (by
+  rw [LX.Core.FiniteWindow.sum_window_nat W _ (by
     intro i hi
-    rw [LRX.FiniteWindow.displacement_outside W p i hi,ite_eq_right hP])]
-  simp only [LRX.FiniteWindow.displacement_embed]
+    rw [LX.Core.FiniteWindow.displacement_outside W p i hi,ite_eq_right hP])]
+  simp only [LX.Core.FiniteWindow.displacement_embed]
 
 /-- A fixed initial interval can be removed before applying the drop budget.
 All finite statistics are transferred through the actual tail restriction. -/
-theorem fixed_prefix_drop_bound {n : ℕ} (p : LRX.State n) (r : ℕ) (hr : r < n)
+theorem fixed_prefix_drop_bound {n : ℕ} (p : LX.Core.State n) (r : ℕ) (hr : r < n)
     (hfix : ∀ i : Fin n,i.val < r → p i=i) :
     3*((descendingPositions p).card : ℤ) ≤ ((n-r : ℕ) : ℤ)+
       (∑ i, |displacement p i|)-(inversionNumber p : ℤ)+(backwardUnits p).card-1 := by
   classical
-  let W : LRX.FiniteWindow.Window n (n-r) := ⟨r,by omega⟩
-  have hW (i : Fin n) : LRX.FiniteWindow.Contains W (p i) ↔
-      LRX.FiniteWindow.Contains W i := by
+  let W : LX.Core.FiniteWindow.Window n (n-r) := ⟨r,by omega⟩
+  have hW (i : Fin n) : LX.Core.FiniteWindow.Contains W (p i) ↔
+      LX.Core.FiniteWindow.Contains W i := by
     change (r ≤ (p i).val ∧ (p i).val < r+(n-r)) ↔
       (r ≤ i.val ∧ i.val < r+(n-r))
     have hi := i.isLt
@@ -129,15 +129,15 @@ theorem fixed_prefix_drop_bound {n : ℕ} (p : LRX.State n) (r : ℕ) (hr : r < 
       · intro h
         rwa [hfix i h]
     omega
-  let q := LRX.FiniteWindow.restriction W p hW
-  have he : LRX.FiniteWindow.permutation W q=p := by
+  let q := LX.Core.FiniteWindow.restriction W p hW
+  have he : LX.Core.FiniteWindow.permutation W q=p := by
     apply Equiv.ext
     intro i
-    by_cases hi : LRX.FiniteWindow.Contains W i
-    · obtain ⟨j,rfl⟩ := (LRX.FiniteWindow.contains_iff W i).mp hi
-      rw [LRX.FiniteWindow.permutation_embed]
-      exact LRX.FiniteWindow.embed_restriction W p hW j
-    · rw [LRX.FiniteWindow.permutation_outside W q i hi]
+    by_cases hi : LX.Core.FiniteWindow.Contains W i
+    · obtain ⟨j,rfl⟩ := (LX.Core.FiniteWindow.contains_iff W i).mp hi
+      rw [LX.Core.FiniteWindow.permutation_embed]
+      exact LX.Core.FiniteWindow.embed_restriction W p hW j
+    · rw [LX.Core.FiniteWindow.permutation_outside W q i hi]
       apply (hfix i _).symm
       have hit := i.isLt
       change ¬(r ≤ i.val ∧ i.val < r+(n-r)) at hi
@@ -145,14 +145,14 @@ theorem fixed_prefix_drop_bound {n : ℕ} (p : LRX.State n) (r : ℕ) (hr : r < 
   have hdesc := window_stat_count W q (fun z => z < 0) (by omega)
   have hu := window_stat_count W q (fun z => z = -1) (by omega)
   rw [he] at hdesc hu
-  have hd (m : ℕ) (s : LRX.State m) :
+  have hd (m : ℕ) (s : LX.Core.State m) :
       (Finset.univ.filter fun i => displacement s i < 0)=descendingPositions s := by
     unfold descendingPositions
     apply Finset.filter_congr
     intro i _
     unfold displacement
     omega
-  have hb (m : ℕ) (s : LRX.State m) :
+  have hb (m : ℕ) (s : LX.Core.State m) :
       (Finset.univ.filter fun i => displacement s i = -1)=backwardUnits s := by
     unfold backwardUnits
     apply Finset.filter_congr
@@ -161,8 +161,8 @@ theorem fixed_prefix_drop_bound {n : ℕ} (p : LRX.State n) (r : ℕ) (hr : r < 
     omega
   rw [hd,hd] at hdesc
   rw [hb,hb] at hu
-  have hm := LRX.FiniteWindow.displacement_mass W q
-  have hi := LRX.FiniteWindow.inversion_number_window W q
+  have hm := LX.Core.FiniteWindow.displacement_mass W q
+  have hi := LX.Core.FiniteWindow.inversion_number_window W q
   rw [he] at hm hi
   have hbound := three_drops_bound_of_pos q (by omega : 0 < n-r)
   rwa [← hdesc,← hu,← hm,← hi] at hbound

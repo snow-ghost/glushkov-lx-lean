@@ -3,7 +3,7 @@ import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.AffineLift
+open LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 theorem strict_width_crossing_le_one (d : Fin n → ℤ)
@@ -22,7 +22,7 @@ end LX.AffineScan
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.AffineLift LRX.FiniteCuts
+open LX.AffineScan LX.Core.AffineLift LX.Core.FiniteCuts
 variable {n : ℕ} [NeZero n]
 
 private theorem open_arc_card (i r : Fin n) :

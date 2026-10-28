@@ -210,11 +210,11 @@ theorem threshold_rank_zero_diagonal (r : Fin n) :
   intro i _
   by_cases hir : i ≤ r
   · have hq : ((i : ℤ)-((r : ℤ)+1))/(n : ℤ)= -1 := by
-      apply LRX.PeriodicBuffer.quotient_eq_of_bounds hnpos <;> have := i.isLt <;>
+      apply LX.Core.PeriodicBuffer.quotient_eq_of_bounds hnpos <;> have := i.isLt <;>
         have := r.isLt <;> have : i.val ≤ r.val := hir <;> omega
     simp [targets,hir,hq]
   · have hq : ((i : ℤ)-((r : ℤ)+1))/(n : ℤ)=0 := by
-      apply LRX.PeriodicBuffer.quotient_eq_of_bounds hnpos <;> have := i.isLt <;>
+      apply LX.Core.PeriodicBuffer.quotient_eq_of_bounds hnpos <;> have := i.isLt <;>
         have := r.isLt <;> have : ¬i.val ≤ r.val := hir <;> omega
     simp [targets,hir,hq]
 

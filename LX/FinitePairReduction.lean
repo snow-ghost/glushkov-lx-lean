@@ -21,8 +21,8 @@ def partners (i : Fin n) : List Letter → State n → List (Fin n)
   | .x::w, p => headPartners i p ++ partners i w (p*eval [.x])
 
 theorem eval_cons_action (a : Letter) (w : List Letter) :
-    eval (n := n) (a::w)=a.toLRX.eval*eval w :=
-  LRX.eval_cons a.toLRX (w.map Letter.toLRX)
+    eval (n := n) (a::w)=a.toCore.eval*eval w :=
+  LX.Core.eval_cons a.toCore (w.map Letter.toCore)
 
 theorem mem_head_partners (i j : Fin n) (p : State n) :
     j ∈ headPartners i p ↔ HeadPair p i j := by

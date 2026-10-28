@@ -728,10 +728,10 @@ def words : Array (List Letter) := #[
   [.l,.l,.l,.x,.l,.l],
   [.l,.l,.l,.l,.l]]
 
-def table (c : LRX.PermCode 6) : List Letter := words[LRX.codeIndex c]!
+def table (c : LX.Core.PermCode 6) : List Letter := words[LX.Core.codeIndex c]!
 
-theorem checked : ∀ c : LRX.PermCode 6,
-    eval (table c)=LRX.decode c ∧ (table c).length ≤ 18 := by
+theorem checked : ∀ c : LX.Core.PermCode 6,
+    eval (table c)=LX.Core.decode c ∧ (table c).length ≤ 18 := by
   decide +kernel
 
 theorem sharp_words (p : State 6) :

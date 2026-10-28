@@ -1,10 +1,10 @@
-import LRX.MajorizedExtremeCount
+import LX.MajorizedExtremeCount
 import LX.AnchorPhasePrice
 import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.AffineLift
+open LX.AffineScan LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 theorem cyclic_offset_normalized (p : State n) (a i : Fin n) :

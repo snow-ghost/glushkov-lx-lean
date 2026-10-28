@@ -4,7 +4,7 @@ import Mathlib
 
 namespace LX.Antipode
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LX.CenteredLift LRX.AffineLift
+open LX.AffineScan LX.CenteredLift LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 theorem odd_no_mid_top_mass (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1) (c : Fin n)

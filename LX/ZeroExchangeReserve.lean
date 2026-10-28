@@ -1,14 +1,14 @@
-import LRX.CapacityEqualityReflection
-import LRX.NarrowWindowLift
+import LX.CapacityEqualityReflection
+import LX.NarrowWindowLift
 import LX.MinimumEnergyPhases
 import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.AffineLift LRX.RotationWords
+open LX.AffineScan LX.Core.AffineLift LX.Core.RotationWords
 variable {n : ℕ} [NeZero n]
 
-/-- The LRX equality classification applies to the actual LX phase after a
+/-- The LX.Core equality classification applies to the actual LX phase after a
 proved output shift. Its conclusion is pulled back to the original input. -/
 theorem majorized_capacity_reflection {p : State n} {c₀ : ℤ} {d : Fin n → ℤ}
     (hsource : IsLift p.symm c₀ d) (hm : Majorized d)
@@ -21,13 +21,13 @@ theorem majorized_capacity_reflection {p : State n} {c₀ : ℤ} {d : Fin n → 
   have hd : IsLift q 0 d := by
     refine ⟨hsource.1,?_⟩
     intro i
-    apply (LRX.LiftedModel.cast_eq_iff_modEq _ _).mp
+    apply (LX.Core.LiftedModel.cast_eq_iff_modEq _ _).mp
     simp only [Int.cast_add,Int.cast_natCast,Fin.cast_val_eq_self,Int.cast_zero,add_zero,hq]
     exact lift_residue hsource i
-  have hshort := LRX.FiniteWindow.majorized_short hd hm
-  have hx : (LRX.LiftedModel.inversionCount (fun i : Fin n => (i : ℤ)+d i) : ℤ)=
+  have hshort := LX.Core.FiniteWindow.majorized_short hd hm
+  have hx : (LX.Core.LiftedModel.inversionCount (fun i : Fin n => (i : ℤ)+d i) : ℤ)=
       ((n/2 : ℕ) : ℤ)*((n : ℤ)-(n/2 : ℕ))-(n/2 : ℕ) := heq
-  obtain ⟨t,ht⟩ := LRX.FiniteCuts.strict_capacity_equality_reflection hd.1 hm hd hshort
+  obtain ⟨t,ht⟩ := LX.Core.FiniteCuts.strict_capacity_equality_reflection hd.1 hm hd hshort
     (fun _ hh => hh) (fun _ hh => hh) hx
   refine ⟨t+t-(((n-1)/2 : ℕ) : Fin n)-c,?_⟩
   intro i

@@ -1,4 +1,4 @@
-import LRX.BalancedSubsetEnergy
+import LX.BalancedSubsetEnergy
 import LX.DepthBound
 import Mathlib
 
@@ -8,21 +8,21 @@ variable {n : ℕ} [NeZero n]
 
 /-- An outgoing inversion always ends at a token of strictly larger backward depth. -/
 theorem crossing_pos_depth_lt (d : Fin n → ℤ) (a j : Fin n)
-    (h : 0 < LRX.AffineLift.crossing d a j) : backwardDepth d a < backwardDepth d j := by
-  let r := LRX.L n ^ a.val
+    (h : 0 < LX.Core.AffineLift.crossing d a j) : backwardDepth d a < backwardDepth d j := by
+  let r := LX.Core.L n ^ a.val
   let b : Fin n := r.symm j
-  let e := LRX.RotationWords.localDisplacement d a
-  have hr0 : r 0=a := by simp [r,LRX.AffineLift.rotation_power_apply]
+  let e := LX.Core.RotationWords.localDisplacement d a
+  have hr0 : r 0=a := by simp [r,LX.Core.AffineLift.rotation_power_apply]
   have hrb : r b=j := r.apply_symm_apply j
-  have hc : LRX.AffineLift.crossing e 0 b=LRX.AffineLift.crossing d a j := by
-    have hh := LRX.RotationWords.crossing_recentered d a 0 b
-    change LRX.AffineLift.crossing e 0 b=LRX.AffineLift.crossing d (r 0) (r b) at hh
+  have hc : LX.Core.AffineLift.crossing e 0 b=LX.Core.AffineLift.crossing d a j := by
+    have hh := LX.Core.RotationWords.crossing_recentered d a 0 b
+    change LX.Core.AffineLift.crossing e 0 b=LX.Core.AffineLift.crossing d (r 0) (r b) at hh
     simpa only [hr0,hrb] using hh
   have htarget : targets e b < targets e 0 := by
-    have hh : 0 < LRX.AffineLift.crossing e 0 b := by omega
-    have hnum : LRX.AffineLift.crossingNumerator e 0 b=targets e b-targets e 0 := by
-      simp [LRX.AffineLift.crossingNumerator,targets]
-    simp only [LRX.AffineLift.crossing,hnum] at hh
+    have hh : 0 < LX.Core.AffineLift.crossing e 0 b := by omega
+    have hnum : LX.Core.AffineLift.crossingNumerator e 0 b=targets e b-targets e 0 := by
+      simp [LX.Core.AffineLift.crossingNumerator,targets]
+    simp only [LX.Core.AffineLift.crossing,hnum] at hh
     by_contra hnot
     have hq := Int.ediv_nonneg (by omega : 0 ≤ targets e b-targets e 0)
       (show (0 : ℤ) ≤ n by positivity)
@@ -36,10 +36,10 @@ theorem crossing_pos_depth_lt (d : Fin n → ℤ) (a j : Fin n)
 
 /-- Net displacement plus incoming crossings is exactly the outgoing crossing count. -/
 theorem displacement_add_depth {p : State n} {c : ℤ} {d : Fin n → ℤ}
-    (hd : LRX.AffineLift.IsLift p c d) (i : Fin n) :
+    (hd : LX.Core.AffineLift.IsLift p c d) (i : Fin n) :
     d i+(backwardDepth d i : ℤ)=
-      ∑ j, ((LRX.AffineLift.crossing d i j).toNat : ℤ) := by
-  rw [← LRX.AffineLift.crossing_row_sum hd i]
+      ∑ j, ((LX.Core.AffineLift.crossing d i j).toNat : ℤ) := by
+  rw [← LX.Core.AffineLift.crossing_row_sum hd i]
   simp only [backwardDepth,Nat.cast_sum,← Finset.sum_add_distrib]
   apply Finset.sum_congr rfl
   intro j _
@@ -50,19 +50,19 @@ def depthCount (d : Fin n → ℤ) (k : ℕ) : ℕ :=
 
 /-- A token can only send unit crossings to tokens above it in the depth ordering. -/
 theorem displacement_add_depth_le_count {p : State n} {c : ℤ} {d : Fin n → ℤ}
-    (hd : LRX.AffineLift.IsLift p c d) (hm : LRX.AffineLift.Majorized d)
+    (hd : LX.Core.AffineLift.IsLift p c d) (hm : LX.Core.AffineLift.Majorized d)
     (k : ℕ) (i : Fin n) (hk : k ≤ backwardDepth d i) :
     d i+(backwardDepth d i : ℤ) ≤ depthCount d (k+1) := by
   rw [displacement_add_depth hd]
-  have hterm (j : Fin n) : ((LRX.AffineLift.crossing d i j).toNat : ℤ) ≤
+  have hterm (j : Fin n) : ((LX.Core.AffineLift.crossing d i j).toNat : ℤ) ≤
       if k+1 ≤ backwardDepth d j then 1 else 0 := by
-    have hc := LRX.AffineLift.crossing_unit hd.1 hm i j
-    by_cases hpos : 0 < LRX.AffineLift.crossing d i j
+    have hc := LX.Core.AffineLift.crossing_unit hd.1 hm i j
+    by_cases hpos : 0 < LX.Core.AffineLift.crossing d i j
     · have hh := crossing_pos_depth_lt d i j hpos
       rw [ite_eq_left (by omega : k+1 ≤ backwardDepth d j)]
-      have hh' := le_abs_self (LRX.AffineLift.crossing d i j)
+      have hh' := le_abs_self (LX.Core.AffineLift.crossing d i j)
       omega
-    · have he : (LRX.AffineLift.crossing d i j).toNat=0 := by omega
+    · have he : (LX.Core.AffineLift.crossing d i j).toNat=0 := by omega
       rw [he,Nat.cast_zero]
       split_ifs <;> norm_num
   have hh := Finset.sum_le_sum (fun j (_ : j ∈ (Finset.univ : Finset (Fin n))) => hterm j)
@@ -70,10 +70,10 @@ theorem displacement_add_depth_le_count {p : State n} {c : ℤ} {d : Fin n → �
 
 /-- Majorization bounds the number of coordinates below any fixed threshold. -/
 theorem majorized_lower_threshold {d : Fin n → ℤ}
-    (hb : ∑ i,d i=0) (hm : LRX.AffineLift.Majorized d)
+    (hb : ∑ i,d i=0) (hm : LX.Core.AffineLift.Majorized d)
     (S : Finset (Fin n)) (t : ℤ) (ht : 2*t ≤ (n : ℤ))
     (hS : ∀ i ∈ S, d i ≤ -t) : (S.card : ℤ) ≤ (n : ℤ)-2*t := by
-  have hmaj := LRX.AffineLift.majorized_neg hb hm S
+  have hmaj := LX.Core.AffineLift.majorized_neg hb hm S
   have hs : (S.card : ℤ)*t ≤ ∑ i ∈ S, -d i := by
     calc
       _ = ∑ _i ∈ S, t := by simp
@@ -87,7 +87,7 @@ theorem majorized_lower_threshold {d : Fin n → ℤ}
 /-- Only a bounded number of tokens can have near-maximal depth. The bound
 uses the next level, so it can be iterated down from the largest depth. -/
 theorem depth_count_recurrence {p : State n} {c : ℤ} {d : Fin n → ℤ}
-    (hd : LRX.AffineLift.IsLift p c d) (hm : LRX.AffineLift.Majorized d)
+    (hd : LX.Core.AffineLift.IsLift p c d) (hm : LX.Core.AffineLift.Majorized d)
     (k : ℕ) (hk : 2*k ≤ n) :
     (depthCount d k : ℤ) ≤ (n : ℤ)-2*k+2*depthCount d (k+1) := by
   have hh : (depthCount d k : ℤ) ≤ (n : ℤ)-2*((k : ℤ)-depthCount d (k+1)) := by
@@ -100,7 +100,7 @@ theorem depth_count_recurrence {p : State n} {c : ℤ} {d : Fin n → ℤ}
   linarith
 
 theorem top_depth_count {p : State n} {c : ℤ} {d : Fin n → ℤ}
-    (hd : LRX.AffineLift.IsLift p c d) (hm : LRX.AffineLift.Majorized d)
+    (hd : LX.Core.AffineLift.IsLift p c d) (hm : LX.Core.AffineLift.Majorized d)
     (h : ℕ) (hh : 2*h ≤ n) (hmax : ∀ i, backwardDepth d i ≤ h) :
     (depthCount d h : ℤ) ≤ (n : ℤ)-2*h := by
   have hz : depthCount d (h+1)=0 := by

@@ -3,7 +3,7 @@ import Mathlib
 
 namespace LX
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open AffineScan LRX.AffineLift
+open AffineScan LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 /-- Every balanced lift's greedy price is the length of a literal word

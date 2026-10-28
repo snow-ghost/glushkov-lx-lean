@@ -3,7 +3,7 @@ import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.FiniteCuts
+open LX.AffineScan LX.Core.FiniteCuts
 variable {n : ℕ} [NeZero n]
 
 theorem equal_raw_offset_height (p : State n) (a b : Fin n)

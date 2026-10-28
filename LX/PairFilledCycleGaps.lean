@@ -5,7 +5,7 @@ import LX.ZeroDefectCycleGeometry
 import Mathlib
 
 namespace LX.CycleGeometry
-open LRX.FiniteCuts
+open LX.Core.FiniteCuts
 variable {n : ℕ} [NeZero n]
 
 /-- An invariant nonempty interval filled only by transpositions must
@@ -74,7 +74,7 @@ theorem single_cycle_gap_empty (q g : State n) (hq : cycleDefect q=0)
     (hfixed : ∀ i : Fin n,a.val < i.val → i.val < c.val → q i ≠ i) :
     c.val ≤ a.val+1 := by
   have hac : q.SameCycle a c :=
-    (LRX.ZeroGap.cycle_root_same_cycle hg ha).symm.trans (LRX.ZeroGap.cycle_root_same_cycle hg hc)
+    (LX.Core.ZeroGap.cycle_root_same_cycle hg ha).symm.trans (LX.Core.ZeroGap.cycle_root_same_cycle hg hc)
   have hno (i : Fin n) (hai : a.val < i.val) (hic : i.val < c.val) : ¬q.SameCycle a i := by
     intro hs
     have he := Equiv.Perm.cycle_is_cycleOf ha hg
@@ -137,7 +137,7 @@ end LX.CycleGeometry
 
 namespace LX.AnchoredPhases
 open scoped Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.AffineLift LX.AffineScan
+open LX.Core.AffineLift LX.AffineScan
 variable {n : ℕ} [NeZero n]
 
 /-- Majorization excludes every backward unit arrow in the even maximal

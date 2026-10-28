@@ -39,7 +39,7 @@ theorem minimum_height_fixed_prefix_bound (p : State n) (a : Fin n)
   have h := fixed_prefix_drop_bound (permutation p a) r hr hfix
   have hu := minimum_height_backward_units p a hmin
   have he := anchor_reserve_decomposition p a
-  unfold LRX.FiniteCuts.cycleDefect at he
+  unfold LX.Core.FiniteCuts.cycleDefect at he
   change 3*(height p a : ℤ) ≤ _ at h
   rw [Nat.cast_sub (by omega : r ≤ n)] at h
   omega

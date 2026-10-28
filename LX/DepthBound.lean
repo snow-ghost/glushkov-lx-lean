@@ -6,12 +6,12 @@ open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
 variable {n : ℕ} [NeZero n]
 
 theorem recentered_backward_depth (d : Fin n → ℤ) (r i : Fin n) :
-    backwardDepth (LRX.RotationWords.localDisplacement d r) i =
-      backwardDepth d ((LRX.L n ^ r.val) i) := by
+    backwardDepth (LX.Core.RotationWords.localDisplacement d r) i =
+      backwardDepth d ((LX.Core.L n ^ r.val) i) := by
   unfold backwardDepth
-  simp_rw [LRX.RotationWords.crossing_recentered]
-  exact Equiv.sum_comp (LRX.L n ^ r.val)
-    (fun j => (-LRX.AffineLift.crossing d ((LRX.L n ^ r.val) i) j).toNat)
+  simp_rw [LX.Core.RotationWords.crossing_recentered]
+  exact Equiv.sum_comp (LX.Core.L n ^ r.val)
+    (fun j => (-LX.Core.AffineLift.crossing d ((LX.Core.L n ^ r.val) i) j).toNat)
 
 /-- Along an inversion, the smaller target has strictly more inverted predecessors. -/
 theorem backward_depth_gt_head (d : Fin n → ℤ) (j : Fin n)
@@ -34,23 +34,23 @@ theorem backward_depth_gt_head (d : Fin n → ℤ) (j : Fin n)
 /-- A token with maximal backward depth has no outgoing inversion. -/
 theorem maximum_depth_nonpositive_crossings (d : Fin n → ℤ) (a : Fin n)
     (ha : ∀ i, backwardDepth d i ≤ backwardDepth d a) :
-    ∀ j, LRX.AffineLift.crossing d a j ≤ 0 := by
+    ∀ j, LX.Core.AffineLift.crossing d a j ≤ 0 := by
   intro j
   by_contra h
-  let r := LRX.L n ^ a.val
+  let r := LX.Core.L n ^ a.val
   let b : Fin n := r.symm j
-  let e := LRX.RotationWords.localDisplacement d a
-  have hr0 : r 0 = a := by simp [r, LRX.AffineLift.rotation_power_apply]
+  let e := LX.Core.RotationWords.localDisplacement d a
+  have hr0 : r 0 = a := by simp [r, LX.Core.AffineLift.rotation_power_apply]
   have hrb : r b = j := r.apply_symm_apply j
-  have hc : LRX.AffineLift.crossing e 0 b = LRX.AffineLift.crossing d a j := by
-    have hh := LRX.RotationWords.crossing_recentered d a 0 b
-    change LRX.AffineLift.crossing e 0 b = LRX.AffineLift.crossing d (r 0) (r b) at hh
+  have hc : LX.Core.AffineLift.crossing e 0 b = LX.Core.AffineLift.crossing d a j := by
+    have hh := LX.Core.RotationWords.crossing_recentered d a 0 b
+    change LX.Core.AffineLift.crossing e 0 b = LX.Core.AffineLift.crossing d (r 0) (r b) at hh
     simpa only [hr0, hrb] using hh
   have htarget : targets e b < targets e 0 := by
-    have hh : 0 < LRX.AffineLift.crossing e 0 b := by omega
-    have hnum : LRX.AffineLift.crossingNumerator e 0 b = targets e b-targets e 0 := by
-      simp [LRX.AffineLift.crossingNumerator, targets]
-    simp only [LRX.AffineLift.crossing, hnum] at hh
+    have hh : 0 < LX.Core.AffineLift.crossing e 0 b := by omega
+    have hnum : LX.Core.AffineLift.crossingNumerator e 0 b = targets e b-targets e 0 := by
+      simp [LX.Core.AffineLift.crossingNumerator, targets]
+    simp only [LX.Core.AffineLift.crossing, hnum] at hh
     by_contra hnot
     have hq := Int.ediv_nonneg (by omega : 0 ≤ targets e b-targets e 0)
       (show (0 : ℤ) ≤ n by positivity)
@@ -68,7 +68,7 @@ theorem maximum_depth_nonpositive_crossings (d : Fin n → ℤ) (a : Fin n)
 
 /-- The largest backward depth is attained at a token whose displacement is its negative. -/
 theorem exists_depth_extreme {p : State n} {c : ℤ} {d : Fin n → ℤ}
-    (hd : LRX.AffineLift.IsLift p c d) :
+    (hd : LX.Core.AffineLift.IsLift p c d) :
     ∃ a : Fin n, (∀ i, backwardDepth d i ≤ backwardDepth d a) ∧
       (backwardDepth d a : ℤ) = -d a := by
   obtain ⟨a, _, ha⟩ := Finset.exists_mem_eq_sup (Finset.univ : Finset (Fin n))
@@ -78,14 +78,14 @@ theorem exists_depth_extreme {p : State n} {c : ℤ} {d : Fin n → ℤ}
     exact Finset.le_sup (f := backwardDepth d) (Finset.mem_univ i)
   refine ⟨a, hmax, ?_⟩
   have hc := maximum_depth_nonpositive_crossings d a hmax
-  have hrow := LRX.AffineLift.crossing_row_sum hd a
-  have he (j : Fin n) : ((-LRX.AffineLift.crossing d a j).toNat : ℤ) =
-      -LRX.AffineLift.crossing d a j := Int.toNat_of_nonneg (by have := hc j; omega)
+  have hrow := LX.Core.AffineLift.crossing_row_sum hd a
+  have he (j : Fin n) : ((-LX.Core.AffineLift.crossing d a j).toNat : ℤ) =
+      -LX.Core.AffineLift.crossing d a j := Int.toNat_of_nonneg (by have := hc j; omega)
   simp only [backwardDepth, Nat.cast_sum, he, Finset.sum_neg_distrib, hrow]
 
 /-- A lower displacement bound controls every token's backward exchanges. -/
 theorem backward_depth_le_strip {p : State n} {c : ℤ} {d : Fin n → ℤ}
-    (hd : LRX.AffineLift.IsLift p c d) (h : ℤ) (hlo : ∀ i, -h ≤ d i) (i : Fin n) :
+    (hd : LX.Core.AffineLift.IsLift p c d) (h : ℤ) (hlo : ∀ i, -h ≤ d i) (i : Fin n) :
     (backwardDepth d i : ℤ) ≤ h := by
   obtain ⟨a,hmax,he⟩ := exists_depth_extreme hd
   have hh : (backwardDepth d i : ℤ) ≤ backwardDepth d a := by exact_mod_cast hmax i

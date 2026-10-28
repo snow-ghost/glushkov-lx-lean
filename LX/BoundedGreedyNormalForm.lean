@@ -4,7 +4,7 @@ import Mathlib
 
 namespace LX
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open AffineScan LRX.AffineLift
+open AffineScan LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 /-- A shortest greedy representative exists with finite phase and all

@@ -4,7 +4,7 @@ import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.FiniteCuts
+open LX.AffineScan LX.Core.FiniteCuts
 variable {n : ℕ} [NeZero n]
 
 /-- Maximum-depth tokens are exactly the fixed positions of the anchored
@@ -23,7 +23,7 @@ theorem depth_eq_height_iff_fixed (p : State n) (a i : Fin n) :
   · intro hi
     have hd := fixed_source_displacement p a i ((mem_fixedPositions _ _).mpr hi)
     have hr := displacement_add_depth (is_lift p a) i
-    have hnonneg : 0 ≤ ∑ j,((LRX.AffineLift.crossing (displacement p a) i j).toNat : ℤ) :=
+    have hnonneg : 0 ≤ ∑ j,((LX.Core.AffineLift.crossing (displacement p a) i j).toNat : ℤ) :=
       Finset.sum_nonneg (fun _ _ => Nat.cast_nonneg _)
     rw [hd] at hr
     have hh := hmax i

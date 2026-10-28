@@ -72,9 +72,9 @@ theorem queue_deadline_sweep_lower (hn : 2 ≤ n) (d : Fin n → ℤ)
 theorem queue_deadline_of_zero (d : Fin n → ℤ) (hz : ∀ i,d i=0) : queueDeadline d=0 := by
   have he : d=(fun _ => 0) := funext hz
   subst d
-  have hd : LRX.AffineLift.IsLift (1 : State n) 0 (fun _ => 0) := by
+  have hd : LX.Core.AffineLift.IsLift (1 : State n) 0 (fun _ => 0) := by
     simpa only [← Equiv.Perm.inv_def,inv_one,Equiv.Perm.one_apply,sub_self] using
-      LRX.AffineLift.canonical_lift (1 : State n)
+      LX.Core.AffineLift.canonical_lift (1 : State n)
   have hb (i : Fin n) : backwardDepth (fun _ : Fin n => 0) i=0 := by
     have hh := backward_depth_le_strip hd (0 : ℤ) (by simp) i
     omega

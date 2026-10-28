@@ -6,7 +6,7 @@ import Mathlib
 namespace LX.AnchoredPhases
 open Classical
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.FiniteCuts
+open LX.AffineScan LX.Core.FiniteCuts
 variable {n : ℕ} [NeZero n]
 
 private theorem raw_gap_value (p : State n) (b : Fin n) (hg : 0 < (b-p b).val) :

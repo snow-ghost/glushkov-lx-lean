@@ -3,13 +3,8 @@ import Mathlib
 
 namespace LX.CenteredLift
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.AffineLift
+open LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
-
-def profile (e : Fin n → ℤ) : Option (Fin n) → Fin n → ℤ
-  | none => e
-  | some a => raiseAt e a
-
 
 theorem perturbed_board_labels (m : ℕ) (C : ℤ) (ρ : State n) (i : Fin n) :
     i+(perturbedBoard m C ρ i : Fin n)=(C : Fin n)-ρ i := by

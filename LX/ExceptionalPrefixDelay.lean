@@ -28,10 +28,10 @@ theorem tail_head_depth_lower (d : Fin n → ℤ) (a : Fin n)
     simp only [Finset.sum_boole,hset,Fin.card_Ici,← backward_depth_head] <;> rfl
 
 theorem neg_displacement_le_depth {p : State n} {c : ℤ} {d : Fin n → ℤ}
-    (hd : LRX.AffineLift.IsLift p c d) (i : Fin n) :
+    (hd : LX.Core.AffineLift.IsLift p c d) (i : Fin n) :
     -d i ≤ (backwardDepth d i : ℤ) := by
   have hh := displacement_add_depth hd i
-  have hs : (0 : ℤ) ≤ ∑ j : Fin n,((LRX.AffineLift.crossing d i j).toNat : ℤ) :=
+  have hs : (0 : ℤ) ≤ ∑ j : Fin n,((LX.Core.AffineLift.crossing d i j).toNat : ℤ) :=
     Finset.sum_nonneg (fun _ _ => Int.natCast_nonneg _)
   omega
 
@@ -52,9 +52,9 @@ def oddException (m : ℕ) (i : Fin n) : ℤ :=
   else 3*(m : ℤ)+4-2*i.val
 
 private theorem lift_labels_injective {p : State n} {c : ℤ} {d : Fin n → ℤ}
-    (hd : LRX.AffineLift.IsLift p c d) : Function.Injective (labels d) := by
+    (hd : LX.Core.AffineLift.IsLift p c d) : Function.Injective (labels d) := by
   have hl (i : Fin n) : labels d i=p.symm i+(c : Fin n) := by
-    simpa only [labels] using LRX.AffineLift.lift_residue hd i
+    simpa only [labels] using LX.Core.AffineLift.lift_residue hd i
   intro i j hij
   rw [hl,hl] at hij
   exact p.symm.injective (add_right_cancel hij)
@@ -62,7 +62,7 @@ private theorem lift_labels_injective {p : State n} {c : ℤ} {d : Fin n → ℤ
 /-- The even exceptional lift needs one more rotation than the token
 budget permits. The phase condition will turn that one into a full lap. -/
 theorem even_exception_rotation_lower (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
-    {p : State n} {c : ℤ} (hd : LRX.AffineLift.IsLift p c (evenException (n := n) m))
+    {p : State n} {c : ℤ} (hd : LX.Core.AffineLift.IsLift p c (evenException (n := n) m))
     (w : List Letter) (hw : ∀ i,run w (evenException (n := n) m) i=0) :
     (n-1)*(m-2)+2 ≤ w.count .l := by
   have hn2 : 2 ≤ n := by omega
@@ -97,7 +97,7 @@ theorem even_exception_rotation_lower (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
 
 /-- The same one-rotation obstruction in the odd exceptional lift. -/
 theorem odd_exception_rotation_lower (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1)
-    {p : State n} {c : ℤ} (hd : LRX.AffineLift.IsLift p c (oddException (n := n) m))
+    {p : State n} {c : ℤ} (hd : LX.Core.AffineLift.IsLift p c (oddException (n := n) m))
     (w : List Letter) (hw : ∀ i,run w (oddException (n := n) m) i=0) :
     (n-1)*(m-1)+1 ≤ w.count .l := by
   have hn2 : 2 ≤ n := by omega
@@ -134,7 +134,7 @@ theorem odd_exception_rotation_lower (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1)
 
 /-- The extra rotation forces a full phase period in the even family. -/
 theorem even_exception_paid_rotation_lower (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
-    {p : State n} {c : ℤ} (hd : LRX.AffineLift.IsLift p c (evenException (n := n) m))
+    {p : State n} {c : ℤ} (hd : LX.Core.AffineLift.IsLift p c (evenException (n := n) m))
     {g : List Letter} (hg : ScanTrace (evenException (n := n) m) g) :
     (n-1)*(m-2)+1+n ≤ paidRotations ((m+3 : ℕ) : Fin n) g := by
   have hh := even_exception_rotation_lower m hm hn hd g hg.run_zero
@@ -152,7 +152,7 @@ theorem even_exception_paid_rotation_lower (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
 
 /-- The extra rotation forces a full phase period in the odd family. -/
 theorem odd_exception_paid_rotation_lower (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1)
-    {p : State n} {c : ℤ} (hd : LRX.AffineLift.IsLift p c (oddException (n := n) m))
+    {p : State n} {c : ℤ} (hd : LX.Core.AffineLift.IsLift p c (oddException (n := n) m))
     {g : List Letter} (hg : ScanTrace (oddException (n := n) m) g) :
     (n-1)*(m-1)+n ≤ paidRotations ((m+2 : ℕ) : Fin n) g := by
   have hh := odd_exception_rotation_lower m hm hn hd g hg.run_zero

@@ -4,7 +4,7 @@ import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.AffineLift
+open LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 /-- The first nonmaximal head is reached within the number of maximal-depth
@@ -47,7 +47,7 @@ theorem word_with_nonmaximal_head (hn : 2 ≤ n) (p : State n) (c : ℤ)
     intro i j hij
     rw [hl,hl] at hij
     exact p.injective (add_right_cancel hij)
-  have he : e=LRX.RotationWords.localDisplacement d r := by
+  have he : e=LX.Core.RotationWords.localDisplacement d r := by
     funext i
     exact run_left_apply r.val d i
   have hei : Function.Injective (labels e) := run_injective hn u d hi
@@ -57,7 +57,7 @@ theorem word_with_nonmaximal_head (hn : 2 ≤ n) (p : State n) (c : ℤ)
     exact hmax _
   have heh : backwardDepth e 0 < h := by
     rw [he,recentered_backward_depth]
-    simpa only [LRX.AffineLift.rotation_power_apply,Fin.val_zero,Nat.cast_zero,
+    simpa only [LX.Core.AffineLift.rotation_power_apply,Fin.val_zero,Nat.cast_zero,
       Fin.cast_val_eq_self,zero_add] using hhead
   obtain ⟨w,hw⟩ := exists_scan_trace hn e heb hei
   have hL := (hw.rotations_le_deadline hn heb hei).trans
@@ -112,7 +112,7 @@ end LX.AffineScan
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.AffineLift
+open LX.AffineScan LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 

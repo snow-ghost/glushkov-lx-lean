@@ -1,4 +1,4 @@
-import LRX.FiniteShallowMatching
+import LX.FiniteShallowMatching
 import LX.AnchorReserveRigidity
 import LX.MatchingFixedNeighbors
 import LX.OddUnitFixedNeighbors
@@ -6,7 +6,7 @@ import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.FiniteCuts LRX.AffineLift
+open LX.AffineScan LX.Core.FiniteCuts LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 /-- Extract the adjacent fixed pair directly from the zero-reserve source;
@@ -16,7 +16,7 @@ theorem odd_zero_reserve_adjacent_fixed (p : State n) (a : Fin n)
     (hm : Majorized (displacement p a)) (hz : anchorReserve p a=0) :
     ∃ u : Fin n,permutation p a u=u ∧ permutation p a (u+1)=u+1 := by
   have hd := is_lift p a
-  have heq : (LRX.LiftedModel.inversionCount (fun i : Fin n => (i : ℤ)+displacement p a i) : ℤ)=
+  have heq : (LX.Core.LiftedModel.inversionCount (fun i : Fin n => (i : ℤ)+displacement p a i) : ℤ)=
       (height p a : ℤ)*((n : ℤ)-height p a-1) := by
     change (inversions (displacement p a) : ℤ)=_
     unfold anchorReserve at hz

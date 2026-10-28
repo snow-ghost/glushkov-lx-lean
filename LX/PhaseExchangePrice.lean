@@ -3,7 +3,7 @@ import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.AffineLift
+open LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 /-- Changing a phase alters each signed crossing by the difference of the
@@ -91,15 +91,15 @@ theorem top_phase_inversions {p : State n} {c : ℤ} {d : Fin n → ℤ}
     simp only [hpoint,Finset.sum_add_distrib,Finset.sum_sub_distrib]
     rw [htwo,htwo,htwo,h1,h2,h3,h4,h5]
     ring
-  have hold := LRX.RotationWords.twice_inversion_count hd
-  have hnew := LRX.RotationWords.twice_inversion_count (shift_lift hd S)
+  have hold := LX.Core.RotationWords.twice_inversion_count hd
+  have hnew := LX.Core.RotationWords.twice_inversion_count (shift_lift hd S)
   have hold' : 2*(inversions d : ℤ)=∑ i : Fin n, ∑ j : Fin n, |crossing d i j| := by
-    change 2*(LRX.LiftedModel.inversionCount (fun i : Fin n => (i : ℤ)+d i) : ℤ)=_
+    change 2*(LX.Core.LiftedModel.inversionCount (fun i : Fin n => (i : ℤ)+d i) : ℤ)=_
     have hc := congrArg (fun k : ℕ => (k : ℤ)) hold
     simpa only [inversions,targets,Nat.cast_mul,Nat.cast_ofNat,Nat.cast_sum,Int.natCast_natAbs] using hc
   have hnew' : 2*(inversions (phaseShift d S) : ℤ)=
       ∑ i : Fin n, ∑ j : Fin n, |crossing (phaseShift d S) i j| := by
-    change 2*(LRX.LiftedModel.inversionCount (fun i : Fin n => (i : ℤ)+phaseShift d S i) : ℤ)=_
+    change 2*(LX.Core.LiftedModel.inversionCount (fun i : Fin n => (i : ℤ)+phaseShift d S i) : ℤ)=_
     have hc := congrArg (fun k : ℕ => (k : ℤ)) hnew
     simpa only [inversions,targets,Nat.cast_mul,Nat.cast_ofNat,Nat.cast_sum,Int.natCast_natAbs] using hc
   simp only [Finset.sum_sub_distrib] at hsum

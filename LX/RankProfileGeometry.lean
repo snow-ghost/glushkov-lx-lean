@@ -6,7 +6,7 @@ import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.FiniteCuts
+open LX.AffineScan LX.Core.FiniteCuts
 variable {n : ℕ} [NeZero n]
 
 /-- The height at any threshold, including an unoccupied one, is its

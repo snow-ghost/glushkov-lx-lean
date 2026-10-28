@@ -15,7 +15,7 @@ theorem candidate_word_bound (hn : 2 ≤ n) (p : State n) (a : Fin n) :
   obtain ⟨w,ht,hw⟩ := candidate_sorting_word hn p a
   have hd := is_lift p a
   have hlabels (i : Fin n) : labels (displacement p a) i=p i+(phase p a : Fin n) := by
-    simpa only [labels,Equiv.symm_symm] using LRX.AffineLift.lift_residue hd i
+    simpa only [labels,Equiv.symm_symm] using LX.Core.AffineLift.lift_residue hd i
   have hi : Function.Injective (labels (displacement p a)) := by
     intro i j hij
     rw [hlabels,hlabels] at hij

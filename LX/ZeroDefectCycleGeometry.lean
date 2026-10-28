@@ -1,12 +1,12 @@
-import LRX.EventCoverEquality
-import LRX.LinearSortingTrace
-import LRX.MinimalEventCycle
-import LRX.TwoWindowCycleDefect
+import LX.EventCoverEquality
+import LX.LinearSortingTrace
+import LX.MinimalEventCycle
+import LX.TwoWindowCycleDefect
 import LX.WordMetric
 import Mathlib
 
 namespace LX.EventGeometry
-open LRX.ZeroGap
+open LX.Core.ZeroGap
 variable {n : ℕ} [NeZero n]
 
 /-- Two different components of a separated linear event graph cannot
@@ -69,7 +69,7 @@ end LX.EventGeometry
 
 namespace LX.CycleGeometry
 open scoped BigOperators
-open LRX.ZeroGap LRX.FiniteCuts
+open LX.Core.ZeroGap LX.Core.FiniteCuts
 variable {n : ℕ} [NeZero n]
 
 /-- Zero finite defect forbids alternating vertices from distinct actual

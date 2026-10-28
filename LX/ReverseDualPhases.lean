@@ -4,7 +4,7 @@ import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.FiniteCuts LRX.WordReflection
+open LX.AffineScan LX.Core.FiniteCuts LX.Core.WordReflection
 variable {n : ℕ} [NeZero n]
 
 def dualPosition (p : State n) : State n := reflection*p

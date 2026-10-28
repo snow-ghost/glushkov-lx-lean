@@ -12,15 +12,15 @@ def potentials : Array ℕ := #[
   7,7,6,10,4,9,10,8,10,9,3,4,6,8,5,10,5,10,9,10,4,3,4,5,
   6,6,7,9,6,5,7,6,8,8,8,5,10,9,6,5,4,5,6,5,8,10,5,4]
 
-def score (p : State 5) : ℕ := potentials[LRX.codeIndex (LRX.encode p)]!
+def score (p : State 5) : ℕ := potentials[LX.Core.codeIndex (LX.Core.encode p)]!
 
 theorem potential_zero : score 1=0 := by decide +kernel
 
-theorem potential_edges : ∀ c : LRX.PermCode 5,∀ a : Letter,
-    score (LRX.decode c*eval [a]) ≤ score (LRX.decode c)+1 := by
-  have checked : ∀ c : LRX.PermCode 5,
-      score (LRX.decode c*eval [.l]) ≤ score (LRX.decode c)+1 ∧
-      score (LRX.decode c*eval [.x]) ≤ score (LRX.decode c)+1 := by
+theorem potential_edges : ∀ c : LX.Core.PermCode 5,∀ a : Letter,
+    score (LX.Core.decode c*eval [a]) ≤ score (LX.Core.decode c)+1 := by
+  have checked : ∀ c : LX.Core.PermCode 5,
+      score (LX.Core.decode c*eval [.l]) ≤ score (LX.Core.decode c)+1 ∧
+      score (LX.Core.decode c*eval [.x]) ≤ score (LX.Core.decode c)+1 := by
     decide +kernel
   intro c a
   cases a with

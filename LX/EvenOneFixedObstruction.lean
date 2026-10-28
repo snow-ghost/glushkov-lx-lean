@@ -1,10 +1,10 @@
-import LRX.FixedCountReflection
+import LX.FixedCountReflection
 import LX.AnchoredPhases
 import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.FiniteCuts
+open LX.AffineScan LX.Core.FiniteCuts
 variable {n : ℕ} [NeZero n]
 
 /-- A unique fixed position is the only maximum-depth position, so its

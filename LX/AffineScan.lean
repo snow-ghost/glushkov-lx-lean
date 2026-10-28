@@ -1,4 +1,4 @@
-import LRX.LiftedModel
+import LX.LiftedModel
 import LX.WordMetric
 import Mathlib
 
@@ -55,7 +55,7 @@ theorem exchange_sum (d : Fin n → ℤ) : ∑ i, exchange d i = ∑ i, d i := b
   simp [exchange, Finset.sum_add_distrib, Finset.sum_sub_distrib, Equiv.sum_comp]
 
 theorem exchange_energy (hn : 2 ≤ n) (d : Fin n → ℤ) :
-    (LRX.AffineLift.energy (exchange d) : ℤ) - LRX.AffineLift.energy d =
+    (LX.Core.AffineLift.energy (exchange d) : ℤ) - LX.Core.AffineLift.energy d =
       2 * (d 1 - d 0 + 1) := by
   have h01 : (0 : Fin n) ≠ 1 := by
     intro h
@@ -73,7 +73,7 @@ theorem exchange_energy (hn : 2 ≤ n) (d : Fin n → ℤ) :
           add_zero]
         ring
       · simp [exchange, Equiv.swap_apply_of_ne_of_ne hi hj, hi, hj]
-  rw [LRX.AffineLift.energy_cast, LRX.AffineLift.energy_cast]
+  rw [LX.Core.AffineLift.energy_cast, LX.Core.AffineLift.energy_cast]
   simp_rw [point]
   simp only [Finset.sum_add_distrib]
   rw [Equiv.sum_comp (Equiv.swap (0 : Fin n) 1) (fun i => d i ^ 2)]
@@ -82,9 +82,9 @@ theorem exchange_energy (hn : 2 ≤ n) (d : Fin n → ℤ) :
 
 theorem exchange_energy_lt (hn : 2 ≤ n) (d : Fin n → ℤ)
     (hdesc : d 1 + 1 < d 0) :
-    LRX.AffineLift.energy (exchange d) < LRX.AffineLift.energy d := by
+    LX.Core.AffineLift.energy (exchange d) < LX.Core.AffineLift.energy d := by
   have h := exchange_energy hn d
-  have hh : (LRX.AffineLift.energy (exchange d) : ℤ) < LRX.AffineLift.energy d := by
+  have hh : (LX.Core.AffineLift.energy (exchange d) : ℤ) < LX.Core.AffineLift.energy d := by
     omega
   exact_mod_cast hh
 
@@ -129,7 +129,7 @@ theorem exists_descent (hn : 2 ≤ n) (d : Fin n → ℤ)
       simp only [labels, he, Int.cast_add, Int.cast_one, finRotate_apply]
       abel
     have hc := hi hh
-    exact LRX.LiftedModel.neighboring_positions_distinct hn i (by
+    exact LX.Core.LiftedModel.neighboring_positions_distinct hn i (by
       simpa only [finRotate_apply] using hc)
   have hh := hno i
   omega
@@ -171,17 +171,17 @@ theorem step_labels (hn : 2 ≤ n) (a : Letter) (d : Fin n → ℤ) (i : Fin n) 
     labels (step a d) i = labels d (eval (n := n) [a] i) -
       (if a = .l then 1 else 0) := by
   cases a with
-  | l => simpa [step, eval, Letter.toLRX, LRX.eval, LRX.Letter.eval, LRX.L] using rotate_labels d i
-  | x => simpa [step, eval, Letter.toLRX, LRX.eval, LRX.Letter.eval, LRX.X] using exchange_labels hn d i
+  | l => simpa [step, eval, Letter.toCore, LX.Core.eval, LX.Core.Letter.eval, LX.Core.L] using rotate_labels d i
+  | x => simpa [step, eval, Letter.toCore, LX.Core.eval, LX.Core.Letter.eval, LX.Core.X] using exchange_labels hn d i
 
 theorem run_labels (hn : 2 ≤ n) (w : List Letter) (d : Fin n → ℤ) (i : Fin n) :
     labels (run w d) i = labels d (eval w i) - (w.count .l : Fin n) := by
   induction w generalizing d with
-  | nil => simp [run, eval, LRX.eval]
+  | nil => simp [run, eval, LX.Core.eval]
   | cons a w ih =>
     rw [run, ih, step_labels hn]
-    cases a <;> simp [eval, Letter.toLRX, LRX.eval,
-      LRX.Letter.eval, Equiv.Perm.mul_apply] <;> abel
+    cases a <;> simp [eval, Letter.toCore, LX.Core.eval,
+      LX.Core.Letter.eval, Equiv.Perm.mul_apply] <;> abel
 
 /-- A zero affine board gives an actual sorting word, including its final paid rotation. -/
 theorem sorting_word_of_zero (hn : 2 ≤ n) (p : State n) (c : Fin n)
@@ -199,22 +199,22 @@ theorem sorting_word_of_zero (hn : 2 ≤ n) (p : State n) (c : Fin n)
   have hc : p (eval w (i + k)) = i := (add_right_cancel hh).symm
   change (p * eval (n := n) (w ++ List.replicate k.val Letter.l)) i = i
   rw [eval_append]
-  simpa [eval, Letter.toLRX, LRX.eval, LRX.Letter.eval,
-    Equiv.Perm.mul_apply, LRX.AffineLift.rotation_power_apply] using hc
+  simpa [eval, Letter.toCore, LX.Core.eval, LX.Core.Letter.eval,
+    Equiv.Perm.mul_apply, LX.Core.AffineLift.rotation_power_apply] using hc
 
 theorem run_left_apply (k : ℕ) (d : Fin n → ℤ) (i : Fin n) :
-    run (List.replicate k .l) d i = d (((LRX.L n)^k) i) := by
+    run (List.replicate k .l) d i = d (((LX.Core.L n)^k) i) := by
   induction k generalizing d with
   | zero => simp [run]
   | succ k ih =>
     simp only [List.replicate_succ, run, step]
     rw [ih]
-    simp only [rotate, LRX.L, pow_succ', Equiv.Perm.mul_apply]
+    simp only [rotate, LX.Core.L, pow_succ', Equiv.Perm.mul_apply]
 
 theorem run_left_energy (k : ℕ) (d : Fin n → ℤ) :
-    LRX.AffineLift.energy (run (List.replicate k .l) d) = LRX.AffineLift.energy d := by
-  simp only [LRX.AffineLift.energy, run_left_apply]
-  exact Equiv.sum_comp ((LRX.L n)^k) (fun i => (d i).natAbs ^ 2)
+    LX.Core.AffineLift.energy (run (List.replicate k .l) d) = LX.Core.AffineLift.energy d := by
+  simp only [LX.Core.AffineLift.energy, run_left_apply]
+  exact Equiv.sum_comp ((LX.Core.L n)^k) (fun i => (d i).natAbs ^ 2)
 
 
 #print axioms exchange_energy_lt

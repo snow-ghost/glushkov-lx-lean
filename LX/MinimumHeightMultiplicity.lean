@@ -3,7 +3,7 @@ import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.FiniteCuts
+open LX.Core.FiniteCuts
 variable {n : ℕ} [NeZero n]
 
 omit [NeZero n] in
@@ -34,7 +34,7 @@ private theorem rank_bonus_sum (f : ℕ) (hf : 0 < f) (hfn : f ≤ n) :
         · rw [ite_eq_left ⟨by omega,hk'⟩,ite_eq_right hz]; ring
       _ = _ := by simp [Finset.sum_sub_distrib,hf]; ring
   rw [hp]
-  have ht := LRX.FiniteCoordinates.range_sum_twice f
+  have ht := LX.Core.FiniteCoordinates.range_sum_twice f
   nlinarith
 
 /-- A large fixed fiber forces quadratically many additional minimum-height

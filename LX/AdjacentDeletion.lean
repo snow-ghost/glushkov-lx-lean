@@ -17,7 +17,7 @@ theorem delete_adjacent_descent (hn : 2 ≤ n) (p : State n) (d : Fin n → ℤ)
     simp [Nat.mod_eq_of_lt (by omega : 1 < n)]
   by_cases hi : i.val+1 < n
   · have hj : (i+1).val=i.val+1 := hnext.trans (Nat.mod_eq_of_lt hi)
-    let key : LRX.LiftedModel.PairKey n := ⟨i,i+1,0⟩
+    let key : LX.Core.LiftedModel.PairKey n := ⟨i,i+1,0⟩
     have hk : key.Valid := by
       constructor
       · change i.val < (i+1).val
@@ -33,7 +33,7 @@ theorem delete_adjacent_descent (hn : 2 ≤ n) (p : State n) (d : Fin n → ℤ)
       apply Fin.ext
       rw [hnext,hnlast,Nat.mod_self,Fin.val_zero]
     rw [hj] at hdesc
-    let key : LRX.LiftedModel.PairKey n := ⟨0,i,-(n : ℤ)⟩
+    let key : LX.Core.LiftedModel.PairKey n := ⟨0,i,-(n : ℤ)⟩
     have hk : key.Valid := by
       constructor
       · change (0 : Fin n).val < i.val

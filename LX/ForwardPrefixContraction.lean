@@ -3,14 +3,14 @@ import Mathlib
 
 namespace LX.FiniteDropBudget
 open scoped BigOperators
-open LRX.FiniteCuts
+open LX.Core.FiniteCuts
 variable {n : ℕ} [NeZero n]
 
-def ForwardPrefix (p : LRX.State n) (r : ℕ) : Prop :=
+def ForwardPrefix (p : LX.Core.State n) (r : ℕ) : Prop :=
   ∀ i : Fin n,i.val < r → i.val ≤ (p i).val ∧
     ∀ j : Fin n,i.val < j.val → j.val < (p i).val → p j=j
 
-theorem head_merge_forward_prefix (p : LRX.State n) (r : ℕ)
+theorem head_merge_forward_prefix (p : LX.Core.State n) (r : ℕ)
     (hp : ForwardPrefix p r) (hhead : p 0 ≠ 0) (hb : (p 0).val < r) :
     ForwardPrefix (p*Equiv.swap 0 (p 0)) r := by
   let b := p 0
@@ -56,9 +56,9 @@ theorem head_merge_forward_prefix (p : LRX.State n) (r : ℕ)
 
 /-- An ascending prefix chain can be merged into the head. All its other
 vertices become fixed, without increasing mass minus inversions. -/
-theorem contract_forward_prefix (p : LRX.State n) (r : ℕ) (hr : 0 < r)
+theorem contract_forward_prefix (p : LX.Core.State n) (r : ℕ) (hr : 0 < r)
     (hp : ForwardPrefix p r) (hhead : p 0 ≠ 0) :
-    ∃ q : LRX.State n,
+    ∃ q : LX.Core.State n,
       (∀ i : Fin n,0 < i.val → i.val < r → q i=i) ∧
       ForwardPrefix q r ∧ q 0 ≠ 0 ∧
       descendingPositions q=descendingPositions p ∧ backwardUnits q=backwardUnits p ∧

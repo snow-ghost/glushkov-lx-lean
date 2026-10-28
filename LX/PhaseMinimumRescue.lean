@@ -1,10 +1,10 @@
-import LRX.AffineLift
+import LX.AffineLift
 import LX.WordMetric
 import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.AffineLift
+open LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 def raiseMinimum (d : Fin n → ℤ) (a : Fin n) : Fin n → ℤ :=

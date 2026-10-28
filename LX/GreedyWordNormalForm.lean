@@ -6,14 +6,14 @@ import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.AffineLift
+open LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 /-- The exact physical endpoint of an arbitrary word is a board on which
 that same word terminates at zero. Winding is retained. -/
 theorem exists_exact_word_board (hn : 2 ≤ n) (w : List Letter) :
     ∃ d : Fin n → ℤ,IsLift (eval w) (w.count .l : ℤ) d ∧ ∀ i,run w d i=0 := by
-  let s := LRX.LiftedModel.run (w.map Letter.toLRX) (LRX.LiftedModel.initial (n := n))
+  let s := LX.Core.LiftedModel.run (w.map Letter.toCore) (LX.Core.LiftedModel.initial (n := n))
   let d : Fin n → ℤ := fun i => s.position i-(i : ℤ)
   have hd : IsLift (eval w) (w.count .l : ℤ) d := by
     have hh := DirectedTokenLower.word_endpoint_lift hn w
@@ -21,7 +21,7 @@ theorem exists_exact_word_board (hn : 2 ≤ n) (w : List Letter) :
     exact hh
   refine ⟨d,hd,?_⟩
   have he : targets d=s.position := by funext i; simp [targets,d]
-  have hr := LiftedScan.remainder_run hn (targets d) w LRX.LiftedModel.initial
+  have hr := LiftedScan.remainder_run hn (targets d) w LX.Core.LiftedModel.initial
   rw [LiftedScan.remainder_initial] at hr
   intro i
   rw [← hr]
@@ -72,7 +72,7 @@ end LX.AffineScan
 
 namespace LX
 open scoped Fin.IntCast Fin.NatCast Fin.CommRing
-open AffineScan LRX.AffineLift
+open AffineScan LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 /-- Every directed distance is attained within the proved greedy normal

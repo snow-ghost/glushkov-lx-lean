@@ -5,7 +5,7 @@ import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.AffineLift
+open LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 theorem raise_coordinate_crossing (d : Fin n → ℤ) (a i j : Fin n) :
@@ -74,14 +74,14 @@ theorem raise_coordinate_inversions {p : State n} {c : ℤ} {d : Fin n → ℤ}
     have h2 : (∑ i : Fin n,∑ j : Fin n,if j=a then Δ i else 0)=∑ j : Fin n,Δ j := by simp
     rw [h1,h2]; ring
   have hold : 2*(inversions d : ℤ)=∑ i : Fin n,∑ j : Fin n,|crossing d i j| := by
-    change 2*(LRX.LiftedModel.inversionCount (fun i : Fin n => (i : ℤ)+d i) : ℤ)=_
-    have hh := congrArg (fun k : ℕ => (k : ℤ)) (LRX.RotationWords.twice_inversion_count hd)
+    change 2*(LX.Core.LiftedModel.inversionCount (fun i : Fin n => (i : ℤ)+d i) : ℤ)=_
+    have hh := congrArg (fun k : ℕ => (k : ℤ)) (LX.Core.RotationWords.twice_inversion_count hd)
     simpa only [inversions,targets,Nat.cast_mul,Nat.cast_ofNat,Nat.cast_sum,Int.natCast_natAbs] using hh
   have hnew : 2*(inversions (raiseMinimum d a) : ℤ)=
       ∑ i : Fin n,∑ j : Fin n,|crossing (raiseMinimum d a) i j| := by
-    change 2*(LRX.LiftedModel.inversionCount (fun i : Fin n => (i : ℤ)+raiseMinimum d a i) : ℤ)=_
+    change 2*(LX.Core.LiftedModel.inversionCount (fun i : Fin n => (i : ℤ)+raiseMinimum d a i) : ℤ)=_
     have hh := congrArg (fun k : ℕ => (k : ℤ))
-      (LRX.RotationWords.twice_inversion_count (raise_minimum_lift hd a))
+      (LX.Core.RotationWords.twice_inversion_count (raise_minimum_lift hd a))
     simpa only [inversions,targets,Nat.cast_mul,Nat.cast_ofNat,Nat.cast_sum,Int.natCast_natAbs] using hh
   simp only [Finset.sum_sub_distrib] at hs
   rw [← hold,← hnew,hsumΔ] at hs

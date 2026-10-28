@@ -5,7 +5,7 @@ import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LX.FiniteDropBudget LRX.FiniteCuts
+open LX.AffineScan LX.FiniteDropBudget LX.Core.FiniteCuts
 variable {n : ℕ} [NeZero n]
 
 theorem near_top_prefix_forward (p : State n) (a : Fin n) (r : ℕ)

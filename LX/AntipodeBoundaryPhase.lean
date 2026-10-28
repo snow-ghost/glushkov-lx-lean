@@ -11,7 +11,7 @@ variable {n : ℕ} [NeZero n]
 /-- The endpoint residue pays the exact extra rotation missing from the
 plain token budget. All quantities come from the same literal word. -/
 theorem ScanTrace.paid_token_bound (hn : 2 ≤ n) {p : State n} {c : Fin n}
-    {d : Fin n → ℤ} (hd : LRX.AffineLift.IsLift p (c : ℤ) d)
+    {d : Fin n → ℤ} (hd : LX.Core.AffineLift.IsLift p (c : ℤ) d)
     {g : List Letter} (hg : ScanTrace d g) (i : Fin n) :
     (n : ℤ)*(i.val-1 : ℕ)-((n : ℤ)-1)*targets d i+((-p.symm i : Fin n) : ℤ) ≤
       (paidRotations c g : ℤ) := by
@@ -27,7 +27,7 @@ theorem ScanTrace.paid_token_bound (hn : 2 ≤ n) {p : State n} {c : Fin n}
   have hnonneg : 0 ≤ R-T := by change T ≤ R at ht; omega
   have hF : (targets d i : Fin n)=p.symm i+c := by
     simpa only [targets,Int.cast_add,Int.cast_natCast,Fin.cast_val_eq_self] using
-      LRX.AffineLift.lift_residue hd i
+      LX.Core.AffineLift.lift_residue hd i
   have hphase := paid_rotations_phase c g
   have hcast : ((R-T : ℤ) : Fin n)= -p.symm i := by
     simp only [R,T,Int.cast_sub,Int.cast_mul,Int.cast_natCast,Fin.natCast_self,
@@ -54,7 +54,7 @@ variable {n : ℕ} [NeZero n]
 /-- At height m, every ordinary position already pays the even target.
 Only the two transposed positions can escape this estimate. -/
 theorem even_bottom_ordinary_paid (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
-    {c : Fin n} {d : Fin n → ℤ} (hd : LRX.AffineLift.IsLift even (c : ℤ) d)
+    {c : Fin n} {d : Fin n → ℤ} (hd : LX.Core.AffineLift.IsLift even (c : ℤ) d)
     {g : List Letter} (hg : ScanTrace d g) (i : Fin n) (hi : 3 ≤ i.val)
     (hdi : d i= -(m : ℤ)) :
     3*m^2-4*m+3 ≤ inversions d+paidRotations c g := by
@@ -91,7 +91,7 @@ theorem even_bottom_ordinary_paid (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
     push_cast; rw [hsub]; exact hlen)
 
 theorem even_unpaid_bottom_positions (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
-    {c : Fin n} {d : Fin n → ℤ} (hd : LRX.AffineLift.IsLift even (c : ℤ) d)
+    {c : Fin n} {d : Fin n → ℤ} (hd : LX.Core.AffineLift.IsLift even (c : ℤ) d)
     {g : List Letter} (hg : ScanTrace d g)
     (hu : inversions d+paidRotations c g < 3*m^2-4*m+3)
     (i : Fin n) (hdi : d i= -(m : ℤ)) : i.val=1 ∨ i.val=2 := by
@@ -115,7 +115,7 @@ theorem even_unpaid_bottom_positions (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
     omega
 
 theorem even_unpaid_boundary_phase (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
-    {c : Fin n} {d : Fin n → ℤ} (hd : LRX.AffineLift.IsLift even (c : ℤ) d)
+    {c : Fin n} {d : Fin n → ℤ} (hd : LX.Core.AffineLift.IsLift even (c : ℤ) d)
     {g : List Letter} (hg : ScanTrace d g)
     (hu : inversions d+paidRotations c g < 3*m^2-4*m+3)
     (he : ∃ i,d i= -(m : ℤ)) : c=((m+2 : ℕ) : Fin n) := by
@@ -133,10 +133,10 @@ theorem even_unpaid_boundary_phase (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
       subst i
       simp only [Equiv.swap_apply_right]
       norm_num
-  have hh := LRX.AffineLift.lift_residue hd i
+  have hh := LX.Core.AffineLift.lift_residue hd i
   rw [hdi] at hh
   simp only [Int.cast_natCast,Fin.cast_val_eq_self] at hh
-  simp only [even,Equiv.symm_symm,Equiv.Perm.mul_apply,LRX.WordReflection.reflection_apply] at hh
+  simp only [even,Equiv.symm_symm,Equiv.Perm.mul_apply,LX.Core.WordReflection.reflection_apply] at hh
   have hnfin : (2 : Fin n)*(m : Fin n)=0 := by
     have hz : (n : Fin n)=0 := Fin.natCast_self n
     have hc := congrArg (fun t : ℕ => (t : Fin n)) hn

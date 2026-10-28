@@ -4,7 +4,7 @@ import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.AffineLift
+open LX.AffineScan LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 /-- Every globally minimal anchor in the even unit-reserve branch has the
@@ -71,20 +71,20 @@ theorem even_unit_reserve_source {p : State n} {a : Fin n}
     (m : ℕ) (hn : n=2*m) (ha : GlobalMinimum p a)
     (hunit : (inversions (displacement p a) : ℤ)+1=(m : ℤ)*(m-1)) :
     let q := permutation p a
-    LRX.FiniteCuts.cycleDefect q=0 ∧
+    LX.Core.FiniteCuts.cycleDefect q=0 ∧
       q.support.card=q.cycleFactorsFinset.card+m ∧
-      ((LRX.FiniteCuts.fixedPositions q).card=1 ∨
-       (LRX.FiniteCuts.fixedPositions q).card=2) ∧
+      ((LX.Core.FiniteCuts.fixedPositions q).card=1 ∨
+       (LX.Core.FiniteCuts.fixedPositions q).card=2) ∧
       q.support.card=2*q.cycleFactorsFinset.card+
-        (LRX.FiniteCuts.fixedPositions q).card := by
+        (LX.Core.FiniteCuts.fixedPositions q).card := by
   obtain ⟨hh,hr⟩ := even_unit_reserve_height m hn ha hunit
   obtain ⟨hz,hrank,_,_,_⟩ := unit_anchor_reserve_rigidity p a
     (global_minimum_majorized ha) hr
   have hf := majorized_anchor_fixed_positions p a (global_minimum_majorized ha)
-  have hcard := LRX.FiniteCuts.fixed_positions_card (permutation p a)
-  have hpos : 0 < (LRX.FiniteCuts.fixedPositions (permutation p a)).card := by
+  have hcard := LX.Core.FiniteCuts.fixed_positions_card (permutation p a)
+  have hpos : 0 < (LX.Core.FiniteCuts.fixedPositions (permutation p a)).card := by
     apply Finset.card_pos.mpr
-    exact ⟨a,(LRX.FiniteCuts.mem_fixedPositions _ _).mpr (permutation_anchor p a)⟩
+    exact ⟨a,(LX.Core.FiniteCuts.mem_fixedPositions _ _).mpr (permutation_anchor p a)⟩
   dsimp only
   exact ⟨hz,by omega,by omega,by omega⟩
 
@@ -101,7 +101,7 @@ theorem cycle_size_le_of_excess (q : State n) (e : ℕ)
   have hsum : (∑ c ∈ q.cycleFactorsFinset,((c.support.card : ℤ)-2))=(e : ℤ) := by
     rw [Finset.sum_sub_distrib]
     have hs : (∑ c ∈ q.cycleFactorsFinset,(c.support.card : ℤ))=(q.support.card : ℤ) := by
-      exact_mod_cast LRX.FiniteCuts.cycle_support_card_sum q
+      exact_mod_cast LX.Core.FiniteCuts.cycle_support_card_sum q
     rw [hs,he]
     simp
     ring
@@ -130,7 +130,7 @@ theorem small_cycle_excess_profile (q : State n) (e : ℕ) (he2 : e ≤ 2)
         2*(if g.support.card=4 then 1 else 0) := by
     rcases hsize g hg with h | h | h <;> simp [h]
   have hs := Finset.sum_congr rfl hterm
-  rw [LRX.FiniteCuts.cycle_support_card_sum] at hs
+  rw [LX.Core.FiniteCuts.cycle_support_card_sum] at hs
   simp only [Finset.sum_add_distrib,← Finset.mul_sum,Finset.sum_const,
     smul_eq_mul,Finset.sum_boole] at hs
   change q.support.card=q.cycleFactorsFinset.card*2+cycleSizeCount q 3+

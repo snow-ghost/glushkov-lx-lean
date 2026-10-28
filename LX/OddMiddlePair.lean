@@ -5,7 +5,7 @@ import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.AffineLift
+open LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 theorem reflection_token_bound (hn : 2 ≤ n) {p : State n} {c : Fin n} {d : Fin n → ℤ}

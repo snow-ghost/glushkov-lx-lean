@@ -1,4 +1,4 @@
-import LRX.PermutationCode
+import LX.PermutationCode
 import LX.WordMetric
 import Mathlib
 
@@ -40,12 +40,12 @@ theorem potential_le_diameter (hn : 2 ≤ n) (score : State n → ℕ)
 the lower bound against every possible word, not just a search output. -/
 theorem lower_of_code_potential (hn : 2 ≤ n) (score : State n → ℕ)
     (hzero : score 1=0)
-    (checked : ∀ c : LRX.PermCode n,∀ a : Letter,
-      score (LRX.decode c*eval [a]) ≤ score (LRX.decode c)+1)
+    (checked : ∀ c : LX.Core.PermCode n,∀ a : Letter,
+      score (LX.Core.decode c*eval [a]) ≤ score (LX.Core.decode c)+1)
     (p : State n) : score p ≤ diameter n := by
   apply potential_le_diameter hn score hzero ?_ p
   intro q a
-  simpa only [LRX.decode_encode] using checked (LRX.encode q) a
+  simpa only [LX.Core.decode_encode] using checked (LX.Core.encode q) a
 
 #print axioms potential_word_bound
 #print axioms lower_of_code_potential

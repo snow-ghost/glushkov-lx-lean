@@ -3,7 +3,7 @@ import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.FiniteCuts LX.AffineScan
+open LX.Core.FiniteCuts LX.AffineScan
 variable {n : ℕ} [NeZero n]
 
 theorem offset_difference_mass (p : State n) (a : Fin n) :

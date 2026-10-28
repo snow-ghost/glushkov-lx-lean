@@ -35,7 +35,7 @@ open LX.AffineScan
 variable {n : ℕ} [NeZero n]
 
 theorem even_large_height_paid (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
-    {c : Fin n} {d : Fin n → ℤ} (hd : LRX.AffineLift.IsLift even (c : ℤ) d)
+    {c : Fin n} {d : Fin n → ℤ} (hd : LX.Core.AffineLift.IsLift even (c : ℤ) d)
     {g : List Letter} (hg : ScanTrace d g) (i : Fin n) (hi : d i < -(m : ℤ)) :
     3*m^2-4*m+3 ≤ inversions d+paidRotations c g := by
   have hI := even_lift_inversions_lower m hm hn hd
@@ -47,7 +47,7 @@ theorem even_large_height_paid (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
   nlinarith
 
 theorem odd_large_height_paid (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1)
-    {c : Fin n} {d : Fin n → ℤ} (hd : LRX.AffineLift.IsLift (odd m hm hn) (c : ℤ) d)
+    {c : Fin n} {d : Fin n → ℤ} (hd : LX.Core.AffineLift.IsLift (odd m hm hn) (c : ℤ) d)
     {g : List Letter} (hg : ScanTrace d g) (i : Fin n) (hi : d i < -(m : ℤ)) :
     3*m^2-m+1 ≤ inversions d+paidRotations c g := by
   have hI := odd_lift_inversions_lower m hm hn hd
@@ -61,7 +61,7 @@ theorem odd_large_height_paid (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1)
 /-- Every potentially shorter lift of the even candidate is in this
 lower strip; this removes all larger heights for every size. -/
 theorem even_unpaid_lower_strip (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
-    {c : Fin n} {d : Fin n → ℤ} (hd : LRX.AffineLift.IsLift even (c : ℤ) d)
+    {c : Fin n} {d : Fin n → ℤ} (hd : LX.Core.AffineLift.IsLift even (c : ℤ) d)
     {g : List Letter} (hg : ScanTrace d g)
     (hu : inversions d+paidRotations c g < 3*m^2-4*m+3) :
     ∀ i,-(m : ℤ) ≤ d i := by
@@ -71,7 +71,7 @@ theorem even_unpaid_lower_strip (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
   omega
 
 theorem odd_unpaid_lower_strip (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1)
-    {c : Fin n} {d : Fin n → ℤ} (hd : LRX.AffineLift.IsLift (odd m hm hn) (c : ℤ) d)
+    {c : Fin n} {d : Fin n → ℤ} (hd : LX.Core.AffineLift.IsLift (odd m hm hn) (c : ℤ) d)
     {g : List Letter} (hg : ScanTrace d g)
     (hu : inversions d+paidRotations c g < 3*m^2-m+1) :
     ∀ i,-(m : ℤ) ≤ d i := by

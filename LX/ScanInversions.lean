@@ -1,4 +1,4 @@
-import LRX.RecenteredCrossings
+import LX.RecenteredCrossings
 import LX.GreedyScan
 import Mathlib
 
@@ -8,12 +8,12 @@ variable {n : ℕ} [NeZero n]
 
 def targets (d : Fin n → ℤ) (i : Fin n) : ℤ := (i : ℤ) + d i
 
-def inversions (d : Fin n → ℤ) : ℕ := LRX.LiftedModel.inversionCount (targets d)
+def inversions (d : Fin n → ℤ) : ℕ := LX.Core.LiftedModel.inversionCount (targets d)
 
 private theorem swap_inversion_balance (hn : 2 ≤ n) (F : Fin n → ℤ) :
-    LRX.LiftedModel.inversionCount (fun i => F (Equiv.swap 0 1 i)) +
+    LX.Core.LiftedModel.inversionCount (fun i => F (Equiv.swap 0 1 i)) +
         ((F 1 - F 0)/(n : ℤ)).natAbs =
-      LRX.LiftedModel.inversionCount F + ((F 0 - F 1)/(n : ℤ)).natAbs := by
+      LX.Core.LiftedModel.inversionCount F + ((F 0 - F 1)/(n : ℤ)).natAbs := by
   let τ : Equiv.Perm (Fin n) := Equiv.swap 0 1
   have h01 : (0 : Fin n) ≠ 1 := by intro h; have := Fin.one_eq_zero_iff.mp h.symm; omega
   have hv1 : (1 : Fin n).val = 1 := by simp [Nat.mod_eq_of_lt (by omega : 1 < n)]
@@ -40,10 +40,10 @@ private theorem swap_inversion_balance (hn : 2 ≤ n) (F : Fin n → ℤ) :
       all_goals try omega
       all_goals simp_all
     simp only [horder, h01p, h10p, ite_false, add_zero]
-  have hreindex : LRX.LiftedModel.inversionCount (fun i => F (τ i)) =
+  have hreindex : LX.Core.LiftedModel.inversionCount (fun i => F (τ i)) =
       ∑ i : Fin n, ∑ j : Fin n,
         if τ i < τ j then ((F j-F i)/(n : ℤ)).natAbs else 0 := by
-    unfold LRX.LiftedModel.inversionCount
+    unfold LX.Core.LiftedModel.inversionCount
     rw [← Equiv.sum_comp τ (fun i => ∑ j : Fin n,
       if i < j then ((F (τ j)-F (τ i))/(n : ℤ)).natAbs else 0)]
     apply Finset.sum_congr rfl
@@ -75,7 +75,7 @@ private theorem negative_quotient_abs (g : ℤ) (hg : 0 < g) (hdiv : ¬ (n : ℤ
   have hrpos : 0 < g % (n : ℤ) := by omega
   have hdecomp := Int.ediv_mul_add_emod g (n : ℤ)
   have hquot : (-g)/(n : ℤ) = -(g/(n : ℤ))-1 := by
-    apply LRX.PeriodicBuffer.quotient_eq_of_bounds hn <;> nlinarith
+    apply LX.Core.PeriodicBuffer.quotient_eq_of_bounds hn <;> nlinarith
   have hq0 : 0 ≤ g/(n : ℤ) := Int.ediv_nonneg (le_of_lt hg) (le_of_lt hn)
   rw [hquot]
   have habs := Int.natCast_natAbs (-(g/(n : ℤ))-1)
@@ -110,7 +110,7 @@ theorem exchange_inversions (hn : 2 ≤ n) (d : Fin n → ℤ)
   have hg : 0 < targets d 0-targets d 1 := by simp only [targets, Fin.val_zero, Nat.cast_zero, zero_add, hv1]; omega
   have hdiv : ¬ (n : ℤ) ∣ targets d 0-targets d 1 := by
     intro h
-    have hh := LRX.AffineLift.cast_eq_of_modEq (Int.modEq_iff_dvd.mpr h)
+    have hh := LX.Core.AffineLift.cast_eq_of_modEq (Int.modEq_iff_dvd.mpr h)
     have hcast (i : Fin n) : ((targets d i : ℤ) : Fin n) = labels d i := by
       simp [targets, labels]
     have hl : labels d 1 = labels d 0 := by
@@ -133,21 +133,21 @@ theorem rotate_inversions (hn : 2 ≤ n) (d : Fin n → ℤ)
   have hp (i : Fin n) : p i = labels d i := rfl
   have hcast (i : Fin n) : ((targets d i : ℤ) : Fin n) = labels d i := by
     simp [targets, labels]
-  have hd : LRX.AffineLift.IsLift p.symm 0 d := by
+  have hd : LX.Core.AffineLift.IsLift p.symm 0 d := by
     refine ⟨hb, ?_⟩
     intro i
     change Int.ModEq (n : ℤ) (targets d i) ((p i : ℤ) + 0)
-    have hm := LRX.AffineLift.modEq_residue (n := n) (targets d i)
+    have hm := LX.Core.AffineLift.modEq_residue (n := n) (targets d i)
     have hcast' : (Fin.intCast (targets d i) : Fin n) = labels d i := hcast i
     rw [hcast'] at hm
     simpa only [hp, add_zero] using hm
   have hv1 : (1 : Fin n).val = 1 := by simp [Nat.mod_eq_of_lt (by omega : 1 < n)]
-  have hh := LRX.RotationWords.inversion_count_recentered (p := p.symm) 0 1 hd
-  simp only [LRX.RotationWords.localDisplacement, hv1, pow_one, LRX.L] at hh
+  have hh := LX.Core.RotationWords.inversion_count_recentered (p := p.symm) 0 1 hd
+  simp only [LX.Core.RotationWords.localDisplacement, hv1, pow_one, LX.Core.L] at hh
   exact hh
 
 theorem inversions_zero (d : Fin n → ℤ) (hz : ∀ i, d i = 0) : inversions d = 0 := by
-  unfold inversions LRX.LiftedModel.inversionCount
+  unfold inversions LX.Core.LiftedModel.inversionCount
   apply Finset.sum_eq_zero
   intro i _
   apply Finset.sum_eq_zero
@@ -155,7 +155,7 @@ theorem inversions_zero (d : Fin n → ℤ) (hz : ∀ i, d i = 0) : inversions d
   split_ifs with hij
   · have hn : (0 : ℤ) < n := by exact_mod_cast NeZero.pos n
     have he : ((j : ℤ)-(i : ℤ))/(n : ℤ) = 0 := by
-      apply LRX.PeriodicBuffer.quotient_eq_of_bounds hn <;> omega
+      apply LX.Core.PeriodicBuffer.quotient_eq_of_bounds hn <;> omega
     simp only [targets, hz, add_zero, he, Int.natAbs_zero]
   · rfl
 

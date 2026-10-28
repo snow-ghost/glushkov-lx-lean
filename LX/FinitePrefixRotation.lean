@@ -1,14 +1,14 @@
-import LRX.FiniteInversionBalance
-import LRX.ShallowRotation
+import LX.FiniteInversionBalance
+import LX.ShallowRotation
 import LX.FiniteDropBudget
 import Mathlib
 
 namespace LX.FiniteDropBudget
 open scoped BigOperators
-open LRX.FiniteCuts
+open LX.Core.FiniteCuts
 variable {k : ℕ}
 
-theorem rotate_conjugate_drops (p : LRX.State (k+1)) (hp : p 0 ≠ 0) :
+theorem rotate_conjugate_drops (p : LX.Core.State (k+1)) (hp : p 0 ≠ 0) :
     (descendingPositions (rotateConjugate p)).card=(descendingPositions p).card := by
   have hp' : p.symm 0 ≠ 0 := by
     intro he
@@ -48,7 +48,7 @@ theorem rotate_conjugate_drops (p : LRX.State (k+1)) (hp : p 0 ≠ 0) :
   rw [Equiv.sum_comp (finRotate (k+1)).symm,sum_descending_indicator,sum_descending_indicator] at hs
   omega
 
-theorem rotate_conjugate_units_le (p : LRX.State (k+1))
+theorem rotate_conjugate_units_le (p : LX.Core.State (k+1))
     (hp : p 0 ≠ Fin.last k) :
     (backwardUnits (rotateConjugate p)).card ≤ (backwardUnits p).card := by
   classical
@@ -80,7 +80,7 @@ theorem rotate_conjugate_units_le (p : LRX.State (k+1))
 
 /-- A fixed interval just after a moving head can be recentered without
 creating a backward unit arrow unless the head maps to the last position. -/
-theorem fixed_middle_drop_bound (p : LRX.State (k+1)) (r : ℕ)
+theorem fixed_middle_drop_bound (p : LX.Core.State (k+1)) (r : ℕ)
     (hr : r ≤ k+1) (hp : p 0 ≠ 0) (hlast : p 0 ≠ Fin.last k)
     (hfix : ∀ i : Fin (k+1),0 < i.val → i.val < r → p i=i) :
     3*((descendingPositions p).card : ℤ) ≤ ((k+1 : ℕ) : ℤ)-(r : ℤ)+

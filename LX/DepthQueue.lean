@@ -63,11 +63,11 @@ theorem exists_zero_depth (d : Fin n → ℤ) : ∃ i, backwardDepth d i=0 := by
   have hj := ha j (Finset.mem_univ _)
   have hval := (j-a).isLt
   have hn : (0 : ℤ)<n := by exact_mod_cast NeZero.pos n
-  have hq : LRX.AffineLift.crossingNumerator d a j / (n : ℤ) < 1 := by
+  have hq : LX.Core.AffineLift.crossingNumerator d a j / (n : ℤ) < 1 := by
     apply (Int.ediv_lt_iff_lt_mul hn).mpr
-    simp only [LRX.AffineLift.crossingNumerator]
+    simp only [LX.Core.AffineLift.crossingNumerator]
     omega
-  simp only [LRX.AffineLift.crossing, neg_neg]
+  simp only [LX.Core.AffineLift.crossing, neg_neg]
   omega
 
 theorem sweep_prefix_depth (hn : 2 ≤ n) (d : Fin n → ℤ)
@@ -162,24 +162,24 @@ theorem zero_of_depth_zero (d : Fin n → ℤ) (hb : ∑ i, d i=0)
     (hi : Function.Injective (labels d)) (hz : ∀ i, backwardDepth d i=0) :
     ∀ i, d i=0 := by
   let p : State n := Equiv.ofBijective (labels d) ⟨hi, Finite.surjective_of_injective hi⟩
-  have hd : LRX.AffineLift.IsLift p.symm 0 d := by
+  have hd : LX.Core.AffineLift.IsLift p.symm 0 d := by
     refine ⟨hb, ?_⟩
     intro i
-    apply (LRX.LiftedModel.cast_eq_iff_modEq _ _).mp
+    apply (LX.Core.LiftedModel.cast_eq_iff_modEq _ _).mp
     simp only [Int.cast_add, Int.cast_natCast, Fin.cast_val_eq_self, Int.cast_zero, add_zero,
       Equiv.symm_symm]
     rfl
-  have hcross (i j : Fin n) : LRX.AffineLift.crossing d i j=0 := by
-    have hlo : 0 ≤ LRX.AffineLift.crossing d i j := by
-      have hh : (-LRX.AffineLift.crossing d i j).toNat ≤ backwardDepth d i :=
-        Finset.single_le_sum (f := fun k => (-LRX.AffineLift.crossing d i k).toNat)
+  have hcross (i j : Fin n) : LX.Core.AffineLift.crossing d i j=0 := by
+    have hlo : 0 ≤ LX.Core.AffineLift.crossing d i j := by
+      have hh : (-LX.Core.AffineLift.crossing d i j).toNat ≤ backwardDepth d i :=
+        Finset.single_le_sum (f := fun k => (-LX.Core.AffineLift.crossing d i k).toNat)
           (fun _ _ => Nat.zero_le _) (Finset.mem_univ j)
       rw [hz] at hh
       omega
     have hhi := maximum_depth_nonpositive_crossings d i (by intro k; simp only [hz,le_refl]) j
     omega
   intro i
-  have hh := LRX.AffineLift.crossing_row_sum hd i
+  have hh := LX.Core.AffineLift.crossing_row_sum hd i
   simpa only [hcross,Finset.sum_const_zero] using hh.symm
 
 theorem sweep_add (d : Fin n → ℤ) (a b : ℕ) :

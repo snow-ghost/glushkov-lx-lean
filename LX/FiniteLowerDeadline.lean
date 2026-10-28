@@ -25,23 +25,4 @@ theorem phase_order_gap (c : Fin n) (u v : ℕ) (hu : (u : Fin n)=c)
   rw [Nat.mul_add,Nat.mul_one] at hm
   omega
 
-/-- Last cursor in this phase that could still give a price below B. -/
-def lowerDeadline (n I B c : ℕ) : ℕ := c+n*((B-I-1-c)/n)
-
-
-/-- A computable certificate: either the starting phase already costs
-enough, or the greedy board is nonzero at the last affordable cursor. -/
-def LowerDeadlineCertificate (B : ℕ) (c : Fin n) (d : Fin n → ℤ) : Prop :=
-  B ≤ inversions d+c.val ∨
-    ¬∀ i,saturatedSweep d (lowerDeadline n (inversions d) B c.val) i=0
-
-
 end LX.AffineScan
-
-namespace LX
-open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open AffineScan LRX.AffineLift
-variable {n : ℕ} [NeZero n]
-
-
-end LX

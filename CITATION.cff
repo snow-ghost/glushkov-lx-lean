@@ -14,8 +14,8 @@ authors:
     given-names: I.
   - family-names: Smolensky
     given-names: A.
-version: 1.0.1
-date-released: 2026-10-25
+version: 1.0.0
+date-released: 2026-10-28
 repository-code: "https://github.com/snow-ghost/glushkov-lx-lean"
 url: "https://github.com/snow-ghost/glushkov-lx-lean"
 license: MIT

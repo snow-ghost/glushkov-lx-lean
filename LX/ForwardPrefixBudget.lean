@@ -4,12 +4,12 @@ import Mathlib
 
 namespace LX.FiniteDropBudget
 open scoped BigOperators
-open LRX.FiniteCuts
+open LX.Core.FiniteCuts
 variable {n : ℕ} [NeZero n]
 
 /-- The initial ascending chain is charged directly to the finite drop
 budget; no hypothesis on shallow cycles is required. -/
-theorem forward_prefix_drop_bound (p : LRX.State n) (r : ℕ)
+theorem forward_prefix_drop_bound (p : LX.Core.State n) (r : ℕ)
     (hr0 : 0 < r) (hr : r ≤ n) (hp : ForwardPrefix p r) (hhead : p 0 ≠ 0)
     (hd : 2 ≤ (descendingPositions p).card) :
     3*((descendingPositions p).card : ℤ) ≤ (n : ℤ)-(r : ℤ)+

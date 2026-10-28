@@ -8,7 +8,7 @@ variable {n : ℕ} [NeZero n]
 
 theorem inversions_add_constant (d : Fin n → ℤ) (t : ℤ) :
     inversions (fun i => d i+t)=inversions d := by
-  unfold inversions LRX.LiftedModel.inversionCount
+  unfold inversions LX.Core.LiftedModel.inversionCount
   apply Finset.sum_congr rfl
   intro i _
   apply Finset.sum_congr rfl
@@ -22,7 +22,7 @@ end LX.AffineScan
 
 namespace LX.CenteredLift
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.AffineLift
+open LX.AffineScan LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 /-- A balanced single-coordinate raise supplies its balanced uniformly
@@ -41,7 +41,7 @@ theorem raised_source_lift {p : State n} {c : Fin n} {e : Fin n → ℤ} (a : Fi
     have hh := lift_residue hd i
     have he : (raiseAt e a i : Fin n)=(e i : Fin n) := by simp [raiseAt]
     rw [he] at hh
-    apply (LRX.LiftedModel.cast_eq_iff_modEq _ _).mp
+    apply (LX.Core.LiftedModel.cast_eq_iff_modEq _ _).mp
     simp only [Int.cast_add,Int.cast_one,Int.cast_natCast,Fin.cast_val_eq_self] at hh ⊢
     linear_combination hh
 
@@ -56,7 +56,7 @@ end LX.CenteredLift
 
 namespace LX.Antipode
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LX.CenteredLift LRX.AffineLift
+open LX.AffineScan LX.CenteredLift LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 theorem odd_raised_base_inversions (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1)

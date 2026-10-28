@@ -23,7 +23,7 @@ theorem even_sorting_word_conjecture (hn4 : 4 ≤ n) (p : State n)
   have hq := AnchoredPhases.even_global_unpaid_head_pattern hn4 (reverseDual p) m hn hdual
   have hq0 : (1 : Fin n)-p.symm 1=0 := by
     simpa only [reverseDual,Equiv.Perm.mul_apply,Equiv.Perm.inv_def,
-      LRX.WordReflection.reflection_apply,sub_zero] using hq.1
+      LX.Core.WordReflection.reflection_apply,sub_zero] using hq.1
   have hi : p.symm 1=1 := by linear_combination -hq0
   have hp1 : p 1=1 := by
     have he := p.apply_symm_apply 1

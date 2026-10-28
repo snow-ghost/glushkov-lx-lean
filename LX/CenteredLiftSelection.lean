@@ -1,4 +1,4 @@
-import LRX.LiftedModel
+import LX.LiftedModel
 import Mathlib
 
 namespace LX.CenteredLift
@@ -16,7 +16,7 @@ theorem center_bounds (m : ℕ) (z : ℤ) :
   omega
 
 theorem center_cast (m : ℕ) (z : ℤ) : ((center (n := n) m z : ℤ) : Fin n)=(z : Fin n) := by
-  apply (LRX.LiftedModel.cast_eq_iff_modEq _ _).mpr
+  apply (LX.Core.LiftedModel.cast_eq_iff_modEq _ _).mpr
   apply Int.modEq_iff_dvd.mpr
   refine ⟨(z+m)/(n : ℤ),?_⟩
   have he := Int.ediv_mul_add_emod (z+m) (n : ℤ)
@@ -74,7 +74,7 @@ theorem balanced_single_raise (m : ℕ) (d e : Fin n → ℤ)
   have hn : (0 : ℤ) < n := by exact_mod_cast NeZero.pos n
   let δ : Fin n → ℤ := fun i => d i-e i
   have hgap (i : Fin n) : δ i=0 ∨ (n : ℤ) ≤ δ i := by
-    have hmod := (LRX.LiftedModel.cast_eq_iff_modEq _ _).mp (hres i).symm
+    have hmod := (LX.Core.LiftedModel.cast_eq_iff_modEq _ _).mp (hres i).symm
     obtain ⟨k,hk⟩ := Int.modEq_iff_dvd.mp hmod
     change δ i=(n : ℤ)*k at hk
     have hδ : -(n : ℤ) < δ i := by have := hlo i; have := he i; dsimp [δ]; omega

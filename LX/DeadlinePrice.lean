@@ -103,9 +103,4 @@ open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
 open LX.AffineScan
 variable {n : ℕ} [NeZero n]
 
-def deadlinePrice (p : State n) (a : Fin n) : ℕ :=
-  inversions (displacement p a)+scanDeadline (displacement p a)+
-    ((phase p a : Fin n)-(scanDeadline (displacement p a) : Fin n)).val
-
-
 end LX.AnchoredPhases

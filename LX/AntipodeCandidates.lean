@@ -1,16 +1,16 @@
-import LRX.FiniteAdjacentInversions
-import LRX.WordReflection
+import LX.FiniteAdjacentInversions
+import LX.WordReflection
 import LX.ReflectionLiftLower
 import Mathlib
 
 namespace LX.Antipode
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.FiniteCuts
+open LX.AffineScan LX.Core.FiniteCuts
 variable {n : ℕ} [NeZero n]
 
 /-- Generation-oriented even candidate; its inverse is the sorting
 permutation [1,n-1,0,n-2,...,2]. -/
-def even : State n := (LRX.WordReflection.reflection*Equiv.swap 1 2).symm
+def even : State n := (LX.Core.WordReflection.reflection*Equiv.swap 1 2).symm
 
 def oddRankValue (m k : ℕ) : ℕ :=
   if k=2 then m+1 else if 3 ≤ k ∧ k ≤ m+1 then k-1 else k
@@ -40,7 +40,7 @@ def oddRank (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1) : State n where
 
 /-- Generation-oriented odd candidate. -/
 def odd (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1) : State n :=
-  (LRX.WordReflection.reflection*oddRank m hm hn).symm
+  (LX.Core.WordReflection.reflection*oddRank m hm hn).symm
 
 theorem even_rank_inversions (hn : 3 ≤ n) : inversionNumber (Equiv.swap (1 : Fin n) 2)=1 := by
   have hv1 : (1 : Fin n).val=1 := Nat.mod_eq_of_lt (by omega : 1 < n)
@@ -80,14 +80,14 @@ theorem odd_rank_inversions (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1) :
 /-- Uniform exchange lower bound for every lift and every phase of the
 even candidate. -/
 theorem even_lift_inversions_lower (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
-    {c : ℤ} {d : Fin n → ℤ} (hd : LRX.AffineLift.IsLift even c d) :
+    {c : ℤ} {d : Fin n → ℤ} (hd : LX.Core.AffineLift.IsLift even c d) :
     m*(m-1) ≤ inversions d+1 := by
   have hp (i : Fin n) : (even : State n).symm i=1-(Equiv.swap (1 : Fin n) 2) i := rfl
   have hh := even_reflection_lift_lower hd (Equiv.swap 1 2) hp m hn
   rwa [even_rank_inversions (by omega : 3 ≤ n)] at hh
 
 theorem odd_lift_inversions_lower (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1)
-    {c : ℤ} {d : Fin n → ℤ} (hd : LRX.AffineLift.IsLift (odd m hm hn) c d) :
+    {c : ℤ} {d : Fin n → ℤ} (hd : LX.Core.AffineLift.IsLift (odd m hm hn) c d) :
     m^2 ≤ inversions d+(m-1) := by
   have hp (i : Fin n) : (odd m hm hn).symm i=1-(oddRank m hm hn) i := rfl
   have hh := odd_reflection_lift_lower hd (oddRank m hm hn) hp m hn

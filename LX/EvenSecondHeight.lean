@@ -12,7 +12,7 @@ theorem head_displacement_offset (p : State n) (a : Fin n) :
   have he : permutation p a 0=cyclicOffset p a 0 := by
     change p 0+(a-p a)=p 0-0-(p a-a)
     abel
-  simp only [displacement,LRX.FiniteCuts.clockwiseRepresentative,Fin.val_zero,Nat.not_lt_zero,
+  simp only [displacement,LX.Core.FiniteCuts.clockwiseRepresentative,Fin.val_zero,Nat.not_lt_zero,
     ite_false,add_zero,Nat.cast_zero,sub_zero,he]
 
 /-- Choosing an anchor with a different cyclic displacement from position 0

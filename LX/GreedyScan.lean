@@ -44,7 +44,7 @@ theorem run_left_zero_iff (k : ℕ) (d : Fin n → ℤ) :
   simp only [run_left_apply]
   constructor
   · intro h i
-    obtain ⟨j, rfl⟩ := ((LRX.L n)^k).surjective i
+    obtain ⟨j, rfl⟩ := ((LX.Core.L n)^k).surjective i
     exact h j
   · intro h i
     exact h _
@@ -70,7 +70,7 @@ theorem ScanTrace.prepend_left (k : ℕ) (d : Fin n → ℤ) (w : List Letter)
 theorem exists_scan_trace (hn : 2 ≤ n) (d : Fin n → ℤ)
     (hb : ∑ i, d i = 0) (hi : Function.Injective (labels d)) :
     ∃ w : List Letter, ScanTrace d w := by
-  generalize he : LRX.AffineLift.energy d = E
+  generalize he : LX.Core.AffineLift.energy d = E
   induction E using Nat.strong_induction_on generalizing d with
   | h E ih =>
     by_cases hz : ∀ i, d i = 0
@@ -88,14 +88,14 @@ theorem exists_scan_trace (hn : 2 ≤ n) (d : Fin n → ℤ)
     let u : List Letter := List.replicate k .l
     let e := run u d
     have he0 : e 0 = d ⟨k, hk⟩ := by
-      simp [e, u, run_left_apply, LRX.AffineLift.rotation_power_apply, hcast]
+      simp [e, u, run_left_apply, LX.Core.AffineLift.rotation_power_apply, hcast]
     have he1 : e 1 = d (finRotate n ⟨k, hk⟩) := by
-      simp only [e, u, run_left_apply, LRX.AffineLift.rotation_power_apply, finRotate_apply, hcast]
+      simp only [e, u, run_left_apply, LX.Core.AffineLift.rotation_power_apply, finRotate_apply, hcast]
       congr 1
       abel
     have hdesce : e 1 + 1 < e 0 := by simpa only [he0, he1] using hdesc
-    have henergy : LRX.AffineLift.energy e = E := (run_left_energy k d).trans he
-    have hlt : LRX.AffineLift.energy (exchange e) < E := by
+    have henergy : LX.Core.AffineLift.energy e = E := (run_left_energy k d).trans he
+    have hlt : LX.Core.AffineLift.energy (exchange e) < E := by
       rw [← henergy]
       exact exchange_energy_lt hn e hdesce
     have hb' : ∑ j, exchange e j = 0 := by rw [exchange_sum, run_sum, hb]
@@ -112,16 +112,16 @@ theorem exists_scan_trace (hn : 2 ≤ n) (d : Fin n → ℤ)
     have hjcast : (j : Fin n) = ⟨j, hjn⟩ := by
       apply Fin.ext
       simp [Nat.mod_eq_of_lt hjn]
-    simpa only [run_left_apply, LRX.AffineLift.rotation_power_apply, zero_add,
+    simpa only [run_left_apply, LX.Core.AffineLift.rotation_power_apply, zero_add,
       finRotate_apply, hjcast, add_comm, add_zero] using hh
 
 /-- The unique forward scan acts on the actual permutation in its exact orientation. -/
 theorem exists_realized_scan (hn : 2 ≤ n) (p : State n) (c : ℤ)
-    (d : Fin n → ℤ) (hd : LRX.AffineLift.IsLift p.symm c d) :
+    (d : Fin n → ℤ) (hd : LX.Core.AffineLift.IsLift p.symm c d) :
     ∃ w : List Letter, ScanTrace d w ∧
       p * eval (w ++ List.replicate ((c : Fin n) - (w.count .l : Fin n)).val .l) = 1 := by
   have hlabels (i : Fin n) : labels d i = p i + (c : Fin n) := by
-    simpa only [labels, Equiv.symm_symm] using LRX.AffineLift.lift_residue hd i
+    simpa only [labels, Equiv.symm_symm] using LX.Core.AffineLift.lift_residue hd i
   have hi : Function.Injective (labels d) := by
     intro i j hij
     rw [hlabels, hlabels] at hij

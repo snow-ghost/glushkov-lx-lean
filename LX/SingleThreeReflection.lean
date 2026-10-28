@@ -3,7 +3,7 @@ import Mathlib
 
 namespace LX.CycleGeometry
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.FiniteCuts
+open LX.Core.FiniteCuts
 variable {n : ℕ} [NeZero n]
 
 /-- Splitting the consecutive positive triple preserves displacement mass

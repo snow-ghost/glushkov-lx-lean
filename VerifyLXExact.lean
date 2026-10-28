@@ -28,7 +28,7 @@ open Lean Elab Command in
 run_cmd do
   let env ← getEnv
   let moduleNames := env.header.moduleNames
-  let prefixes := #[`LX, `LRX]
+  let prefixes := #[`LX]
   let mut count : Nat := 0
   for (name, info) in env.constants.toList do
     let some idx := env.getModuleIdxFor? name | continue

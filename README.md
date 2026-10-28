@@ -88,11 +88,20 @@ Actions tab.
 - [`ConjectureLower`](LX/ConjectureLower.lean): matching lower bounds.
 - [`SharpDiameterAll`](LX/SharpDiameterAll.lean): the combined theorem and routing.
 
-The `LRX` sources provide local dependencies of the LX proof. The published
-source set contains 325 local modules in the transitive import closure of
-`LX.SharpDiameterAll`, plus the entry module and axiom verifier. Unused
-auxiliary theorems and imports have been removed; the public theorem statements
-are unchanged.
+All 310 proof modules are in `LX/`, built as one Lean library. The shared
+permutation, lift, and finite-window machinery uses the namespace `LX.Core`;
+the directed L/X metric and diameter theorems use `LX`. The symmetric
+word machinery is in [`SymmetricWordMetric`](LX/SymmetricWordMetric.lean),
+and the directed metric is in [`WordMetric`](LX/WordMetric.lean).
+
+The source set is restricted to dependencies of the public diameter and
+routing results. Unused bound specifications, certificates, and auxiliary
+proofs have been removed, including references used only by `#print axioms`.
+Seven definitional simplification lemmas are retained because the proof sources
+refer to them, even though their applications disappear from the compiled
+proof terms. All other remaining source declarations occur in the dependency
+closure of the public results, including private helper declarations.
+The public diameter and routing statements are unchanged.
 
 ## Citation and license
 

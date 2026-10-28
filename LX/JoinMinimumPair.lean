@@ -1,10 +1,10 @@
-import LRX.LiftedModel
+import LX.LiftedModel
 import LX.WordMetric
 import Mathlib
 
 namespace LX.AffineScan
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.AffineLift
+open LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 /-- The balanced lift obtained by joining two fixed positions of an odd
@@ -91,7 +91,7 @@ theorem join_minima_lift {p : State n} {c : ℤ} {d : Fin n → ℤ}
     IsLift (p*Equiv.swap u v).symm (c-1) (joinMinima d u v) := by
   refine ⟨join_minima_balance d u v hd.1,?_⟩
   intro i
-  apply (LRX.LiftedModel.cast_eq_iff_modEq _ _).mp
+  apply (LX.Core.LiftedModel.cast_eq_iff_modEq _ _).mp
   simp only [Int.cast_add,Int.cast_sub,Int.cast_natCast,Int.cast_one,Fin.cast_val_eq_self,
     Equiv.symm_symm,Equiv.Perm.mul_apply,join_minima_cast]
   by_cases hiu : i=u

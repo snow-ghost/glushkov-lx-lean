@@ -1,4 +1,4 @@
-import LRX.NestedMatchingGeometry
+import LX.NestedMatchingGeometry
 import LX.WordMetric
 import Mathlib
 
@@ -9,7 +9,7 @@ variable {n : ℕ}
 /-- If there are no adjacent fixed points and no adjacent pair, every pair
 interval contains a pair whose endpoints are exactly two positions apart. -/
 theorem pair_contains_gap_two (q : State n) (hinv : Function.Involutive q)
-    (hnc : LRX.FiniteCuts.NoncrossingPairs q)
+    (hnc : LX.Core.FiniteCuts.NoncrossingPairs q)
     (hnoadj : ∀ i : Fin n,i.val+1 ≠ (q i).val)
     (hnofix : ∀ i j : Fin n,i.val+1=j.val → q i=i → q j ≠ j)
     (a b : Fin n) (hab : a.val < b.val) (he : q a=b) :
@@ -28,7 +28,7 @@ theorem pair_contains_gap_two (q : State n) (hinv : Function.Involutive q)
         exact hnofix x y rfl hx
       · exact ⟨x,by dsimp [x]; omega,by dsimp [x]; omega,hx⟩
     obtain ⟨x,hax,hxb,hx⟩ := hmoved
-    have hinside := LRX.FiniteCuts.noncrossing_pair_interior q hinv hnc a b x hax hxb he
+    have hinside := LX.Core.FiniteCuts.noncrossing_pair_interior q hinv hnc a b x hax hxb he
     have hne : (q x).val ≠ x.val := fun hh => hx (Fin.ext hh)
     by_cases hxp : x.val < (q x).val
     · obtain ⟨u,v,hu,hv,huv,heq⟩ := pair_contains_gap_two q hinv hnc hnoadj hnofix x (q x) hxp rfl
@@ -47,11 +47,11 @@ theorem eq_add_of_value_add (i j : Fin n) (k : ℕ) (h : i.val+k=j.val) : i+(k :
 
 /-- Two separated intervals would contain two different cyclic gap-two pairs. -/
 theorem no_separated_pairs (q : State n) (hinv : Function.Involutive q)
-    (hnc : LRX.FiniteCuts.NoncrossingPairs q)
+    (hnc : LX.Core.FiniteCuts.NoncrossingPairs q)
     (hnoadj : ∀ i : Fin n,q i ≠ i+1)
     (hnofix : ∀ i : Fin n,q i=i → q (i+1) ≠ i+1)
     (hunique : ∀ i j : Fin n,q i=i+2 → q j=j+2 → i=j) :
-    LRX.FiniteCuts.NoSeparatedPairs q := by
+    LX.Core.FiniteCuts.NoSeparatedPairs q := by
   have hnoadj' (i : Fin n) : i.val+1 ≠ (q i).val := by
     intro hh
     exact hnoadj i (eq_add_of_value_add i (q i) 1 hh).symm
@@ -71,7 +71,7 @@ theorem no_separated_pairs (q : State n) (hinv : Function.Involutive q)
 /-- A noncrossing matching with at least two pairs, no cyclic adjacent pair,
 and at most one cyclic gap-two pair must have adjacent fixed positions. -/
 theorem exists_adjacent_fixed (q : State n) (hinv : Function.Involutive q)
-    (hnc : LRX.FiniteCuts.NoncrossingPairs q) (hsize : 4 ≤ q.support.card)
+    (hnc : LX.Core.FiniteCuts.NoncrossingPairs q) (hsize : 4 ≤ q.support.card)
     (hnoadj : ∀ i : Fin n,q i ≠ i+1)
     (hunique : ∀ i j : Fin n,q i=i+2 → q j=j+2 → i=j) :
     ∃ i : Fin n,q i=i ∧ q (i+1)=i+1 := by
@@ -198,7 +198,7 @@ theorem exists_adjacent_fixed (q : State n) (hinv : Function.Involutive q)
     have hh := hcmax x hxP
     have hne : x.val ≠ c.val := fun he => hxc (Fin.ext he)
     omega
-  have hinside := LRX.FiniteCuts.noncrossing_pair_interior q hinv hnc a c x hax hxc' hpac
+  have hinside := LX.Core.FiniteCuts.noncrossing_pair_interior q hinv hnc a c x hax hxc' hpac
   have hnx : (q x).val ≠ x.val := fun he => (Equiv.Perm.mem_support.mp hxP) (Fin.ext he)
   have hleaf : ∃ u v : Fin n,v.val < c.val ∧ u.val+2=v.val ∧ q u=v := by
     by_cases hlt : x.val < (q x).val

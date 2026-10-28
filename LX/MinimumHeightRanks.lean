@@ -136,7 +136,7 @@ theorem rank_surplus_sum (p : State n) (a : Fin n) :
   rw [below_count_sum]
   have htri : 2*(∑ t : Fin n, (t : ℤ))=(n : ℤ)*((n : ℤ)-1) := by
     rw [Fin.sum_univ_eq_sum_range]
-    exact LRX.FiniteCoordinates.range_sum_twice n
+    exact LX.Core.FiniteCoordinates.range_sum_twice n
   nlinarith
 
 /-- A zero-surplus threshold is itself occupied and determines another anchor

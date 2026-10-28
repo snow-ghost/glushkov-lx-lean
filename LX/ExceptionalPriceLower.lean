@@ -7,16 +7,16 @@ open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
 variable {n : ℕ} [NeZero n]
 
 theorem sum_depth_eq_inversions {p : State n} {c : ℤ} {d : Fin n → ℤ}
-    (hd : LRX.AffineLift.IsLift p c d) : ∑ i,backwardDepth d i=inversions d := by
-  have hh := LRX.RotationWords.twice_inversion_count hd
-  have he : (∑ i : Fin n,∑ j : Fin n,(LRX.AffineLift.crossing d i j).toNat)=
-      ∑ i : Fin n,∑ j : Fin n,(-LRX.AffineLift.crossing d i j).toNat := by
+    (hd : LX.Core.AffineLift.IsLift p c d) : ∑ i,backwardDepth d i=inversions d := by
+  have hh := LX.Core.RotationWords.twice_inversion_count hd
+  have he : (∑ i : Fin n,∑ j : Fin n,(LX.Core.AffineLift.crossing d i j).toNat)=
+      ∑ i : Fin n,∑ j : Fin n,(-LX.Core.AffineLift.crossing d i j).toNat := by
     rw [Finset.sum_comm]
     apply Finset.sum_congr rfl
     intro i _
     apply Finset.sum_congr rfl
     intro j _
-    rw [LRX.AffineLift.crossing_antisymm hd j i]
+    rw [LX.Core.AffineLift.crossing_antisymm hd j i]
   simp_rw [← Int.toNat_add_toNat_neg_eq_natAbs,Finset.sum_add_distrib] at hh
   rw [he] at hh
   change 2*inversions d=(∑ i,backwardDepth d i)+(∑ i,backwardDepth d i) at hh
@@ -49,7 +49,7 @@ def oddDepthLower (m k : ℕ) : ℕ :=
   else if k ≤ m+1 then k-3 else k-(m+2)
 
 theorem even_exception_depth_lower (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
-    {p : State n} {c : ℤ} (hd : LRX.AffineLift.IsLift p c (evenException m))
+    {p : State n} {c : ℤ} (hd : LX.Core.AffineLift.IsLift p c (evenException m))
     (i : Fin n) : evenDepthLower m i.val ≤ backwardDepth (evenException m) i := by
   have hil := i.isLt
   unfold evenDepthLower
@@ -86,7 +86,7 @@ theorem even_exception_depth_lower (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
     omega
 
 theorem odd_exception_depth_lower (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1)
-    {p : State n} {c : ℤ} (hd : LRX.AffineLift.IsLift p c (oddException m))
+    {p : State n} {c : ℤ} (hd : LX.Core.AffineLift.IsLift p c (oddException m))
     (i : Fin n) : oddDepthLower m i.val ≤ backwardDepth (oddException m) i := by
   have hil := i.isLt
   unfold oddDepthLower
@@ -183,13 +183,13 @@ theorem odd_depth_lower_sum (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1) :
   nlinarith
 
 theorem even_exception_inversions_lower (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
-    {p : State n} {c : ℤ} (hd : LRX.AffineLift.IsLift p c (evenException m)) :
+    {p : State n} {c : ℤ} (hd : LX.Core.AffineLift.IsLift p c (evenException m)) :
     m*(m-1) ≤ inversions (evenException (n := n) m) := by
   rw [← sum_depth_eq_inversions hd,← even_depth_lower_sum m hm hn]
   exact Finset.sum_le_sum (fun i _ => even_exception_depth_lower m hm hn hd i)
 
 theorem odd_exception_inversions_lower (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1)
-    {p : State n} {c : ℤ} (hd : LRX.AffineLift.IsLift p c (oddException m)) :
+    {p : State n} {c : ℤ} (hd : LX.Core.AffineLift.IsLift p c (oddException m)) :
     m*(m-1)+1 ≤ inversions (oddException (n := n) m) := by
   rw [← sum_depth_eq_inversions hd,← odd_depth_lower_sum m hm hn]
   exact Finset.sum_le_sum (fun i _ => odd_exception_depth_lower m hm hn hd i)
@@ -197,7 +197,7 @@ theorem odd_exception_inversions_lower (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1)
 /-- The exceptional even lift cannot beat the conjectured diameter price.
 The statement concerns this lift, not every lift of the antipode. -/
 theorem even_exception_price_lower (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
-    {p : State n} {c : ℤ} (hd : LRX.AffineLift.IsLift p c (evenException m))
+    {p : State n} {c : ℤ} (hd : LX.Core.AffineLift.IsLift p c (evenException m))
     {g : List Letter} (hg : ScanTrace (evenException (n := n) m) g) :
     3*m^2-4*m+3 ≤ inversions (evenException (n := n) m)+paidRotations ((m+3 : ℕ) : Fin n) g := by
   have hI := even_exception_inversions_lower m hm hn hd
@@ -212,7 +212,7 @@ theorem even_exception_price_lower (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m)
 /-- The odd exceptional lift is at least one unit more expensive than the
 conjectured diameter, so it cannot be a missing cheaper representation. -/
 theorem odd_exception_price_lower (m : ℕ) (hm : 2 ≤ m) (hn : n=2*m+1)
-    {p : State n} {c : ℤ} (hd : LRX.AffineLift.IsLift p c (oddException m))
+    {p : State n} {c : ℤ} (hd : LX.Core.AffineLift.IsLift p c (oddException m))
     {g : List Letter} (hg : ScanTrace (oddException (n := n) m) g) :
     3*m^2-m+2 ≤ inversions (oddException (n := n) m)+paidRotations ((m+2 : ℕ) : Fin n) g := by
   have hI := odd_exception_inversions_lower m hm hn hd

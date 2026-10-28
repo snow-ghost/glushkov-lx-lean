@@ -1,6 +1,6 @@
-import LRX.CycleDefectMonotonicity
-import LRX.FiniteShallowMatching
-import LRX.LinearMatchingGeometry
+import LX.CycleDefectMonotonicity
+import LX.FiniteShallowMatching
+import LX.LinearMatchingGeometry
 import LX.WordMetric
 import Mathlib
 
@@ -22,7 +22,7 @@ theorem positions_invariant (q : State n) (i : Fin n) :
   · exact congrArg q
 
 def permutation (q : State n) : State n :=
-  LRX.PrunedLift.permutation q (positions q) (positions_invariant q)
+  LX.Core.PrunedLift.permutation q (positions q) (positions_invariant q)
 
 @[simp] theorem permutation_apply (q : State n) (i : Fin n) :
     permutation q i=if q (q i)=i then q i else i := by
@@ -36,9 +36,9 @@ theorem permutation_involutive (q : State n) : Function.Involutive (permutation 
     exact hi
   · simp only [permutation_apply,ite_eq_right hi]
 
-theorem permutation_zero_defect (q : State n) (hq : LRX.FiniteCuts.cycleDefect q=0) :
-    LRX.FiniteCuts.cycleDefect (permutation q)=0 :=
-  LRX.FiniteCuts.zero_defect_pruned_factor q (positions q) (positions_invariant q) hq
+theorem permutation_zero_defect (q : State n) (hq : LX.Core.FiniteCuts.cycleDefect q=0) :
+    LX.Core.FiniteCuts.cycleDefect (permutation q)=0 :=
+  LX.Core.FiniteCuts.zero_defect_pruned_factor q (positions q) (positions_invariant q) hq
 
 theorem permutation_support_card (q : State n) :
     (permutation q).support.card=2*(permutation q).cycleFactorsFinset.card := by
@@ -55,25 +55,25 @@ theorem permutation_support_card (q : State n) :
     unfold Equiv.Perm.cycleType
     exact Multiset.mem_map.mpr ⟨g,hg,rfl⟩
   calc
-    _ = ∑ g ∈ e.cycleFactorsFinset,g.support.card := (LRX.FiniteCuts.cycle_support_card_sum e).symm
+    _ = ∑ g ∈ e.cycleFactorsFinset,g.support.card := (LX.Core.FiniteCuts.cycle_support_card_sum e).symm
     _ = ∑ _g ∈ e.cycleFactorsFinset,2 := Finset.sum_congr rfl hsize
     _ = _ := by simp [e,mul_comm]
 
 /-- Noncrossing is inherited from zero defect through the actual pruned
 factor. Involutivity alone would not justify this conclusion. -/
-theorem permutation_noncrossing (q : State n) (hq : LRX.FiniteCuts.cycleDefect q=0) :
-    LRX.FiniteCuts.NoncrossingPairs (permutation q) := by
+theorem permutation_noncrossing (q : State n) (hq : LX.Core.FiniteCuts.cycleDefect q=0) :
+    LX.Core.FiniteCuts.NoncrossingPairs (permutation q) := by
   have hs := permutation_support_card q
   have hz := permutation_zero_defect q hq
-  have hdef : (∑ i, |LRX.FiniteCuts.displacement (permutation q) i|)-
-      (LRX.FiniteCuts.inversionNumber (permutation q) : ℤ)=
+  have hdef : (∑ i, |LX.Core.FiniteCuts.displacement (permutation q) i|)-
+      (LX.Core.FiniteCuts.inversionNumber (permutation q) : ℤ)=
       ((permutation q).cycleFactorsFinset.card : ℤ) := by
-    unfold LRX.FiniteCuts.cycleDefect at hz
+    unfold LX.Core.FiniteCuts.cycleDefect at hz
     rw [hs] at hz
     push_cast at hz
     omega
   intro a b c d hab hbc hcd hac
-  exact LRX.FiniteCuts.finite_shallow_matching_noncrossing (permutation q)
+  exact LX.Core.FiniteCuts.finite_shallow_matching_noncrossing (permutation q)
     (permutation q).cycleFactorsFinset.card hs hdef a b c d hab hbc hcd hac
 
 

@@ -9,12 +9,12 @@ open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
 variable {n : ℕ} [NeZero n]
 
 theorem maximum_depth_displacement {p : State n} {c : ℤ} {d : Fin n → ℤ}
-    (hd : LRX.AffineLift.IsLift p c d) (i : Fin n)
+    (hd : LX.Core.AffineLift.IsLift p c d) (i : Fin n)
     (hmax : ∀ j, backwardDepth d j ≤ backwardDepth d i) :
     d i= -(backwardDepth d i : ℤ) := by
   have hh := displacement_add_depth hd i
   have hn := maximum_depth_nonpositive_crossings d i hmax
-  have hz (j : Fin n) : (LRX.AffineLift.crossing d i j).toNat=0 := by have := hn j; omega
+  have hz (j : Fin n) : (LX.Core.AffineLift.crossing d i j).toNat=0 := by have := hn j; omega
   simp only [hz,Nat.cast_zero,Finset.sum_const_zero] at hh
   omega
 
@@ -79,7 +79,7 @@ end LX.AffineScan
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.FiniteCuts LX.AffineScan
+open LX.Core.FiniteCuts LX.AffineScan
 variable {n : ℕ} [NeZero n]
 
 /-- The earliest descending position of the anchored finite permutation has
@@ -120,12 +120,12 @@ theorem candidate_head_reserve_word (hn : 2 ≤ n) (p : State n) (a : Fin n)
   let e := run u d
   have hd := is_lift p a
   have hl (i : Fin n) : labels d i=p i+(phase p a : Fin n) := by
-    simpa only [labels,Equiv.symm_symm] using LRX.AffineLift.lift_residue hd i
+    simpa only [labels,Equiv.symm_symm] using LX.Core.AffineLift.lift_residue hd i
   have hi : Function.Injective (labels d) := by
     intro i j hij
     rw [hl,hl] at hij
     exact p.injective (add_right_cancel hij)
-  have he : e=LRX.RotationWords.localDisplacement d r := by
+  have he : e=LX.Core.RotationWords.localDisplacement d r := by
     funext i
     exact run_left_apply r.val d i
   have hei : Function.Injective (labels e) := run_injective hn u d hi
@@ -135,7 +135,7 @@ theorem candidate_head_reserve_word (hn : 2 ≤ n) (p : State n) (a : Fin n)
     exact_mod_cast (candidate_price_components p a).2 _
   have heh : backwardDepth e 0 < height p a := by
     rw [he,recentered_backward_depth]
-    simpa only [LRX.AffineLift.rotation_power_apply,Fin.val_zero,Nat.cast_zero,
+    simpa only [LX.Core.AffineLift.rotation_power_apply,Fin.val_zero,Nat.cast_zero,
       Fin.cast_val_eq_self,zero_add] using hhead
   obtain ⟨w,hw⟩ := exists_scan_trace hn e heb hei
   have hL := (hw.rotations_le_deadline hn heb hei).trans

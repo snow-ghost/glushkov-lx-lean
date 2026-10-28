@@ -1,13 +1,13 @@
-import LRX.EventDefectParity
-import LRX.MajorizedExtremeCount
-import LRX.StrictBandEquality
-import LRX.TwoWindowCycleDefect
+import LX.EventDefectParity
+import LX.MajorizedExtremeCount
+import LX.StrictBandEquality
+import LX.TwoWindowCycleDefect
 import LX.AnchoredPhases
 import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.AffineLift
+open LX.AffineScan LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 /-- Reserve relative to the capacity of this actual anchor's strip. It need
@@ -21,7 +21,7 @@ theorem anchor_reserve_nonneg (p : State n) (a : Fin n) : 0 ≤ anchorReserve p 
   omega
 
 theorem shifted_anchor_permutation (p : State n) (a : Fin n) :
-    LRX.FiniteCuts.shiftedLiftPermutation p.symm (phase p a) (height p a)=permutation p a := by
+    LX.Core.FiniteCuts.shiftedLiftPermutation p.symm (phase p a) (height p a)=permutation p a := by
   apply Equiv.ext
   intro i
   change p i+((phase p a+(height p a : ℤ) : ℤ) : Fin n)=p i+(a-p a)
@@ -29,27 +29,27 @@ theorem shifted_anchor_permutation (p : State n) (a : Fin n) :
   ring
 
 /-- The reserve splits into two nonnegative quantities already defined on
-finite permutations in LRX: event defect and excess reflection rank. -/
+finite permutations in LX.Core: event defect and excess reflection rank. -/
 theorem anchor_reserve_decomposition (p : State n) (a : Fin n) :
-    anchorReserve p a=LRX.FiniteCuts.cycleDefect (permutation p a)+
+    anchorReserve p a=LX.Core.FiniteCuts.cycleDefect (permutation p a)+
       ((permutation p a).support.card : ℤ)-(permutation p a).cycleFactorsFinset.card-height p a := by
-  have hf := LRX.FiniteCuts.shifted_lift_inversion_formula (is_lift p a)
+  have hf := LX.Core.FiniteCuts.shifted_lift_inversion_formula (is_lift p a)
     (height p a : ℤ) (displacement_band p a)
   rw [shifted_anchor_permutation] at hf
   change (inversions (displacement p a) : ℤ)=_ at hf
-  have hm := LRX.FiniteCuts.displacement_mass_eq_twice_leftDepth (permutation p a)
-  unfold anchorReserve LRX.FiniteCuts.cycleDefect
+  have hm := LX.Core.FiniteCuts.displacement_mass_eq_twice_leftDepth (permutation p a)
+  unfold anchorReserve LX.Core.FiniteCuts.cycleDefect
   nlinarith
 
 theorem anchor_cycle_defect_bounds (p : State n) (a : Fin n) :
-    0 ≤ LRX.FiniteCuts.cycleDefect (permutation p a) ∧
-      LRX.FiniteCuts.cycleDefect (permutation p a) ≤ anchorReserve p a := by
-  have hr := LRX.FiniteCuts.finite_depth_rank (permutation p a)
-  have hc := LRX.FiniteCuts.descending_count_add_cycles_le_support (permutation p a)
+    0 ≤ LX.Core.FiniteCuts.cycleDefect (permutation p a) ∧
+      LX.Core.FiniteCuts.cycleDefect (permutation p a) ≤ anchorReserve p a := by
+  have hr := LX.Core.FiniteCuts.finite_depth_rank (permutation p a)
+  have hc := LX.Core.FiniteCuts.descending_count_add_cycles_le_support (permutation p a)
   have hd := anchor_reserve_decomposition p a
   change height p a+(permutation p a).cycleFactorsFinset.card ≤ (permutation p a).support.card at hc
   constructor
-  · unfold LRX.FiniteCuts.cycleDefect
+  · unfold LX.Core.FiniteCuts.cycleDefect
     omega
   · omega
 
@@ -57,17 +57,17 @@ theorem anchor_cycle_defect_bounds (p : State n) (a : Fin n) :
 No shallow-cycle hypothesis is supplied by the caller. -/
 theorem small_anchor_reserve_zero_defect (p : State n) (a : Fin n)
     (hsmall : anchorReserve p a ≤ 1) :
-    LRX.FiniteCuts.cycleDefect (permutation p a)=0 := by
+    LX.Core.FiniteCuts.cycleDefect (permutation p a)=0 := by
   have hb := anchor_cycle_defect_bounds p a
-  obtain ⟨k,hk⟩ := LRX.FiniteCuts.finite_cycle_defect_even (permutation p a)
-  change LRX.FiniteCuts.cycleDefect (permutation p a)=k+k at hk
+  obtain ⟨k,hk⟩ := LX.Core.FiniteCuts.finite_cycle_defect_even (permutation p a)
+  change LX.Core.FiniteCuts.cycleDefect (permutation p a)=k+k at hk
   omega
 
 /-- Majorization supplies the lower support bound. Thus unit reserve leaves
 at most two vertices beyond the size accounted for by transposition cycles. -/
 theorem unit_anchor_reserve_rigidity (p : State n) (a : Fin n)
     (hmaj : Majorized (displacement p a)) (hunit : anchorReserve p a=1) :
-    LRX.FiniteCuts.cycleDefect (permutation p a)=0 ∧
+    LX.Core.FiniteCuts.cycleDefect (permutation p a)=0 ∧
       ((permutation p a).support.card : ℤ)-(permutation p a).cycleFactorsFinset.card=
         (height p a : ℤ)+1 ∧
       2*(height p a : ℤ) ≤ (permutation p a).support.card ∧
@@ -79,10 +79,10 @@ theorem unit_anchor_reserve_rigidity (p : State n) (a : Fin n)
   have hh := (short_coordinates (is_lift p a).1 hmaj a).2
   rw [displacement_anchor] at hh
   have hext := majorized_negative_level_count (is_lift p a).1 hmaj (height p a : ℤ) (by omega)
-  have hs := LRX.FiniteCuts.shifted_support_add_extreme_count (is_lift p a)
+  have hs := LX.Core.FiniteCuts.shifted_support_add_extreme_count (is_lift p a)
     (height p a : ℤ) (displacement_band p a)
   rw [shifted_anchor_permutation] at hs
-  have hc := LRX.FiniteCuts.twice_cycle_count_le_support (permutation p a)
+  have hc := LX.Core.FiniteCuts.twice_cycle_count_le_support (permutation p a)
   exact ⟨hz,by omega,by omega,by omega,by omega⟩
 
 

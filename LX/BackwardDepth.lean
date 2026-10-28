@@ -7,12 +7,12 @@ variable {n : ℕ} [NeZero n]
 
 /-- Number of inverted predecessors of a lifted token, counted over the preceding periods. -/
 def backwardDepth (d : Fin n → ℤ) (i : Fin n) : ℕ :=
-  ∑ j : Fin n, (-LRX.AffineLift.crossing d i j).toNat
+  ∑ j : Fin n, (-LX.Core.AffineLift.crossing d i j).toNat
 
 theorem crossing_quotient (d : Fin n → ℤ) (i j : Fin n) :
-    -LRX.AffineLift.crossing d i j =
+    -LX.Core.AffineLift.crossing d i j =
       (targets d j-targets d i)/(n : ℤ) + if j < i then 1 else 0 := by
-  simp only [LRX.AffineLift.crossing, neg_neg, LRX.AffineLift.crossingNumerator,
+  simp only [LX.Core.AffineLift.crossing, neg_neg, LX.Core.AffineLift.crossingNumerator,
     Fin.intCast_val_sub_eq_sub_add_ite]
   by_cases hji : j < i
   · have hh : ¬ i ≤ j := not_le.mpr hji
@@ -41,16 +41,16 @@ theorem backward_depth_head (d : Fin n → ℤ) :
 theorem rotate_backward_depth (hn : 2 ≤ n) (d : Fin n → ℤ) (i : Fin n) :
     backwardDepth (rotate d) i = backwardDepth d (finRotate n i) := by
   have hv1 : (1 : Fin n).val=1 := by simp [Nat.mod_eq_of_lt (by omega : 1 < n)]
-  have hc (j : Fin n) := LRX.RotationWords.crossing_recentered d 1 i j
-  have he : LRX.RotationWords.localDisplacement d 1 = rotate d := by
+  have hc (j : Fin n) := LX.Core.RotationWords.crossing_recentered d 1 i j
+  have he : LX.Core.RotationWords.localDisplacement d 1 = rotate d := by
     funext j
-    simp only [LRX.RotationWords.localDisplacement, hv1, pow_one, LRX.L, rotate]
+    simp only [LX.Core.RotationWords.localDisplacement, hv1, pow_one, LX.Core.L, rotate]
   rw [he] at hc
-  simp only [hv1, pow_one, LRX.L] at hc
+  simp only [hv1, pow_one, LX.Core.L] at hc
   unfold backwardDepth
   simp_rw [hc]
   exact Equiv.sum_comp (finRotate n)
-    (fun j => (-LRX.AffineLift.crossing d (finRotate n i) j).toNat)
+    (fun j => (-LX.Core.AffineLift.crossing d (finRotate n i) j).toNat)
 
 
 /-- One backwards move consumes exactly one inverted predecessor. -/

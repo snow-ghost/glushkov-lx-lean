@@ -4,7 +4,7 @@ import Mathlib
 namespace LX.AnchoredPhases
 open Classical
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.FiniteCuts
+open LX.AffineScan LX.Core.FiniteCuts
 variable {n : ℕ} [NeZero n]
 
 theorem rank_two_unpaid_smaller_aligned_exists (p : State n) (a : Fin n)

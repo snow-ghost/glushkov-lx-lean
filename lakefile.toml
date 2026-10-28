@@ -1,14 +1,11 @@
 name = "glushkov_lx"
-version = "1.0.1"
+version = "1.0.0"
 defaultTargets = ["LX"]
 
 [[require]]
 name = "mathlib"
 scope = "leanprover-community"
 rev = "v4.34.0"
-
-[[lean_lib]]
-name = "LRX"
 
 [[lean_lib]]
 name = "LX"

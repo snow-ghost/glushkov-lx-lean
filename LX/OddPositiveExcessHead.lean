@@ -4,7 +4,7 @@ import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LRX.FiniteCuts
+open LX.AffineScan LX.Core.FiniteCuts
 variable {n : ℕ} [NeZero n]
 
 theorem odd_unpaid_positive_excess_head_fixed (p : State n) (a : Fin n)
@@ -52,7 +52,7 @@ theorem odd_unpaid_positive_excess_initial_pair (p : State n) (a : Fin n)
     (by rw [reverse_dual_second_excess]; exact hpos) hdual
   have he : (1 : Fin n)-p.symm 1=0 := by
     simpa only [reverseDual,Equiv.Perm.mul_apply,Equiv.Perm.inv_def,
-      LRX.WordReflection.reflection_apply,sub_zero] using hq0
+      LX.Core.WordReflection.reflection_apply,sub_zero] using hq0
   have hi : p.symm 1=1 := by linear_combination -he
   refine ⟨hp0,?_⟩
   have hp1 := p.apply_symm_apply 1

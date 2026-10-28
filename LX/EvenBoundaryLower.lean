@@ -8,7 +8,7 @@ import Mathlib
 
 namespace LX.Antipode
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LX.AffineScan LX.CenteredLift LRX.AffineLift
+open LX.AffineScan LX.CenteredLift LX.Core.AffineLift
 variable {n : ℕ} [NeZero n]
 
 theorem even_exception_lift (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m) :
@@ -19,8 +19,8 @@ theorem even_exception_lift (m : ℕ) (hm : 3 ≤ m) (hn : n=2*m) :
   have hb := perturbed_board_labels m ((c : ℤ)+1) (Equiv.swap (1 : Fin n) 2) i
   change i+(evenBase m c i : Fin n)=_ at hb
   rw [even_boundary_base m hm hn] at hb
-  apply (LRX.LiftedModel.cast_eq_iff_modEq _ _).mp
-  simp only [even,Equiv.symm_symm,Equiv.Perm.mul_apply,LRX.WordReflection.reflection_apply,
+  apply (LX.Core.LiftedModel.cast_eq_iff_modEq _ _).mp
+  simp only [even,Equiv.symm_symm,Equiv.Perm.mul_apply,LX.Core.WordReflection.reflection_apply,
     Int.cast_add,Int.cast_sub,Int.cast_one,Int.cast_natCast,Fin.cast_val_eq_self,
     c,Nat.cast_add,Nat.cast_ofNat] at hb ⊢
   linear_combination hb

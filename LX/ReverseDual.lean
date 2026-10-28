@@ -1,9 +1,9 @@
-import LRX.WordReflection
+import LX.WordReflection
 import LX.WordMetric
 import Mathlib
 
 namespace LX
-open LRX.WordReflection
+open LX.Core.WordReflection
 variable {n : ℕ} [NeZero n]
 
 /-- Reflecting an inverse reverses an LX word without adding inverse
@@ -28,8 +28,8 @@ theorem reverseDual_mul (p q : State n) : reverseDual (p*q)=reverseDual q*revers
 
 theorem reverseDual_letter (c : Letter) : reverseDual (eval (n := n) [c])=eval [c] := by
   have he : (eval (n := n) [c])⁻¹=reflection*eval [c]*reflection := by
-    simpa only [eval,List.map_cons,List.map_nil,LRX.eval_cons,LRX.eval_nil,mul_one,
-      LRX.Letter.eval_inverse] using mirror_letter_eval (n := n) c.toLRX
+    simpa only [eval,List.map_cons,List.map_nil,LX.Core.eval_cons,LX.Core.eval_nil,mul_one,
+      LX.Core.Letter.eval_inverse] using mirror_letter_eval (n := n) c.toCore
   rw [reverseDual,he]
   simp only [mul_assoc,← mul_assoc (reflection : State n) reflection,reflection_square,one_mul,mul_one]
 

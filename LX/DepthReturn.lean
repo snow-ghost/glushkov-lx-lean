@@ -30,7 +30,4 @@ theorem compare_head_tail_depth (hn : 2 ≤ n) (d : Fin n → ℤ) (j : ℕ)
   · rfl
 
 
-def returnWord (d : Fin n → ℤ) : List Letter := sweepWord d (n-1) ++ [.x]
-
-
 end LX.AffineScan

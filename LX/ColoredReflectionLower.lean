@@ -17,7 +17,7 @@ theorem reflection_opposite_pairs (d : Fin n → ℤ) (ρ : State n)
     (hF : ∀ i,targets d i=C-(ρ i : ℤ)+(n : ℤ)*k i) :
     sameColorPairs (fun i => decide (k i % 2=0))+
       2*oppositeColorInversions ρ (fun i => decide (k i % 2=0)) ≤
-        inversions d+LRX.FiniteCuts.inversionNumber ρ := by
+        inversions d+LX.Core.FiniteCuts.inversionNumber ρ := by
   let χ : Fin n → Bool := fun i => decide (k i % 2=0)
   have hn : (0 : ℤ) < n := by exact_mod_cast NeZero.pos n
   have hp (i j : Fin n) :
@@ -39,7 +39,7 @@ theorem reflection_opposite_pairs (d : Fin n → ℤ) (ρ : State n)
             have hlt : (ρ j : ℤ) < ρ i := by exact_mod_cast hrv
             have hi := (ρ i).isLt
             have hj := (ρ j).isLt
-            apply LRX.PeriodicBuffer.quotient_eq_of_bounds hn <;> nlinarith
+            apply LX.Core.PeriodicBuffer.quotient_eq_of_bounds hn <;> nlinarith
           have hk : k i ≠ k j := by intro hh; apply hχ; simp only [χ,hh]
           have hpos : 0 < (k j-k i).natAbs := Int.natAbs_pos.mpr (by omega)
           rw [hq]
@@ -56,7 +56,7 @@ theorem reflection_opposite_pairs (d : Fin n → ℤ) (ρ : State n)
             rw [hF j,hF i]
             have hi := (ρ i).isLt
             have hj := (ρ j).isLt
-            apply LRX.PeriodicBuffer.quotient_eq_of_bounds hn <;> nlinarith
+            apply LX.Core.PeriodicBuffer.quotient_eq_of_bounds hn <;> nlinarith
           have hcolor : (k i % 2=0) ↔ (k j % 2=0) := by
             simpa only [χ,decide_eq_decide] using hχ
           have hmod : k i % 2=k j % 2 := by omega
@@ -68,7 +68,7 @@ theorem reflection_opposite_pairs (d : Fin n → ℤ) (ρ : State n)
   have hs := Finset.sum_le_sum (fun i (_ : i ∈ (Finset.univ : Finset (Fin n))) =>
     Finset.sum_le_sum (fun j (_ : j ∈ (Finset.univ : Finset (Fin n))) => hp i j))
   simpa only [Finset.sum_add_distrib,← Finset.mul_sum,sameColorPairs,oppositeColorInversions,
-    inversions,LRX.LiftedModel.inversionCount,LRX.FiniteCuts.inversionNumber,χ] using hs
+    inversions,LX.Core.LiftedModel.inversionCount,LX.Core.FiniteCuts.inversionNumber,χ] using hs
 
 end LX.AffineScan
 

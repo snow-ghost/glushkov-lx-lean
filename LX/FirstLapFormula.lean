@@ -114,12 +114,5 @@ theorem first_lap_depth_formula (hn : 2 ≤ n) (d : Fin n → ℤ)
     simp only [atDepth,Fin.cast_val_eq_self] at hh
     rw [hh,compare_prefix_depth hn d hi i.val hip hlt]
 
-/-- A deadline expressed solely through the original affine permutation. -/
-def sourceDeadline (d : Fin n → ℤ) : ℕ :=
-  (n-1)+(Finset.univ.sup fun i : Fin n =>
-    let b := if i=0 then 0 else emittedDepth d i.val
-    if b=0 then 0 else (n-1)*(b-1)+i.val)-1
-
-
 #print axioms first_lap_depth_formula
 end LX.AffineScan

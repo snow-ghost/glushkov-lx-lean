@@ -1,10 +1,10 @@
-import LRX.FiniteCoordinateCapacity
+import LX.FiniteCoordinateCapacity
 import LX.AnchoredPhases
 import Mathlib
 
 namespace LX.AnchoredPhases
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.FiniteCuts LX.AffineScan
+open LX.Core.FiniteCuts LX.AffineScan
 variable {n : ℕ} [NeZero n]
 
 /-- Distinct cyclic displacements, also called a complete mapping of the cycle. -/
@@ -13,7 +13,7 @@ def CompleteMapping (p : State n) : Prop := Function.Injective (fun i => p i-i)
 theorem clockwise_difference_value (q : State n) (i : Fin n) :
     clockwiseRepresentative q i-(i : ℤ)=((q i-i : Fin n) : ℤ) := by
   have hb := clockwise_representative_bounds q i
-  have hc := LRX.AffineLift.cast_eq_of_modEq (clockwise_representative_modEq q i)
+  have hc := LX.Core.AffineLift.cast_eq_of_modEq (clockwise_representative_modEq q i)
   have hm : ((clockwiseRepresentative q i-(i : ℤ) : ℤ) : Fin n)=q i-i := by
     simp only [Int.cast_sub,Int.cast_natCast,Fin.cast_val_eq_self,hc]
   have hh := congrArg (fun x : Fin n => (x : ℤ)) hm
@@ -53,7 +53,7 @@ theorem complete_height (p : State n) (hp : CompleteMapping p) (a : Fin n) :
   rw [hsum] at hm
   have htri : 2*(∑ i : Fin n, (i : ℤ))=(n : ℤ)*((n : ℤ)-1) := by
     rw [Fin.sum_univ_eq_sum_range]
-    exact LRX.FiniteCoordinates.range_sum_twice n
+    exact LX.Core.FiniteCoordinates.range_sum_twice n
   have hn : (0 : ℤ)<n := by exact_mod_cast NeZero.pos n
   have hh : (n : ℤ)=2*(height p a : ℤ)+1 := by nlinarith
   exact_mod_cast hh
@@ -61,7 +61,7 @@ theorem complete_height (p : State n) (hp : CompleteMapping p) (a : Fin n) :
 /-- The distinct centered integer coordinates satisfy the full subset
 majorization inequality, for every anchor, not just for a selected phase. -/
 theorem complete_majorized (p : State n) (hp : CompleteMapping p) (a : Fin n) :
-    LRX.AffineLift.Majorized (displacement p a) := by
+    LX.Core.AffineLift.Majorized (displacement p a) := by
   intro S
   have hinj : Set.InjOn (displacement p a) S := (complete_displacement_injective p hp a).injOn
   have hn := complete_height p hp a
@@ -74,7 +74,7 @@ theorem complete_majorized (p : State n) (hp : CompleteMapping p) (a : Fin n) :
     exact hupper i)
   rw [Finset.card_image_iff.mpr hinj,Finset.sum_image hinj] at hhigh
   simp only [Finset.sum_sub_distrib,Finset.sum_const,Finset.card_range,nsmul_eq_mul] at hhigh
-  have htri := LRX.FiniteCoordinates.range_sum_twice S.card
+  have htri := LX.Core.FiniteCoordinates.range_sum_twice S.card
   have hna : (n : ℤ)=2*(height p a : ℤ)+1 := by exact_mod_cast hn
   nlinarith
 

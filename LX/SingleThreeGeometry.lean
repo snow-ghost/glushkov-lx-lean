@@ -5,7 +5,7 @@ import Mathlib
 
 namespace LX.CycleGeometry
 open scoped BigOperators Fin.IntCast Fin.NatCast Fin.CommRing
-open LRX.FiniteCuts
+open LX.Core.FiniteCuts
 variable {n : ℕ} [NeZero n]
 
 /-- One unit of excess over pair cycles identifies one actual 3-cycle. -/
